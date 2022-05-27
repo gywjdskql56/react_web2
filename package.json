@@ -49,8 +49,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
+    "deploy": "gh-pages -d build"
   },
+  "homepage": "https://gywjdskql56.github.io/react_web2/",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -78,6 +80,7 @@
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-react": "7.28.0",
     "eslint-plugin-react-hooks": "4.3.0",
+    "gh-pages": "^4.0.0",
     "prettier": "2.5.1"
   }
 }
