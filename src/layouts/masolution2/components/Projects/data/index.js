@@ -25,7 +25,7 @@ function httpGet(theURL) {
 }
 
 export default function data() {
-  const universe = httpGet("http://0.0.0.0:5001/universes/".concat(localStorage.getItem("port1")));
+  const universe = httpGet("http://13.209.68.205:5001/universes/".concat(localStorage.getItem("port1")));
   console.log(localStorage.getItem("port1"));
   console.log(Object.keys(universe));
   console.log(typeof universe);
