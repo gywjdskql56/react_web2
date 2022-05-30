@@ -25,14 +25,12 @@ function httpGet(theURL) {
 }
 
 export default function data() {
-  const universe = httpGet(
-    "http://localhost:5001/universes/".concat(localStorage.getItem("port1"))
-  );
+  const universe = httpGet("http://0.0.0.0:5001/universes/".concat(localStorage.getItem("port1")));
   console.log(localStorage.getItem("port1"));
   console.log(Object.keys(universe));
   console.log(typeof universe);
   console.log(universe.ticker);
-  console.log(universe.ticker.length);
+  console.log(universe.ticker.lengths);
 
   const rows = [];
   for (let i = 0; i < 5; i += 1) {

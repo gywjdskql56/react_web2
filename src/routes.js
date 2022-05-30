@@ -40,6 +40,7 @@ import Home from "layouts/home";
 import MAsolution from "layouts/masolution";
 import MAsolution1 from "layouts/masolution1";
 import MAsolution2 from "layouts/masolution2";
+import Screening from "layouts/screening";
 // import Tables from "layouts/tables";
 // import Billing from "layouts/billing";
 // import RTL from "layouts/rtl";
@@ -83,6 +84,14 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/masolution2",
     component: <MAsolution2 />,
+  },
+  {
+    type: "collapse",
+    name: "스크리닝",
+    key: "screening",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/screeening",
+    component: <Screening />,
   },
 ];
 

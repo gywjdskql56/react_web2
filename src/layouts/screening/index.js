@@ -59,14 +59,17 @@ function Dashboard() {
     { value: "JAPAN", label: "JP" },
   ];
   const options2 = [
-    { value: "ESG", label: "ESG" },
-    { value: "ex ESG", label: "ex ESG" },
+    { value: "Energe", label: "Energe" },
+    { value: "IT", label: "IT" },
+    { value: "Commodity", label: "Commodity" },
+    { value: "Semiconductor", label: "Semiconductor" },
+    { value: "Entertainment", label: "Entertainment" },
   ];
   const options3 = [
-    { value: "AALP", label: "AAPL" },
-    { value: "TSLA", label: "TSLA" },
-    { value: "GOOGL", label: "GOOGL" },
-    { value: "NASDAQ", label: "NASDAQ" },
+    { value: "변동성 20% 이내", label: "변동성 20% 이내" },
+    { value: "변동성 10% 이내", label: "변동성 10% 이내" },
+    { value: "최근 수익률 상위 30개", label: "최근 수익률 상위 30개" },
+    { value: "최근 수익률 상위 10%", label: "최근 수익률 상위 10%" },
   ];
   function openWarningSB() {
     console.log("on click!");
@@ -77,49 +80,9 @@ function Dashboard() {
       <DashboardNavbar />
       <MDBox py={3}>
         <Grid container spacing={3}>
-          <Grid item xs={4} md={4} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="error"
-                icon="weekend"
-                count="공격투자"
-                title="국내외 238개 종목"
-                percentage={{
-                  color: "success",
-                  amount: "+25%",
-                  label: "설정일 이후",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={4} md={4} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="warning"
-                icon="warning"
-                count="위험중립"
-                title="국내외 238개 종목"
-                percentage={{
-                  color: "warning",
-                  amount: "+31%",
-                  label: "설정일 이후",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={4} md={4} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="store"
-                count="안정중립"
-                title="국내외 238개 종목"
-                percentage={{
-                  color: "success",
-                  amount: "+13%",
-                  label: "설정일 이후",
-                }}
-              />
+          <Grid item xs={2} md={2} lg={2}>
+            <MDBox mb={1}>
+              <ComplexStatisticsCard color="error" icon="weekend" count="- 국가 선택" />
             </MDBox>
           </Grid>
         </Grid>
@@ -133,6 +96,13 @@ function Dashboard() {
           />
         </MDBox>
         <MDBox mt={4.5}>
+          <Grid item xs={2} md={2} lg={2}>
+            <MDBox mb={1}>
+              <ComplexStatisticsCard color="error" icon="weekend" count="- 섹터 선택" />
+            </MDBox>
+          </Grid>
+        </MDBox>
+        <MDBox mt={4.5}>
           <Select
             closeMenuOnSelect={false}
             components={animatedComponents}
@@ -140,6 +110,13 @@ function Dashboard() {
             isMulti
             options={options2}
           />
+        </MDBox>
+        <MDBox mt={4.5}>
+          <Grid item xs={2} md={2} lg={2}>
+            <MDBox mb={1}>
+              <ComplexStatisticsCard color="error" icon="weekend" count="- 제약 조건" />
+            </MDBox>
+          </Grid>
         </MDBox>
         <MDBox mt={4.5}>
           <Select
@@ -159,7 +136,7 @@ function Dashboard() {
                   color="warning"
                   onClick={() => openWarningSB()}
                   fullWidth
-                  href="/masolution2"
+                  href="/screening1"
                 >
                   다음 단계로
                 </MDButton>

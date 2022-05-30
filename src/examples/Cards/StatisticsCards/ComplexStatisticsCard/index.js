@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 // import CardActionArea from "@material-ui/core/CardActionArea";
@@ -28,23 +13,28 @@ import React, { useState } from "react";
 
 // import React from "react";
 function handleClick(title) {
+  if (title.slice(0, 1) === "-") {
+    localStorage.setItem("color", "");
+  } else {
+    localStorage.setItem("color", "salmon");
+  }
   console.log(title);
   localStorage.setItem("port", title);
   window.dispatchEvent(new Event("port"));
+  console.log(localStorage.getItem("port"));
 }
 function ComplexStatisticsCard({ color, title, count, percentage, icon }) {
-  console.log(count);
-  localStorage.setItem("port", "변동성 알고리즘");
   const [port, setPort] = useState("");
   window.addEventListener("port", () => {
     setPort(localStorage.getItem("port"));
     console.log("ACTIVE!");
+    console.log(port);
   });
 
   return (
     <Card
       onClick={() => handleClick(count)}
-      style={{ backgroundColor: count === port ? "salmon" : "" }}
+      style={{ backgroundColor: count === port ? localStorage.getItem("color") : "" }}
     >
       <MDBox display="flex" justifyContent="space-between" pt={1} px={2}>
         <MDBox
