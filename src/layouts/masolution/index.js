@@ -11,9 +11,7 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-import MAsolution1 from "layouts/masolution1";
-// @mui material components
+*/// @mui material components
 import Grid from "@mui/material/Grid";
 
 // Material Dashboard 2 React components
