@@ -93,7 +93,7 @@ function Dashboard() {
     console.log("on click!");
     if (sessionStorage.getItem("selected1") === "true") {
       console.log("selected");
-      window.location.href = "{{ 'layouts/masolution1' | relative_url }}";
+      window.location.href = "{{ '/masolution1' | relative_url }}";
     }
   }
   return (
