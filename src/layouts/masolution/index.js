@@ -49,30 +49,30 @@ import port5 from "assets/images/port_5.png";
 function Dashboard() {
   const [warningSB, setWarningSB] = useState(false);
   const [port, setPort] = useState("변동성 알고리즘");
-
+  sessionStorage.setItem("selected1", false);
   const closeWarningSB = () => setWarningSB(false);
-  window.addEventListener("port", () => {
+  window.addEventListener("port1", () => {
     console.log("change to local storage!");
     setPort(localStorage.getItem("port"));
     console.log(localStorage.getItem("port"));
     let portnm = "미래변동성공격1";
-    if (localStorage.getItem("port") === "변동성 알고리즘") {
+    if (sessionStorage.getItem("port1") === "변동성") {
       setPort(port1);
       portnm = "미래변동성공격1";
-    } else if (localStorage.getItem("port") === "초개인화 자산관리") {
+    } else if (sessionStorage.getItem("port1") === "초개인로보") {
       setPort(port2);
       portnm = "미래초개인로보적극1";
-    } else if (localStorage.getItem("port") === "테마 로테이션") {
+    } else if (sessionStorage.getItem("port1") === "테마로테션") {
       setPort(port3);
       portnm = "미래테마로테션공격1";
-    } else if (localStorage.getItem("port") === "멀티에셋 인컴") {
+    } else if (sessionStorage.getItem("port1") === "멀티에셋인컴") {
       setPort(port4);
       portnm = "미래멀티에셋인컴공1";
-    } else if (localStorage.getItem("port") === "AI 미국주식 투자") {
+    } else if (sessionStorage.getItem("port1") === "AI 미국주식 투자") {
       setPort(port5);
       portnm = "미래에셋AI크로스알파";
     }
-    localStorage.setItem("port1", portnm);
+    localStorage.setItem("port", portnm);
   });
 
   const renderWarningSB = (
@@ -92,19 +92,24 @@ function Dashboard() {
   // openWarningSB
   function openWarningSB() {
     console.log("on click!");
+    if (sessionStorage.getItem("selected1") === "true") {
+      console.log("selected");
+      window.location.href = "/masolution1";
+    }
   }
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
         <Grid container spacing={3}>
-          <Grid item xs={9.6} md={4.8} lg={2.4}>
+          <Grid item xs={9.6} md={4.8} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
                 icon="weekend"
                 count="변동성 알고리즘"
                 title="국내 / ETF"
+                solutionNum="1"
                 percentage={{
                   color: "success",
                   amount: "+25%",
@@ -113,12 +118,13 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-          <Grid item xs={9.6} md={4.8} lg={2.4}>
+          <Grid item xs={9.6} md={4.8} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
                 count="초개인화 자산관리"
                 title="국내외 / ETF"
+                solutionNum="1"
                 percentage={{
                   color: "success",
                   amount: "+31%",
@@ -127,13 +133,14 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-          <Grid item xs={9.6} md={4.8} lg={2.4}>
+          <Grid item xs={9.6} md={4.8} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="success"
                 icon="store"
                 count="테마 로테이션"
                 title="해외 / ETF"
+                solutionNum="1"
                 percentage={{
                   color: "success",
                   amount: "+13%",
@@ -142,31 +149,17 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-          <Grid item xs={9.6} md={4.8} lg={2.4}>
+          <Grid item xs={9.6} md={4.8} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
                 count="멀티에셋 인컴"
                 title="다양한 인컴 자산"
+                solutionNum="1"
                 percentage={{
                   color: "success",
                   amount: "+16%",
-                  label: "설정일 이후",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={9.6} md={4.8} lg={2.4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="secondary"
-                icon="adb"
-                count="AI 미국주식 투자"
-                title="국내외 238개 종목"
-                percentage={{
-                  color: "success",
-                  amount: "+18%",
                   label: "설정일 이후",
                 }}
               />
@@ -187,7 +180,6 @@ function Dashboard() {
               <Grid item xs={12} sm={12} lg={12}>
                 <MDButton
                   variant="gradient"
-                  href="/masolution1"
                   color="warning"
                   onClick={() => openWarningSB()}
                   fullWidth

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /**
 =========================================================
 * Material Dashboard 2 React - v2.1.0
@@ -32,13 +33,13 @@ import React, { useState } from "react";
 
 import MDSnackbar from "components/MDSnackbar";
 import MDButton from "components/MDButton";
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
+import httpGet from "config";
 
 function Dashboard() {
+  sessionStorage.setItem("selected2", false);
+  console.log("strategy is ".concat(sessionStorage.getItem("port2")));
   const [warningSB, setWarningSB] = useState(false);
   const closeWarningSB = () => setWarningSB(false);
-  const animatedComponents = makeAnimated();
   const renderWarningSB = (
     <MDSnackbar
       color="warning"
@@ -52,104 +53,42 @@ function Dashboard() {
       bgWhite
     />
   );
-  const options1 = [
-    { value: "GLOBAL", label: "GLOBAL" },
-    { value: "US", label: "US" },
-    { value: "KOREA", label: "KR" },
-    { value: "JAPAN", label: "JP" },
-  ];
-  const options2 = [
-    { value: "ESG", label: "ESG" },
-    { value: "ex ESG", label: "ex ESG" },
-  ];
-  const options3 = [
-    { value: "AALP", label: "AAPL" },
-    { value: "TSLA", label: "TSLA" },
-    { value: "GOOGL", label: "GOOGL" },
-    { value: "NASDAQ", label: "NASDAQ" },
-  ];
+  const color = ["error", "warning", "success", "info"];
+  const strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
+  console.log(strategy);
+
   function openWarningSB() {
     console.log("on click!");
-    window.location.href = "/dashboard_2_2";
+    console.log(sessionStorage.getItem("selected2"));
+    if (sessionStorage.getItem("selected2") === "true") {
+      console.log("selected");
+      window.location.href = "/masolution2";
+    }
   }
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
         <Grid container spacing={3}>
-          <Grid item xs={4} md={4} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="error"
-                icon="weekend"
-                count="공격투자"
-                title="국내외 238개 종목"
-                percentage={{
-                  color: "success",
-                  amount: "+25%",
-                  label: "설정일 이후",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={4} md={4} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="warning"
-                icon="warning"
-                count="위험중립"
-                title="국내외 238개 종목"
-                percentage={{
-                  color: "warning",
-                  amount: "+31%",
-                  label: "설정일 이후",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={4} md={4} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="store"
-                count="안정중립"
-                title="국내외 238개 종목"
-                percentage={{
-                  color: "success",
-                  amount: "+13%",
-                  label: "설정일 이후",
-                }}
-              />
-            </MDBox>
-          </Grid>
+          {strategy.map((value, index) => (
+            <Grid item xs={4} md={4} lg={12 / strategy.length}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color={color[index]}
+                  icon="weekend"
+                  count={value}
+                  title="국내외 238개 종목"
+                  solutionNum="2"
+                  percentage={{
+                    color: "success",
+                    amount: "+25%",
+                    label: "설정일 이후",
+                  }}
+                />
+              </MDBox>
+            </Grid>
+          ))}
         </Grid>
-        <MDBox mt={4.5}>
-          <Select
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            defaultValue={[options1[4], options1[5]]}
-            isMulti
-            options={options1}
-          />
-        </MDBox>
-        <MDBox mt={4.5}>
-          <Select
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            defaultValue={[options2[4], options2[5]]}
-            isMulti
-            options={options2}
-          />
-        </MDBox>
-        <MDBox mt={4.5}>
-          <Select
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            defaultValue={[options3[4], options3[5]]}
-            isMulti
-            options={options3}
-          />
-        </MDBox>
         <MDBox mt={4.5}>
           <MDBox mt={4}>
             <Grid container spacing={3}>
@@ -159,7 +98,6 @@ function Dashboard() {
                   color="warning"
                   onClick={() => openWarningSB()}
                   fullWidth
-                  href="/masolution2"
                 >
                   다음 단계로
                 </MDButton>

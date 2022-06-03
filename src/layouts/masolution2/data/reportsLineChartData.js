@@ -16,11 +16,12 @@ Coded by www.creative-tim.com
 //  .then((response) => response.json())
 //  .then((data) => this.setState({ date: data.date, price: data.price, returns: data.returns }));
 // console.log(kospi);
-
+const data = localStorage.getItem("returns");
+console.log(data);
 export default {
   sales: {
-    labels: [1, 2, 3, 4, 5],
-    datasets: { label: "KOSPI price", data: [1, 2, 3, 4, 5] },
+    labels: data.date,
+    datasets: { label: "수익률", data: data.returns },
   },
   tasks: {
     labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],

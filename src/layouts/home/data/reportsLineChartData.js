@@ -12,15 +12,9 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-global.XMLHttpRequest = require("xhr2");
+import httpGet from "config";
 
-function httpGet(theURL) {
-  const xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", theURL, false);
-  xmlHttp.send(null);
-  return xmlHttp.responseText;
-}
-const data = httpGet("http://127.0.0.1:5000/kospi");
+const data = httpGet("/kospi");
 console.log(data);
 // const getdata = async () => {
 //  const response = await fetch("http://127.0.0.1:5000/kospi");

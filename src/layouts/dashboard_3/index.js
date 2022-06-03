@@ -35,14 +35,6 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 
-// console.log(word.name);
-// fetch("http://127.0.0.1:5000/word")
-//  .then((response) => response.json())
-//  .then((data) => console.log(data));
-// fetch("http://127.0.0.1:5000/word")
-//  .then((response) => response.json())
-//  .then((data) => console.log(data.name));
-
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
 

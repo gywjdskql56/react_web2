@@ -52,7 +52,7 @@ function configs(labels, datasets) {
             display: true,
             drawOnChartArea: true,
             drawTicks: false,
-            borderDash: [5, 5],
+            borderDash: [10, 10],
             color: "rgba(255, 255, 255, .2)",
           },
           ticks: {
@@ -60,7 +60,7 @@ function configs(labels, datasets) {
             color: "#f8f9fa",
             padding: 10,
             font: {
-              size: 14,
+              size: 12,
               weight: 300,
               family: "Roboto",
               style: "normal",
@@ -81,7 +81,7 @@ function configs(labels, datasets) {
             color: "#f8f9fa",
             padding: 10,
             font: {
-              size: 14,
+              size: 10,
               weight: 300,
               family: "Roboto",
               style: "normal",
