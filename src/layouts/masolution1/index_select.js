@@ -70,7 +70,7 @@ function Dashboard() {
   ];
   function openWarningSB() {
     console.log("on click!");
-    window.location.href = "/dashboard_2_2";
+    window.location.href = "layouts/dashboard_2_2";
   }
   return (
     <DashboardLayout>

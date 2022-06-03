@@ -73,7 +73,7 @@ function Dashboard() {
   ];
   function openWarningSB() {
     console.log("on click!");
-    window.location.href = "src/layouts/masolution2";
+    window.location.href = "layouts/masolution2";
   }
   return (
     <DashboardLayout>
