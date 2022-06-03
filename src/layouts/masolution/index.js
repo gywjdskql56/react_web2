@@ -94,7 +94,7 @@ function Dashboard() {
     console.log("on click!");
     if (sessionStorage.getItem("selected1") === "true") {
       console.log("selected");
-      window.location.href = "/masolution1";
+      window.location.href = "src/layouts/masolution1";
     }
   }
   return (

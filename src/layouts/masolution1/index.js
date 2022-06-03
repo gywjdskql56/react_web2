@@ -62,7 +62,7 @@ function Dashboard() {
     console.log(sessionStorage.getItem("selected2"));
     if (sessionStorage.getItem("selected2") === "true") {
       console.log("selected");
-      window.location.href = "https://gywjdskql56.github.io/react_web2//masolution2";
+      window.location.href = "https://gywjdskql56.github.io/react_web2/masolution2";
     }
   }
   return (
