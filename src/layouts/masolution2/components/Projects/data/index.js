@@ -1,32 +1,10 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/function-component-definition */
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-const XMLHttpRequest = require("xhr2");
-
-function httpGet(theURL) {
-  const xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", theURL, false);
-  xmlHttp.send(null);
-  return JSON.parse(xmlHttp.responseText);
-}
+import httpGet from "config";
 
 export default function data() {
-  const universe = httpGet("http://13.209.68.205:5000/universes/".concat(localStorage.getItem("port1")));
-  console.log(localStorage.getItem("port1"));
+  const universe = httpGet(
+    "/universes/".concat(sessionStorage.getItem("port1"), "_", sessionStorage.getItem("port2"))
+  );
+  console.log(sessionStorage.getItem("port1"));
   console.log(Object.keys(universe));
   console.log(typeof universe);
   console.log(universe.ticker);
