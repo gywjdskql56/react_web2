@@ -73,7 +73,7 @@ function Dashboard() {
   ];
   function openWarningSB() {
     console.log("on click!");
-    window.location.href = "/dashboard_2_2";
+    window.location.href = "https://gywjdskql56.github.io/react_web2/dashboard_2_2";
   }
   return (
     <DashboardLayout>
