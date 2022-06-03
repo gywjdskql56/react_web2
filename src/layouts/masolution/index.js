@@ -12,7 +12,7 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-
+import MAsolution1 from "layouts/masolution1";
 // @mui material components
 import Grid from "@mui/material/Grid";
 
@@ -94,7 +94,7 @@ function Dashboard() {
     console.log("on click!");
     if (sessionStorage.getItem("selected1") === "true") {
       console.log("selected");
-      window.location.href = "layouts/masolution1";
+      window.location.href = "{{ 'layouts/masolution1' | relative_url }}";
     }
   }
   return (
