@@ -160,7 +160,11 @@ function Dashboard() {
           </MDBox>
         </MDBox>
         <MDBox mt={4.5}>
-          <Link to="/masolution2">다음 단계로</Link>
+          <Link to="/masolution2">
+            <MDButton variant="gradient" color="warning" fullWidth>
+              NEXT
+            </MDButton>
+          </Link>
           <Routes path="/masolution2" component={MAsolution2} />
         </MDBox>
       </MDBox>
