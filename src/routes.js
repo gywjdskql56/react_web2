@@ -58,7 +58,7 @@ const routes = [
     name: "메인",
     key: "home",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/home",
+    route: "/react_web2",
     component: <Home />,
   },
   {
