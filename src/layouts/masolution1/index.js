@@ -30,7 +30,8 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 
 // Dashboard components
 import React, { useState } from "react";
-
+import MAsolution2 from "layouts/masolution2";
+import { Route, Link } from "react-router-dom";
 import MDSnackbar from "components/MDSnackbar";
 import MDButton from "components/MDButton";
 import httpGet from "config";
@@ -110,13 +111,57 @@ function Dashboard() {
           <MDBox mt={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12} lg={12}>
-                <MDButton variant="gradient" color="warning" href="/masolution2" fullWidth>
+                <MDButton
+                  variant="gradient"
+                  color="warning"
+                  href="...src/layouts/masolution2"
+                  fullWidth
+                >
                   다음 단계로
                 </MDButton>
                 {renderWarningSB}
               </Grid>
             </Grid>
           </MDBox>
+        </MDBox>
+        <MDBox mt={4.5}>
+          <MDBox mt={4}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={12} lg={12}>
+                <MDButton
+                  variant="gradient"
+                  color="warning"
+                  href="...src/layouts/masolution2/index.js"
+                  fullWidth
+                >
+                  다음 단계로
+                </MDButton>
+                {renderWarningSB}
+              </Grid>
+            </Grid>
+          </MDBox>
+        </MDBox>
+        <MDBox mt={4.5}>
+          <MDBox mt={4}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={12} lg={12}>
+                <MDButton
+                  variant="gradient"
+                  color="warning"
+                  href="...src/layouts/masolution2/index.js"
+                  onClick="window.open('...src/layouts/masolution2/index.js', 'self');"
+                  fullWidth
+                >
+                  다음 단계로
+                </MDButton>
+                {renderWarningSB}
+              </Grid>
+            </Grid>
+          </MDBox>
+        </MDBox>
+        <MDBox mt={4.5}>
+          <Link to="/masolution2">다음 단계로</Link>
+          <Route path="/masolution2" component={MAsolution2} />
         </MDBox>
       </MDBox>
       <Footer />
