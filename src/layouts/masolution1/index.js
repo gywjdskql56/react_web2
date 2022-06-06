@@ -113,7 +113,7 @@ function Dashboard() {
                 <MDButton
                   variant="gradient"
                   color="warning"
-                  href="/masolution2"}
+                  href="/masolution2"
                   fullWidth
                 >
                   다음 단계로
