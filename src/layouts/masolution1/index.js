@@ -110,12 +110,7 @@ function Dashboard() {
           <MDBox mt={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12} lg={12}>
-                <MDButton
-                  variant="gradient"
-                  color="warning"
-                  href="/masolution2"
-                  fullWidth
-                >
+                <MDButton variant="gradient" color="warning" href="/masolution2" fullWidth>
                   다음 단계로
                 </MDButton>
                 {renderWarningSB}
