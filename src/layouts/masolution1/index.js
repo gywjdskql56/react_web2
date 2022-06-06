@@ -31,7 +31,7 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 // Dashboard components
 import React, { useState } from "react";
 import MAsolution2 from "layouts/masolution2";
-import { Route, Link } from "react-router-dom";
+import { Routes, Link } from "react-router-dom";
 import MDSnackbar from "components/MDSnackbar";
 import MDButton from "components/MDButton";
 import httpGet from "config";
@@ -63,7 +63,7 @@ function Dashboard() {
     console.log(sessionStorage.getItem("selected2"));
     if (sessionStorage.getItem("selected2") === "true") {
       console.log("selected");
-      window.location.href = "layouts/masolution2";
+      window.location.href = "/masolution2";
     }
   }
   return (
@@ -161,7 +161,7 @@ function Dashboard() {
         </MDBox>
         <MDBox mt={4.5}>
           <Link to="/masolution2">다음 단계로</Link>
-          <Route path="/masolution2" component={MAsolution2} />
+          <Routes path="/masolution2" component={MAsolution2} />
         </MDBox>
       </MDBox>
       <Footer />

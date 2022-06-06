@@ -93,7 +93,7 @@ function Dashboard() {
     console.log("on click!");
     if (sessionStorage.getItem("selected1") === "true") {
       console.log("selected");
-      window.location.href = "{{ '/masolution1' | relative_url }}";
+      window.location.href = "/masolution1";
     }
   }
   return (
@@ -183,7 +183,7 @@ function Dashboard() {
                   onClick={() => openWarningSB()}
                   fullWidth
                 >
-                  NEXT
+                  NEXT1
                 </MDButton>
                 {renderWarningSB}
               </Grid>
