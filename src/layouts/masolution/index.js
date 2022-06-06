@@ -25,7 +25,8 @@ import Footer from "examples/Footer";
 // import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 // import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
-
+import MAsolution1 from "layouts/masolution1";
+import { Routes, Link } from "react-router-dom";
 // Data
 // import reportsBarChartData from "layouts/masolution/data/reportsBarChartData";
 // import reportsLineChartData from "layouts/masolution/data/reportsLineChartData";
@@ -183,11 +184,19 @@ function Dashboard() {
                   onClick={() => openWarningSB()}
                   fullWidth
                 >
-                  NEXT1
+                  NEXT
                 </MDButton>
                 {renderWarningSB}
               </Grid>
             </Grid>
+          </MDBox>
+          <MDBox mt={4.5}>
+            <Link to="/masolution1">
+              <MDButton variant="gradient" color="warning" fullWidth>
+                NEXT
+              </MDButton>
+            </Link>
+            <Routes path="/masolution1" component={MAsolution1} />
           </MDBox>
         </MDBox>
       </MDBox>

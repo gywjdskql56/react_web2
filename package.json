@@ -52,7 +52,7 @@
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://gywjdskql56.github.io/react_web2/",
+  "homepage": "https://gywjdskql56.github.io/",
   "eslintConfig": {
     "extends": [
       "react-app",
