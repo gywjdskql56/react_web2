@@ -56,7 +56,7 @@ const routes = [
   {
     type: "collapse",
     name: "메인",
-    key: "home",
+    key: "react_web2",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/react_web2",
     component: <Home />,

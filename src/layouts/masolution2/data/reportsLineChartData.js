@@ -16,8 +16,7 @@ Coded by www.creative-tim.com
 //  .then((response) => response.json())
 //  .then((data) => this.setState({ date: data.date, price: data.price, returns: data.returns }));
 // console.log(kospi);
-const data = localStorage.getItem("returns");
-console.log(data);
+
 export default {
   sales: {
     labels: data.date,

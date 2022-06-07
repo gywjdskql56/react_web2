@@ -114,7 +114,7 @@ function DefaultNavbar({ transparent, light, action }) {
           </MDTypography>
         </MDBox>
         <MDBox color="inherit" display={{ xs: "none", lg: "flex" }} m={0} p={0}>
-          <DefaultNavbarLink icon="donut_large" name="dashboard" route="/home" light={light} />
+          <DefaultNavbarLink icon="donut_large" name="dashboard" route="/react_web2" light={light} />
           <DefaultNavbarLink icon="person" name="profile" route="/profile" light={light} />
           <DefaultNavbarLink
             icon="account_circle"

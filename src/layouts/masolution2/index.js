@@ -38,15 +38,19 @@ import httpGet from "config";
 
 function Dashboard() {
   //  const { sales, tasks } = reportsLineChartData;
+  console.log(httpGet("/strategy")[sessionStorage.getItem("port1")]);
+  sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
   const returns = httpGet(
     "/returns/".concat(sessionStorage.getItem("port1"), "_", sessionStorage.getItem("port2"))
   );
+  const std = returns.std.toFixed(4);
   const sales = {
     labels: returns.date,
     datasets: { label: "수익률", data: returns.returns },
   };
   console.log(sessionStorage.getItem("port1"));
   console.log(sessionStorage.getItem("port2"));
+  console.log(returns);
 
   return (
     <DashboardLayout>
@@ -79,7 +83,7 @@ function Dashboard() {
                   color="dark"
                   icon="weekend"
                   title="변동성"
-                  count="-"
+                  count={std}
                   percentage={{
                     color: "success",
                     amount: "2,000,000",

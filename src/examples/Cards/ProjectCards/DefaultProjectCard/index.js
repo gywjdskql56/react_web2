@@ -26,6 +26,7 @@ import CardMedia from "@mui/material/CardMedia";
 import MDBox from "components/MDBox";
 
 function DefaultProjectCard({ image, title }) {
+  console.log(image);
   return (
     <Card
       sx={{
@@ -60,22 +61,6 @@ function DefaultProjectCard({ image, title }) {
 DefaultProjectCard.propTypes = {
   image: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  action: PropTypes.shape({
-    type: PropTypes.oneOf(["external", "internal"]),
-    route: PropTypes.string.isRequired,
-    color: PropTypes.oneOf([
-      "primary",
-      "secondary",
-      "info",
-      "success",
-      "warning",
-      "error",
-      "light",
-      "dark",
-      "white",
-    ]).isRequired,
-    label: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 export default DefaultProjectCard;

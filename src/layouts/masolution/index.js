@@ -38,7 +38,6 @@ import React, { useState } from "react";
 
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 
-import MDSnackbar from "components/MDSnackbar";
 import MDButton from "components/MDButton";
 import port1 from "assets/images/port_1.png";
 import port2 from "assets/images/port_2.png";
@@ -47,56 +46,34 @@ import port4 from "assets/images/port_4.png";
 import port5 from "assets/images/port_5.png";
 
 function Dashboard() {
-  const [warningSB, setWarningSB] = useState(false);
   const [port, setPort] = useState("변동성 알고리즘");
   sessionStorage.setItem("selected1", false);
-  const closeWarningSB = () => setWarningSB(false);
+  sessionStorage.setItem("selected2", false);
   window.addEventListener("port1", () => {
+    const portfolio1 = sessionStorage.getItem("port1");
     console.log("change to local storage!");
-    setPort(localStorage.getItem("port"));
+    //    setPort(localStorage.getItem("port"));
     console.log(localStorage.getItem("port"));
     let portnm = "미래변동성공격1";
-    if (sessionStorage.getItem("port1") === "변동성") {
+    if (portfolio1 === "변동성") {
       setPort(port1);
       portnm = "미래변동성공격1";
-    } else if (sessionStorage.getItem("port1") === "초개인로보") {
+    } else if (portfolio1 === "초개인로보") {
       setPort(port2);
       portnm = "미래초개인로보적극1";
-    } else if (sessionStorage.getItem("port1") === "테마로테션") {
+    } else if (portfolio1 === "테마로테션") {
       setPort(port3);
       portnm = "미래테마로테션공격1";
-    } else if (sessionStorage.getItem("port1") === "멀티에셋인컴") {
+    } else if (portfolio1 === "멀티에셋인컴") {
       setPort(port4);
       portnm = "미래멀티에셋인컴공1";
-    } else if (sessionStorage.getItem("port1") === "AI 미국주식 투자") {
+    } else if (portfolio1 === "AI 미국주식 투자") {
       setPort(port5);
       portnm = "미래에셋AI크로스알파";
     }
     localStorage.setItem("port", portnm);
   });
 
-  const renderWarningSB = (
-    <MDSnackbar
-      color="warning"
-      icon="star"
-      title="Material Dashboard"
-      content="Hello, world! This is a notification message"
-      dateTime="11 mins ago"
-      open={warningSB}
-      onClose={closeWarningSB}
-      close={closeWarningSB}
-      bgWhite
-    />
-  );
-  // todo:
-  // openWarningSB
-  function openWarningSB() {
-    console.log("on click!");
-    if (sessionStorage.getItem("selected1") === "true") {
-      console.log("selected");
-      window.location.href = "/masolution1";
-    }
-  }
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -175,21 +152,6 @@ function Dashboard() {
         </MDBox>
 
         <MDBox>
-          <MDBox mt={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={12} lg={12}>
-                <MDButton
-                  variant="gradient"
-                  color="warning"
-                  onClick={() => openWarningSB()}
-                  fullWidth
-                >
-                  NEXT
-                </MDButton>
-                {renderWarningSB}
-              </Grid>
-            </Grid>
-          </MDBox>
           <MDBox mt={4.5}>
             <Link to="/masolution1">
               <MDButton variant="gradient" color="warning" fullWidth>

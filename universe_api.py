@@ -17,7 +17,7 @@ def returns(port1, port2):
     if port1=='멀티에셋인컴':
         port2 = port2[0]
     returns = returns[port1+port2+'2'].dropna().drop_duplicates()
-    return {"returns": list(map(lambda x: 100*x,returns.values.tolist())), "date":list(map(lambda x : x.strftime('%y/%m/%d'),returns.index.tolist())), "std": np.std(returns.values)}
+    return {"returns": list(map(lambda x: 100*x,returns.values.tolist())), "date":list(map(lambda x : x.strftime('%y/%m/%d'),returns.index.tolist())), "std": int(np.std(returns.values)*10000)/10000}
 
 
 @app.route('/strategy/', methods=['GET', 'POST'])

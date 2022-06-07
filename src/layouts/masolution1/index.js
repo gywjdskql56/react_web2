@@ -25,45 +25,31 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
-
 // Data
 
 // Dashboard components
 import React, { useState } from "react";
+import MAsolution1 from "layouts/masolution1";
 import MAsolution2 from "layouts/masolution2";
 import { Routes, Link } from "react-router-dom";
-import MDSnackbar from "components/MDSnackbar";
 import MDButton from "components/MDButton";
 import httpGet from "config";
 
 function Dashboard() {
+  const [component, setComponent] = useState(MAsolution2);
+  const [path, setPath] = useState("/masolution2");
   sessionStorage.setItem("selected2", false);
   console.log("strategy is ".concat(sessionStorage.getItem("port2")));
-  const [warningSB, setWarningSB] = useState(false);
-  const closeWarningSB = () => setWarningSB(false);
-  const renderWarningSB = (
-    <MDSnackbar
-      color="warning"
-      icon="star"
-      title="Material Dashboard"
-      content="Hello, world! "
-      dateTime="11 mins ago"
-      open={warningSB}
-      onClose={closeWarningSB}
-      close={closeWarningSB}
-      bgWhite
-    />
-  );
   const color = ["error", "warning", "success", "info"];
   const strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
+  sessionStorage.setItem("strategy", strategy);
   console.log(strategy);
-
-  function openWarningSB() {
-    console.log("on click!");
+  function click() {
     console.log(sessionStorage.getItem("selected2"));
-    if (sessionStorage.getItem("selected2") === "true") {
-      console.log("selected");
-      window.location.href = "/masolution2";
+    if (sessionStorage.getItem("selected2") === "false") {
+      setComponent(MAsolution1);
+      setPath("/masolution1");
+      console.log("same");
     }
   }
   return (
@@ -91,81 +77,12 @@ function Dashboard() {
           ))}
         </Grid>
         <MDBox mt={4.5}>
-          <MDBox mt={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={12} lg={12}>
-                <MDButton
-                  variant="gradient"
-                  color="warning"
-                  onClick={() => openWarningSB()}
-                  fullWidth
-                >
-                  다음 단계로
-                </MDButton>
-                {renderWarningSB}
-              </Grid>
-            </Grid>
-          </MDBox>
-        </MDBox>
-        <MDBox mt={4.5}>
-          <MDBox mt={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={12} lg={12}>
-                <MDButton
-                  variant="gradient"
-                  color="warning"
-                  href="...src/layouts/masolution2"
-                  fullWidth
-                >
-                  다음 단계로
-                </MDButton>
-                {renderWarningSB}
-              </Grid>
-            </Grid>
-          </MDBox>
-        </MDBox>
-        <MDBox mt={4.5}>
-          <MDBox mt={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={12} lg={12}>
-                <MDButton
-                  variant="gradient"
-                  color="warning"
-                  href="...src/layouts/masolution2/index.js"
-                  fullWidth
-                >
-                  다음 단계로
-                </MDButton>
-                {renderWarningSB}
-              </Grid>
-            </Grid>
-          </MDBox>
-        </MDBox>
-        <MDBox mt={4.5}>
-          <MDBox mt={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={12} lg={12}>
-                <MDButton
-                  variant="gradient"
-                  color="warning"
-                  href="...src/layouts/masolution2/index.js"
-                  onClick="window.open('...src/layouts/masolution2/index.js', 'self');"
-                  fullWidth
-                >
-                  다음 단계로
-                </MDButton>
-                {renderWarningSB}
-              </Grid>
-            </Grid>
-          </MDBox>
-        </MDBox>
-        <MDBox mt={4.5}>
-          <Link to="/masolution2">
+          <Link onClick={() => click()} to={path}>
             <MDButton variant="gradient" color="warning" fullWidth>
               NEXT
             </MDButton>
           </Link>
-          <Routes path="/masolution2" component={MAsolution2} />
+          <Routes path={path} component={component} />
         </MDBox>
       </MDBox>
       <Footer />

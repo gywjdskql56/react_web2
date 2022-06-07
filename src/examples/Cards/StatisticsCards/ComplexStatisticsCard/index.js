@@ -40,9 +40,11 @@ function handleClick(title, solutionNum) {
 }
 function ComplexStatisticsCard({ color, title, count, percentage, icon, solutionNum }) {
   const [port, setPort] = useState("");
+  //  useEffect(() => {
+  //    setPort(localStorage.getItem("title"));
+  //  }, [port])
   window.addEventListener("title", () => {
     setPort(localStorage.getItem("title"));
-    console.log("this is".concat(localStorage.getItem("title")));
   });
 
   return (
