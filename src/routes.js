@@ -71,7 +71,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "솔루션1",
+    name: "유형 선택",
     key: "masolution1",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/masolution1",
@@ -79,7 +79,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "솔루션2",
+    name: "포트폴리오 현황",
     key: "masolution2",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/masolution2",

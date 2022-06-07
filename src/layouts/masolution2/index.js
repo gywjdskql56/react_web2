@@ -35,6 +35,7 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 import Projects from "layouts/masolution2/components/Projects";
 import OrdersOverview from "layouts/masolution2/components/OrdersOverview";
 import httpGet from "config";
+import MDButton from "components/MDButton";
 
 function Dashboard() {
   //  const { sales, tasks } = reportsLineChartData;
@@ -125,6 +126,11 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
               <Projects />
+              <MDBox mt={4.5}>
+                <MDButton variant="gradient" color="warning" fullWidth>
+                  주문 실행하기
+                </MDButton>
+              </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <OrdersOverview />

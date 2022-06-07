@@ -56,26 +56,31 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        <Grid container spacing={3}>
-          {strategy.map((value, index) => (
-            <Grid item xs={4} md={4} lg={12 / strategy.length}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color={color[index]}
-                  icon="weekend"
-                  count={value}
-                  title="국내외 238개 종목"
-                  solutionNum="2"
-                  percentage={{
-                    color: "success",
-                    amount: "+25%",
-                    label: "설정일 이후",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-          ))}
-        </Grid>
+        <MDButton variant="gradient" color="dark" fullWidth>
+          {sessionStorage.getItem("port1")}이 선택되었습니다.
+        </MDButton>
+        <MDBox mt={4.5}>
+          <Grid container spacing={3}>
+            {strategy.map((value, index) => (
+              <Grid item xs={4} md={4} lg={12 / strategy.length}>
+                <MDBox mb={1.5}>
+                  <ComplexStatisticsCard
+                    color={color[index]}
+                    icon="weekend"
+                    count={value}
+                    title="국내외 238개 종목"
+                    solutionNum="2"
+                    percentage={{
+                      color: "success",
+                      amount: "+25%",
+                      label: "설정일 이후",
+                    }}
+                  />
+                </MDBox>
+              </Grid>
+            ))}
+          </Grid>
+        </MDBox>
         <MDBox mt={4.5}>
           <Link onClick={() => click()} to={path}>
             <MDButton variant="gradient" color="warning" fullWidth>

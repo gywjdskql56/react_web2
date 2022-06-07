@@ -39,14 +39,9 @@ import React, { useState } from "react";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 
 import MDButton from "components/MDButton";
-import port1 from "assets/images/port_1.png";
-import port2 from "assets/images/port_2.png";
-import port3 from "assets/images/port_3.png";
-import port4 from "assets/images/port_4.png";
-import port5 from "assets/images/port_5.png";
 
 function Dashboard() {
-  const [port, setPort] = useState("변동성 알고리즘");
+  const [port, setPort] = useState("1");
   sessionStorage.setItem("selected1", false);
   sessionStorage.setItem("selected2", false);
   window.addEventListener("port1", () => {
@@ -56,19 +51,19 @@ function Dashboard() {
     console.log(localStorage.getItem("port"));
     let portnm = "미래변동성공격1";
     if (portfolio1 === "변동성") {
-      setPort(port1);
+      setPort("1");
       portnm = "미래변동성공격1";
     } else if (portfolio1 === "초개인로보") {
-      setPort(port2);
+      setPort("2");
       portnm = "미래초개인로보적극1";
     } else if (portfolio1 === "테마로테션") {
-      setPort(port3);
+      setPort("3");
       portnm = "미래테마로테션공격1";
     } else if (portfolio1 === "멀티에셋인컴") {
-      setPort(port4);
+      setPort("4");
       portnm = "미래멀티에셋인컴공1";
     } else if (portfolio1 === "AI 미국주식 투자") {
-      setPort(port5);
+      setPort("5");
       portnm = "미래에셋AI크로스알파";
     }
     localStorage.setItem("port", portnm);
@@ -146,7 +141,7 @@ function Dashboard() {
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={15} md={15} xl={12}>
-              <DefaultProjectCard image={port} label="" title="" description="" />
+              <DefaultProjectCard image={port} label="" title="" description="" size="large" />
             </Grid>
           </Grid>
         </MDBox>

@@ -28,6 +28,7 @@ function handleClick(title, solutionNum) {
     }
     localStorage.setItem("color", "salmon");
     console.log(sessionStorage.getItem("port1"));
+    window.dispatchEvent(new Event("port1"));
   } else if (solutionNum === "2") {
     sessionStorage.setItem("selected2", true);
     sessionStorage.setItem("port2", title);
