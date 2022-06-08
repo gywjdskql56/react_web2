@@ -42,7 +42,7 @@ function configs(labels, datasets) {
         },
       },
       interaction: {
-        intersect: false,
+        intersect: true,
         mode: "index",
       },
       scales: {
@@ -70,7 +70,7 @@ function configs(labels, datasets) {
         },
         x: {
           grid: {
-            drawBorder: false,
+            drawBorder: true,
             display: false,
             drawOnChartArea: false,
             drawTicks: false,

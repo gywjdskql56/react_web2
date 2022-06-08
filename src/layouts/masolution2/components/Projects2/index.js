@@ -77,7 +77,7 @@ function Projects() {
               done
             </Icon>
             <MDTypography variant="button" fontWeight="regular" color="text">
-              &nbsp;<strong>30 done</strong> this month
+              &nbsp;<strong>포트폴리오의 기간별 수익률입니다.</strong>
             </MDTypography>
           </MDBox>
         </MDBox>

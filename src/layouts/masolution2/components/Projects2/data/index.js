@@ -10,7 +10,11 @@ export default function data() {
 
   let rows = {};
   for (let i = 0; i < cols.length; i += 1) {
-    rows[cols[i]] = perReturns[cols[i]];
+    if (perReturns[cols[i]] !== "") {
+      rows[cols[i]] = Math.ceil(perReturns[cols[i]] * 1000) / 1000;
+    } else {
+      rows[cols[i]] = "-";
+    }
   }
   console.log(rows);
   rows = [rows];

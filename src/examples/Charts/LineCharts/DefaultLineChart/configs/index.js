@@ -28,7 +28,7 @@ function configs(labels, datasets) {
         },
       },
       interaction: {
-        intersect: false,
+        intersect: true,
         mode: "index",
       },
       scales: {
