@@ -32,18 +32,7 @@ import port5 from "assets/images/port_5.png";
 
 function DefaultProjectCard({ image, title }) {
   console.log("IMAGE IS ".concat(image));
-  let imagepath = "";
-  if (image === "1") {
-    imagepath = port1;
-  } else if (image === "2") {
-    imagepath = port2;
-  } else if (image === "3") {
-    imagepath = port3;
-  } else if (image === "4") {
-    imagepath = port4;
-  } else if (image === "5") {
-    imagepath = port5;
-  }
+  const strategy = httpGet("/strategy_explain")[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")];
 
   console.log("IMAGE IS".concat(imagepath));
   return (
