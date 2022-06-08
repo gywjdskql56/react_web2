@@ -34,6 +34,7 @@ import MAsolution2 from "layouts/masolution2";
 import { Routes, Link } from "react-router-dom";
 import MDButton from "components/MDButton";
 import httpGet from "config";
+import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 
 function Dashboard() {
   const [component, setComponent] = useState(MAsolution2);
@@ -44,6 +45,18 @@ function Dashboard() {
   const strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
   sessionStorage.setItem("strategy", strategy);
   console.log(strategy);
+  let imagepath = "";
+  if (image === "1") {
+    imagepath = "port1";
+  } else if (image === "2") {
+    imagepath = "port2";
+  } else if (image === "3") {
+    imagepath = "port3";
+  } else if (image === "4") {
+    imagepath = "port4";
+  } else if (image === "5") {
+    imagepath = "";
+  }
   function click() {
     console.log(sessionStorage.getItem("selected2"));
     if (sessionStorage.getItem("selected2") === "false") {
@@ -79,6 +92,13 @@ function Dashboard() {
                 </MDBox>
               </Grid>
             ))}
+          </Grid>
+        </MDBox>
+        <MDBox mt={4.5}>
+          <Grid container spacing={3}>
+            <Grid item xs={15} md={15} xl={12}>
+              <DefaultProjectCard image="" label="" title="" description="" size="large" />
+            </Grid>
           </Grid>
         </MDBox>
         <MDBox mt={4.5}>

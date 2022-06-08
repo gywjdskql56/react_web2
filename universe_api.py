@@ -11,6 +11,7 @@ CORS(app)
 def get_data(file_nm, skiprows=0, sheet_name =0):
     return pd.read_excel('data/'+file_nm, index_col=0 , skiprows=skiprows, sheet_name=sheet_name)
 
+@app.route('/returns/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
 @app.route('/returns/<port1>_<port2>', methods = ['GET','POST'])
 def returns(port1, port2):
     returns = get_data('RATB_성과표_18차추가.xlsx', sheet_name='그래프(영업일)', skiprows=1)
@@ -29,6 +30,24 @@ def strategy():
         '멀티에셋인컴': [ '적극','중립','안정']
     }
 
+@app.route('/strategy_explain/', methods=['GET', 'POST'], defaults={"port1": "변동성","port2": "공격" })
+@app.route('/strategy_explain/<port1>_<port2>', methods=['GET', 'POST'])
+def strategy():
+    return {
+        '변동성': {'공격':'(고위험) 선택된 국내 상장 주식형 ETF에 대하여 시장 상황 및 주가 수준 등을 감안하여 최소 비중 0%에서 최대 비중 100% 내에서 중위험 중수익의 안정적인 수익 추구하되 위험자산의 비중을 상대적으로 높게 유지하며 투자자의 위험 성향에 대응 \n 위험자산 편입 한도 : 100%',
+                 '위험중립':'(중위험) 선택된 국내 상장 주식형 ETF에 대하여 시장 상황 및 주가 수준 등을 감안하여 최소 비중 0%에서 최대 비중 80% 내에서 중위험 중수익의 안정적인 수익 추구하되 위험자산의 비중을 안정적으로 유지하며 투자자의 위험 성향에 대응 \n 위험자산 편입 한도 : 80%',
+                 '안정': '(저위험) 선택된 국내 상장 주식형 ETF에 대하여 시장 상황 및 주가 수준 등을 감안하여 최소 비중 0%에서 최대 비중 60% 내에서 중위험 중수익의 안정적인 수익 추구하되 위험자산의 비중을 상대적으로 낮게 유지하며 투자자의 위험 성향에 대응 \n 위험자산 편입 한도 : 60%'},
+        '초개인로보': {'적극':'(고위험) 적극적으로 위험을 수용하면서 적극적으로 투자수익 추구 \n  위험자산군의 비중을 92% +/- alpha (67% - 100%) 내에서 운용',
+                  '성장':'(중위험) 위험에 다소 민감하나 꾸준한 투자기회 노출 추구 \n  위험자산군의 비중을 70% +/- alpha (45% - 90%) 내에서 운용',
+                  '안정':'(저위험) 위험에 민감하며 이로 인한 투자 기회 상실 감내 \n  위험자산군의 비중을 52% +/- alpha (27% - 72%) 내에서 운용'},
+        '테마로테션': {'적극': '(다소 높은 위험) 투자자산의 80% 이하를 위험자산(해외 주식 ETF)에 투자하고 나머지를 안전자산(해외채권 ETF, 외화/원화 예수금)에 투자',
+                  '중립': '(보통 위험) 투자자산의 50% 이하를 위험자산(해외 주식 ETF)에 투자하고 나머지를 안전자산(해외채권 ETF, 외화/원화 예수금)에 투자',
+                  '안정': '(매우 낮은 위험) 투자자산의 10% 이하를 위험자산(해외 주식 ETF)에 투자하고 나머지를 안전자산(해외채권 ETF, 외화/원화 예수금)에 투자'},
+        '멀티에셋인컴': {'적극': '(매우 높은 위험) 투자자산의 100% 이하를 위험자산(배당주 ETF/ 리츠 ETF/ 전환사채 ETF/ 우선주 ETF)에 투자 ' ,
+                  '중립': '(다소 높은 위험) 투자자산의 80% 이하를 위험자산에 투자',
+                  '안정': '(보통 위험) 투자자산의 50% 이하를 위험자산에 투자'}
+    }
+
 @app.route('/universe', methods = ['GET','POST'])
 def index():
     universe = get_data(file_nm='변동성_20220513.xlsx',skiprows=2)
@@ -38,7 +57,7 @@ def index():
     data = {'date':universe['종목명'].tolist(), 'price':universe['구성비_x000D_\n(%)'].tolist(), 'returns': universe['수익율_x000D_\n(%)'].tolist()}
     return data
 
-@app.route('/universes/', methods = ['GET','POST'], defaults={"port": "미래변동성공격1"})
+@app.route('/universes/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
 @app.route('/universes/<port1>_<port2>', methods = ['GET','POST'])
 def universe(port1, port2):
     if port1 == "변동성":
@@ -71,7 +90,7 @@ def universe(port1, port2):
 
 @app.route('/', methods = ['GET','POST'])
 def main():
-    return 'hello'
+    return 'flask is working'
 
 if __name__ == '__main__':
     # get_data(file_nm='변동성_20220513.xlsx')
