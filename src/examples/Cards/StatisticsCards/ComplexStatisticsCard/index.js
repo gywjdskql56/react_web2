@@ -34,6 +34,8 @@ function handleClick(title, solutionNum) {
     sessionStorage.setItem("port2", title);
     localStorage.setItem("color", "salmon");
     console.log(sessionStorage.getItem("port2"));
+    window.dispatchEvent(new Event("port2"));
+    //    const strategyEx = sessionStorage.getItem("strategy_explain")[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")];
   } else {
     localStorage.setItem("color", "");
   }

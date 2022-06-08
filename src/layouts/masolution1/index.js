@@ -28,7 +28,7 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 // Data
 
 // Dashboard components
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MAsolution1 from "layouts/masolution1";
 import MAsolution2 from "layouts/masolution2";
 import { Routes, Link } from "react-router-dom";
@@ -36,27 +36,30 @@ import MDButton from "components/MDButton";
 import httpGet from "config";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 
+const strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
+sessionStorage.setItem("strategy", strategy);
+
 function Dashboard() {
+  const strategyEx = httpGet("/strategy_explain");
+  sessionStorage.setItem("strategy_explain", strategyEx);
   const [component, setComponent] = useState(MAsolution2);
   const [path, setPath] = useState("/masolution2");
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
   sessionStorage.setItem("selected2", false);
   console.log("strategy is ".concat(sessionStorage.getItem("port2")));
+  console.log(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")]);
   const color = ["error", "warning", "success", "info"];
-  const strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
-  sessionStorage.setItem("strategy", strategy);
   console.log(strategy);
-  let imagepath = "";
-  if (image === "1") {
-    imagepath = "port1";
-  } else if (image === "2") {
-    imagepath = "port2";
-  } else if (image === "3") {
-    imagepath = "port3";
-  } else if (image === "4") {
-    imagepath = "port4";
-  } else if (image === "5") {
-    imagepath = "";
-  }
+  useEffect(() => {
+    setTitle(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")].title);
+    setDesc(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")].desc);
+  }, []);
+  window.addEventListener("port2", () => {
+    setTitle(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")].title);
+    setDesc(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")].desc);
+  });
+
   function click() {
     console.log(sessionStorage.getItem("selected2"));
     if (sessionStorage.getItem("selected2") === "false") {
@@ -97,12 +100,19 @@ function Dashboard() {
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={15} md={15} xl={12}>
-              <DefaultProjectCard image="" label="" title="" description="" size="large" />
+              <DefaultProjectCard
+                image=""
+                label=""
+                title={title}
+                description={desc}
+                size="large"
+                component="text"
+              />
             </Grid>
           </Grid>
         </MDBox>
         <MDBox mt={4.5}>
-          <Link onClick={() => click()} to={path}>
+          <Link onClick={() => click} to={path}>
             <MDButton variant="gradient" color="warning" fullWidth>
               NEXT
             </MDButton>

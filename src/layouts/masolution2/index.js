@@ -33,6 +33,7 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 
 // Dashboard components
 import Projects from "layouts/masolution2/components/Projects";
+import Projects2 from "layouts/masolution2/components/Projects2";
 import OrdersOverview from "layouts/masolution2/components/OrdersOverview";
 import httpGet from "config";
 import MDButton from "components/MDButton";
@@ -51,7 +52,8 @@ function Dashboard() {
   };
   console.log(sessionStorage.getItem("port1"));
   console.log(sessionStorage.getItem("port2"));
-  console.log(returns);
+  console.log(returns.returns[returns.returns.length - 1]);
+  console.log(returns.returns.at(-1));
 
   return (
     <DashboardLayout>
@@ -66,7 +68,7 @@ function Dashboard() {
                   title="수익률"
                   description={
                     <>
-                      2달간의 백테스트 수익률은 <strong>+15%</strong> 입니다.
+                      전 기간 백테스트 수익률은 <strong>{returns.returns.at(-1)}%</strong> 입니다.
                     </>
                   }
                   date="updated 4 min ago"
@@ -123,19 +125,28 @@ function Dashboard() {
               </MDBox>
             </Grid>
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
-              <MDBox mt={4.5}>
-                <MDButton variant="gradient" color="warning" fullWidth>
-                  주문 실행하기
-                </MDButton>
-              </MDBox>
+          <MDBox mt={4.5}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={12} lg={12}>
+                <Projects2 />
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
+          </MDBox>
+          <MDBox mt={4.5}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6} lg={8}>
+                <Projects />
+                <MDBox mt={4.5}>
+                  <MDButton variant="gradient" color="warning" fullWidth>
+                    주문 실행하기
+                  </MDButton>
+                </MDBox>
+              </Grid>
+              <Grid item xs={12} md={6} lg={4}>
+                <OrdersOverview />
+              </Grid>
             </Grid>
-          </Grid>
+          </MDBox>
         </MDBox>
       </MDBox>
       <Footer />

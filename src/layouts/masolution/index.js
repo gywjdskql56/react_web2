@@ -35,7 +35,6 @@ import { Routes, Link } from "react-router-dom";
 // import Projects from "layouts/masolution/components/Projects";
 // import OrdersOverview from "layouts/masolution/components/OrdersOverview";
 import React, { useState } from "react";
-
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 
 import MDButton from "components/MDButton";
@@ -44,11 +43,12 @@ function Dashboard() {
   const [port, setPort] = useState("1");
   sessionStorage.setItem("selected1", false);
   sessionStorage.setItem("selected2", false);
+
   window.addEventListener("port1", () => {
     const portfolio1 = sessionStorage.getItem("port1");
     console.log("change to local storage!");
     //    setPort(localStorage.getItem("port"));
-    console.log(localStorage.getItem("port"));
+    //    console.log(localStorage.getItem("port"));
     let portnm = "미래변동성공격1";
     if (portfolio1 === "변동성") {
       setPort("1");

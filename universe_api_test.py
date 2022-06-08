@@ -38,5 +38,6 @@ def main():
 
 if __name__ == '__main__':
     get_data(file_nm='변동성_20220513.xlsx')
+    print(1)
     # app.run(debug=True, host='localhost', port=4000)
 

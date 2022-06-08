@@ -8,8 +8,8 @@ import numpy as np
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 CORS(app)
-def get_data(file_nm, skiprows=0, sheet_name =0):
-    return pd.read_excel('data/'+file_nm, index_col=0 , skiprows=skiprows, sheet_name=sheet_name)
+def get_data(file_nm, skiprows=0, sheet_name =0, index_col=0):
+    return pd.read_excel('data/'+file_nm, index_col=index_col , skiprows=skiprows, sheet_name=sheet_name)
 
 @app.route('/returns/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
 @app.route('/returns/<port1>_<port2>', methods = ['GET','POST'])
@@ -19,6 +19,26 @@ def returns(port1, port2):
         port2 = port2[0]
     returns = returns[port1+port2+'2'].dropna().drop_duplicates()
     return {"returns": list(map(lambda x: 100*x,returns.values.tolist())), "date":list(map(lambda x : x.strftime('%y/%m/%d'),returns.index.tolist())), "std": int(np.std(returns.values)*10000)/10000}
+
+@app.route('/period_returns/<port1>_<port2>', methods = ['GET','POST'])
+def period_returns(port1, port2):
+    data = get_data("RATB_성과표_18차추가.xlsx", sheet_name="성과(요약)", skiprows=2, index_col=1)
+    col_list = ['1D', '1W', '2W', '1M', '2M', '3M', '6M', '1Y', 'MTD', 'YTD', 'ITD']
+    data = data[col_list]
+    data.index = list(map(lambda x: str(x).replace('2', ''), data.index))
+    data = data.fillna("")
+    mapping_dict = {
+        '테마로테션적극' : '테마로테션공격',
+        '테마로테션중립' : '테마로테션적극',
+        '테마로테션안정' : '테마로테션중립',
+        '멀티에셋인컴적극' : '멀티에셋인컴공',
+        '멀티에셋인컴중립' : '멀티에셋인컴적',
+        '멀티에셋인컴안정' : '멀티에셋인컴중',
+    }
+    if port1+port2 in mapping_dict.keys():
+        return data.loc[mapping_dict[port1 + port2]].to_dict()
+    else:
+        return data.loc[port1+port2].to_dict()
 
 
 @app.route('/strategy/', methods=['GET', 'POST'])
