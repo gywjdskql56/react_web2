@@ -26,7 +26,7 @@ def period_returns(port1, port2):
     col_list = ['1D', '1W', '2W', '1M', '2M', '3M', '6M', '1Y', 'MTD', 'YTD', 'ITD']
     data = data[col_list]
     data.index = list(map(lambda x: str(x).replace('2', ''), data.index))
-    data = data.fillna(0).apply(lambda x: int(x*100)/100 if x!=0 else "")
+    data = data.fillna("")
     mapping_dict = {
         '테마로테션적극' : '테마로테션공격',
         '테마로테션중립' : '테마로테션적극',
