@@ -36,16 +36,16 @@ import MDButton from "components/MDButton";
 import httpGet from "config";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 
-const strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
-sessionStorage.setItem("strategy", strategy);
-
 function Dashboard() {
+  const strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
   const strategyEx = httpGet("/strategy_explain");
   sessionStorage.setItem("strategy_explain", strategyEx);
   const [component, setComponent] = useState(MAsolution2);
   const [path, setPath] = useState("/masolution2");
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  //  sessionStorage.setItem("strategy", strategy[sessionStorage.getItem("port1")]);
+  //  const [strategy, setStrategy] = useState(strategy[sessionStorage.getItem("port1")]);
   sessionStorage.setItem("selected2", false);
   console.log("strategy is ".concat(sessionStorage.getItem("port2")));
   console.log(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")]);
