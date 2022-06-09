@@ -11,7 +11,7 @@ export default function data() {
   console.log(universe.ticker.lengths);
 
   const rows = [];
-  for (let i = 0; i < 5; i += 1) {
+  for (let i = 0; i < universe.percent.length; i += 1) {
     rows[i] = {
       tickers: universe.ticker[i],
       ratio: universe.percent[i],
