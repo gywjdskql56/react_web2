@@ -28,9 +28,6 @@ def period_returns(port1, port2):
     data.index = list(map(lambda x: str(x).replace('2', ''), data.index))
     data = data.fillna("")
     mapping_dict = {
-        '변동성적극': '변동성공격',
-        '변동성중립': '변동성위험중립',
-        '변동성위험중립': '변동성위험중립',
         '테마로테션적극' : '테마로테션공격',
         '테마로테션중립' : '테마로테션적극',
         '테마로테션안정' : '테마로테션중립',
@@ -47,7 +44,7 @@ def period_returns(port1, port2):
 @app.route('/strategy/', methods=['GET', 'POST'])
 def strategy():
     return {
-        '변동성': ['적극', '중립', '안정'],
+        '변동성': ['공격', '위험중립', '안정'],
         '초개인로보': ['적극','성장', '안정'],
         '테마로테션':[ '적극','중립','안정'],
         '멀티에셋인컴': [ '적극','중립','안정']
@@ -94,7 +91,13 @@ def index():
 @app.route('/universes/<port1>_<port2>', methods = ['GET','POST'])
 def universe(port1, port2):
     if port1 == "변동성":
-        port = "미래"+port1+port2+"2"
+        mapping = {'공격': '적극',
+        '위험중립': '중립',}
+        if port2 in mapping.keys():
+            port2 = "미래" + port1 + mapping(port2) + "2"
+        else:
+            port2 = "미래"+port1+port2+"2"
+
         universe = get_data(file_nm='변동성_20220513.xlsx',sheet_name="MP내역({})".format(port2))
         universe = universe[['종목명', '비중']].dropna()
         # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ", '').replace("%", '')))
