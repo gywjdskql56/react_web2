@@ -18,7 +18,7 @@ def returns(port1, port2):
     if port1=='멀티에셋인컴':
         port2 = port2[0]
     returns = returns[port1+port2+'2'].dropna().drop_duplicates()
-    return {"returns": list(map(lambda x: 100*x,returns.values.tolist())), "date":list(map(lambda x : x.strftime('%y/%m/%d'),returns.index.tolist())), "std": int(np.std(returns.values)*10000)/10000}
+    return {"returns": list(map(lambda x: int(10000*x)/100,returns.values.tolist())), "date":list(map(lambda x : x.strftime('%y/%m/%d'),returns.index.tolist())), "std": int(np.std(returns.values)*10000)/10000}
 
 @app.route('/period_returns/<port1>_<port2>', methods = ['GET','POST'])
 def period_returns(port1, port2):
@@ -98,14 +98,14 @@ def universe(port1, port2):
         universe = get_data(file_nm='변동성_20220513.xlsx',sheet_name="MP내역({})".format(port2))
         universe = universe[['종목명', '비중']].dropna()
         # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ", '').replace("%", '')))
-        universe = universe.sort_values(by='비중')
+        universe = universe.sort_values(by='비중', reverse=True)
         data = {'ticker':universe['종목명'].tolist(),'percent':list(map(lambda x:int(10000*x)/100,universe['비중'].tolist())), 'returns': ["" for i in range(len(universe['종목명'].tolist()))], 'port':port1+port2}
     elif port1 == "멀티에셋인컴":
         universe = get_data(file_nm='(멀티에셋인컴)21.(자문일임)리밸런싱 발생내역_미래에셋자산운용_20220303(수정).xlsx', sheet_name="MP내역({})".format(port2))
         universe = universe[universe.index == '2022-02-28']
         universe = universe[['종목명', '비중']].dropna()
         # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ",'').replace("%",'')))
-        universe = universe.sort_values(by='비중')
+        universe = universe.sort_values(by='비중', reverse=True)
         data = {'ticker':universe['종목명'].tolist(),'percent':list(map(lambda x:int(10000*x)/100,universe['비중'].tolist())), 'returns': ["" for i in range(len(universe['종목명'].tolist()))], 'port':port1+port2}
     elif port1 == "테마로테션":
         universe = get_data(file_nm='수정본_(테마로테이션)21.(자문일임)포트폴리오 리밸런싱 현황_미래에셋자산운용_202203_vFV3.xlsx',
@@ -113,7 +113,7 @@ def universe(port1, port2):
         universe = universe[universe.index == '2022-03-03']
         universe = universe[['종목명', '비중']].dropna()
         # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ", '').replace("%", '')))
-        universe = universe.sort_values(by='비중')
+        universe = universe.sort_values(by='비중', reverse=True)
         data = {'ticker': universe['종목명'].tolist(), 'percent': list(map(lambda x:int(10000*x)/100,universe['비중'].tolist())),
                 'returns': ["" for i in range(len(universe['종목명'].tolist()))], 'port': port1 + port2}
     elif port1 == "초개인로보":
@@ -122,7 +122,7 @@ def universe(port1, port2):
         universe = universe[universe.index == '2021-11-01']
         universe = universe[['종목명', '비중']].dropna()
         # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ", '').replace("%", '')))
-        universe = universe.sort_values(by='비중')
+        universe = universe.sort_values(by='비중', reverse=True)
         data = {'ticker': universe['종목명'].tolist(), 'percent': list(map(lambda x:int(10000*x)/100,universe['비중'].tolist())),
                 'returns': ["" for i in range(len(universe['종목명'].tolist()))], 'port': port1 + port2}
     return data
