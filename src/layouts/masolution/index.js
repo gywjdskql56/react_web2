@@ -27,6 +27,7 @@ import Footer from "examples/Footer";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import MAsolution1 from "layouts/masolution1";
 import { Routes, Link } from "react-router-dom";
+
 // Data
 // import reportsBarChartData from "layouts/masolution/data/reportsBarChartData";
 // import reportsLineChartData from "layouts/masolution/data/reportsLineChartData";

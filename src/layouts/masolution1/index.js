@@ -37,7 +37,7 @@ import httpGet from "config";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 
 function Dashboard() {
-  const strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
+  let strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
   const strategyEx = httpGet("/strategy_explain");
   sessionStorage.setItem("strategy_explain", strategyEx);
   const [component, setComponent] = useState(MAsolution2);
@@ -54,10 +54,12 @@ function Dashboard() {
   useEffect(() => {
     setTitle(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")].title);
     setDesc(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")].desc);
+    strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
   }, []);
   window.addEventListener("port2", () => {
     setTitle(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")].title);
     setDesc(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")].desc);
+    strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
   });
 
   function click() {
