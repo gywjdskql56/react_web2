@@ -94,10 +94,7 @@ def universe(port1, port2):
         mapping = {'공격': '적극',
         '위험중립': '중립',}
         if port2 in mapping.keys():
-            port2 = "미래" + port1 + port2 + "2"
-            # port2 = "미래" + port1 + mapping[port2] + "2"
-        else:
-            port2 = "미래"+port1+port2+"2"
+            port2 =  mapping[port2]
 
         universe = get_data(file_nm='변동성_20220513.xlsx',sheet_name="MP내역({})".format(port2))
         universe = universe[['종목명', '비중']].dropna()
