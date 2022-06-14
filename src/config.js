@@ -1,6 +1,6 @@
 global.XMLHttpRequest = require("xhr2");
 
-const url = "http://13.209.68.205:5000";
+const url = "http://13.125.19.13:5000";
 export default function httpGet(theURL) {
   const xmlHttp = new XMLHttpRequest();
   console.log(url.concat(theURL));
