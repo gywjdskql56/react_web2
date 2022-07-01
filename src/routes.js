@@ -33,30 +33,6 @@ const routes = [
     route: "/masolution",
     component: <MAsolution />,
   },
-//  {
-//    type: "collapse",
-//    name: "유형 선택",
-//    key: "masolution1",
-//    icon: <Icon fontSize="small">dashboard</Icon>,
-//    route: "/masolution1",
-//    component: <MAsolution1 />,
-//  },
-//  {
-//    type: "collapse",
-//    name: "포트폴리오 현황",
-//    key: "masolution2",
-//    icon: <Icon fontSize="small">dashboard</Icon>,
-//    route: "/masolution2",
-//    component: <MAsolution2 />,
-//  },
-//  {
-//    type: "collapse",
-//    name: "스크리닝",
-//    key: "screening",
-//    icon: <Icon fontSize="small">dashboard</Icon>,
-//    route: "/screeening",
-//    component: <Screening />,
-//  },
   {
     type: "collapse",
     name: "Direct Indexing 솔루션",
@@ -71,14 +47,6 @@ const routes = [
     route: "/tlh_solution",
     component: <TLHsolution />,
   },
-//  {
-//    type: "collapse",
-//    name: "TLH 솔루션2",
-//    key: "tlh_solution2",
-//    icon: <Icon fontSize="small">dashboard</Icon>,
-//    route: "/tlh_solution2",
-//    component: <TLHsolution2 />,
-//  },
 ];
 
 export default routes;
