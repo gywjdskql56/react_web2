@@ -1,10 +1,10 @@
 import Home from "layouts/home";
 import MAsolution from "layouts/masolution";
-// import MAsolution1 from "layouts/masolution1";
-// import MAsolution2 from "layouts/masolution2";
-// import Screening from "layouts/screening";
+import MAsolution1 from "layouts/masolution1";
+import MAsolution2 from "layouts/masolution2";
+import Screening from "layouts/screening";
 import TLHsolution from "layouts/tlh_solution";
-// import TLHsolution2 from "layouts/tlh_solution2";
+import TLHsolution2 from "layouts/tlh_solution2";
 // import Tables from "layouts/tables";
 // import Billing from "layouts/billing";
 // import RTL from "layouts/rtl";
@@ -35,6 +35,30 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "  -- 유형 선택",
+    key: "masolution1",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/masolution1",
+    component: <MAsolution1 />,
+  },
+  {
+    type: "collapse",
+    name: "  --포트폴리오 현황",
+    key: "masolution2",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/masolution2",
+    component: <MAsolution2 />,
+  },
+  {
+    type: "collapse",
+    name: "  --스크리닝",
+    key: "screening",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/screeening",
+    component: <Screening />,
+  },
+  {
+    type: "collapse",
     name: "Direct Indexing 솔루션",
     icon: <Icon fontSize="small">dashboard</Icon>,
     href: "https://jkw5779.shinyapps.io/direct_indexing_green",
@@ -46,6 +70,14 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/tlh_solution",
     component: <TLHsolution />,
+  },
+  {
+    type: "collapse",
+    name: "  --TLH 솔루션2",
+    key: "tlh_solution2",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/tlh_solution2",
+    component: <TLHsolution2 />,
   },
 ];
 
