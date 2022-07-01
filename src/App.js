@@ -118,6 +118,9 @@ export default function App() {
       if (route.route) {
         return <Route exact path={route.route} element={route.component} key={route.key} />;
       }
+      if (route.href) {
+        return <Route exact href={route.href} key={route.key} />;
+      }
 
       return null;
     });

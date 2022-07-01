@@ -1,5 +1,5 @@
 import os
-
+import math
 import pandas as pd
 from flask import Flask
 from flask_cors import CORS
@@ -8,6 +8,7 @@ import numpy as np
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 CORS(app)
+
 def get_data(file_nm, skiprows=0, sheet_name =0, index_col=0):
     return pd.read_excel('data/'+file_nm, index_col=index_col , skiprows=skiprows, sheet_name=sheet_name)
 
@@ -132,7 +133,26 @@ def universe(port1, port2):
 def main():
     return 'flask is working'
 
+@app.route('/tlh_solution', methods = ['GET','POST'])
+def TLH():
+    data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과.xlsx',sheet_name='차트')
+    # data_1 = data[['연도', '날짜', 'USDKRW', 'TLH 포트\n($)', 'QQQ ETF\n($)']]
+    data_1 = data[['날짜1','QQQ 평가 금액','TLH 평가 금액']]
+    data_1['날짜1'] = data_1['날짜1'].apply(lambda x: x.strftime('%Y-%m-%d'))
+    data_1 = data_1.reset_index()
+    data_1['tf'] = data_1.index.map(lambda x: x%20==0)
+    data_1 = data_1[data_1['tf']==True]
+
+    data_2 = data[['날짜2','TLH 전략','QQQ 바이홀드 전략']]
+    data_2['날짜2'] = data_2['날짜2'].apply(lambda x: x.strftime('%Y-%m-%d'))
+    data_2 = data_2.reset_index()
+    data_2['tf'] = data_2.index.map(lambda x: x % 20 == 0)
+    data_2 = data_2[data_2['tf'] == True]
+
+    return {'평가금액': {'date': data_1['날짜1'].tolist(), 'QQQ 평가 금액': list(map(lambda x: x/10000000, data_1['QQQ 평가 금액'].tolist())), 'TLH 평가금액': list(map(lambda x: x/10000000,data_1['TLH 평가 금액'].tolist()))} ,
+            '전략': {'date': data_2['날짜2'].tolist(),  'TLH 전략': list(map(lambda x: x,data_2['TLH 전략'].tolist())), 'QQQ 바이홀드 전략': list(map(lambda x: x/10000000,data_2['QQQ 바이홀드 전략'].tolist()))}, 'returns':round((data_2['TLH 전략'].iloc[-1]-data_2['TLH 전략'].iloc[0])/data_2['TLH 전략'].iloc[0]*10000)/100,
+            'cagr': round(((data_2['TLH 전략'].iloc[-1]/data_2['TLH 전략'].iloc[0])**(1/10)-1)*10000)/100}
+
 if __name__ == '__main__':
     # get_data(file_nm='변동성_20220513.xlsx')
     app.run(debug=True, host='0.0.0.0', port=5000)
-

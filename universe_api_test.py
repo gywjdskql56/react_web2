@@ -35,9 +35,18 @@ def universe(port):
 # @app.route('/', methods = ['GET','POST'])
 def main():
     return 'hello'
-
+def cal_thl(start_money, ):
+    pass
 if __name__ == '__main__':
-    get_data(file_nm='변동성_20220513.xlsx')
+    data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과.xlsx',sheet_name='차트')
+    # data_1 = data[['연도', '날짜', 'USDKRW', 'TLH 포트\n($)', 'QQQ ETF\n($)']]
+    data_1 = data[['날짜1','QQQ 평가 금액','TLH 평가 금액']]
+    data_1['날짜1'] = data_1['날짜1'].apply(lambda x: x.strftime('%Y-%m-%d'))
+
+    data_2 = data[['날짜2','TLH 전략','QQQ 바이홀드 전략']]
+    data_2['날짜2'] = data_2['날짜2'].apply(lambda x: x.strftime('%Y-%m-%d'))
+    result= {'date': data_1['날짜1'].tolist(), 'QQQ 평가 금액': data_1['QQQ 평가 금액'].tolist(), 'TLH 평가금액': data_1['TLH 평가 금액'].tolist()}
+    result2 = {'date': data_2['날짜2'].tolist(),  'TLH 전략': data_2['TLH 전략'].tolist(), 'QQQ 바이홀드 전략': data_2['QQQ 바이홀드 전략'].tolist()}
     print(1)
-    # app.run(debug=True, host='localhost', port=4000)
+
 
