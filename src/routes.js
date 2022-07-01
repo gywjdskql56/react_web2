@@ -1,10 +1,10 @@
 import Home from "layouts/home";
 import MAsolution from "layouts/masolution";
-import MAsolution1 from "layouts/masolution1";
-import MAsolution2 from "layouts/masolution2";
-import Screening from "layouts/screening";
+// import MAsolution1 from "layouts/masolution1";
+// import MAsolution2 from "layouts/masolution2";
+// import Screening from "layouts/screening";
 import TLHsolution from "layouts/tlh_solution";
-import TLHsolution2 from "layouts/tlh_solution2";
+// import TLHsolution2 from "layouts/tlh_solution2";
 // import Tables from "layouts/tables";
 // import Billing from "layouts/billing";
 // import RTL from "layouts/rtl";
