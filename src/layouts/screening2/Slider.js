@@ -24,9 +24,10 @@ export default function SliderARIA(props) {
             step={STEP}
             min={MIN}
             max={MAX}
-            onChange={(values) => setState({ values: values })}
+            onChange={(values) => {setState({ values }); console.log(values);}}
             renderTrack={({ propss, children }) => (
               <div
+                aria-hidden="true"
                 onMouseDown={propss.onMouseDown}
                 onTouchStart={propss.onTouchStart}
                 style={{

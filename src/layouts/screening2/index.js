@@ -27,21 +27,12 @@ import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 // Data
 
 // Dashboard components
-import React, { useState } from "react";
-
-import MDSnackbar from "components/MDSnackbar";
+import React from "react";
 import MDButton from "components/MDButton";
 import Slider1 from './Slider';
 
 function Dashboard() {
-  const [warningSB, setWarningSB] = useState(false);
-  const closeWarningSB = () => setWarningSB(false);
-  const animatedComponents = makeAnimated();
 
-  function openWarningSB() {
-    console.log("on click!");
-    window.location.href = "layouts/masolution2";
-  }
   return (
     <DashboardLayout>
       <DashboardNavbar />
