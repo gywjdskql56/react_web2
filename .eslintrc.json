@@ -13,14 +13,13 @@
   },
   "plugins": ["react", "prettier"],
   "rules": {
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "auto"
-      }
-    ],
+    "react/prop-types": "off",
+    "no-static-element-interactions": "off",
+    "react/destructuring-assignment": "off",
+    "prettier/prettier": "off",
     "default-param-last": "off",
     "react/react-in-jsx-scope": "off",
+    "react/state-in-constructor": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/jsx-props-no-spreading": [
       1,

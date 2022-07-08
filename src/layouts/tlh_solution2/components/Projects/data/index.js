@@ -1,30 +1,26 @@
 import httpGet from "config";
 
 export default function data() {
-  const universe = httpGet(
-    "/universes/".concat(sessionStorage.getItem("port1"), "_", sessionStorage.getItem("port2"))
-  );
-  console.log(sessionStorage.getItem("port1"));
-  console.log(Object.keys(universe));
-  console.log(typeof universe);
-  console.log(universe.ticker);
-  console.log(universe.ticker.lengths);
+  const tlh = httpGet("/tlh_table");
+  console.log(tlh);
+  console.log(tlh.no_tlh);
+  console.log(tlh.with_tlh);
 
   const rows = [];
-  for (let i = 0; i < universe.percent.length; i += 1) {
+  for (let i = 0; i < tlh.no_tlh.length; i += 1) {
     rows[i] = {
-      tickers: universe.ticker[i],
-      ratio: universe.percent[i],
-      returns: universe.returns[i],
+      col: tlh.col[i],
+      with_tlh: tlh.with_tlh[i],
+      no_tlh: tlh.no_tlh[i],
     };
   }
   console.log(rows);
 
   return {
     columns: [
-      { Header: "Tickers", accessor: "tickers", width: "45%", align: "left" },
-      { Header: "Ratio", accessor: "ratio", width: "10%", align: "left" },
-      { Header: "Return", accessor: "returns", align: "center" },
+      { Header: "", accessor: "col", width: "30%", align: "left" },
+      { Header: "TLH 적용", accessor: "with_tlh", width: "40%", align: "left" },
+      { Header: "TLH 미적용", accessor: "no_tlh", align: "center" },
     ],
     rows,
   };

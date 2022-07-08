@@ -152,7 +152,14 @@ def TLH():
     return {'평가금액': {'date': data_1['날짜1'].tolist(), 'QQQ 평가 금액': list(map(lambda x: x/10000000, data_1['QQQ 평가 금액'].tolist())), 'TLH 평가금액': list(map(lambda x: x/10000000,data_1['TLH 평가 금액'].tolist()))} ,
             '전략': {'date': data_2['날짜2'].tolist(),  'TLH 전략': list(map(lambda x: x,data_2['TLH 전략'].tolist())), 'QQQ 바이홀드 전략': list(map(lambda x: x/10000000,data_2['QQQ 바이홀드 전략'].tolist()))}, 'returns':round((data_2['TLH 전략'].iloc[-1]-data_2['TLH 전략'].iloc[0])/data_2['TLH 전략'].iloc[0]*10000)/100,
             'cagr': round(((data_2['TLH 전략'].iloc[-1]/data_2['TLH 전략'].iloc[0])**(1/10)-1)*10000)/100}
-
+@app.route('/tlh_table', methods = ['GET','POST'])
+def TLH_Table():
+    data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_NASDAQ100.xlsx', sheet_name='시뮬레이션').reset_index()
+    return {
+        'col': data.loc[[28, 30, 33, 35, 37, 39], '기본공제\n대비'].tolist(),
+        'with_tlh': list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], '기본공제\n대비.1'].tolist())),
+        'no_tlh': list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], 'QQQ\n실현 수익'].tolist()))
+    }
 if __name__ == '__main__':
     # get_data(file_nm='변동성_20220513.xlsx')
     app.run(debug=True, host='0.0.0.0', port=5000)

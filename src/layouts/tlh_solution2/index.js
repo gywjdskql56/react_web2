@@ -11,7 +11,7 @@ import Footer from "examples/Footer";
 // import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
-
+import Projects from "layouts/tlh_solution2/components/Projects";
 // Data
 // import reportsBarChartData from "layouts/masolution2/data/reportsBarChartData";
 // import reportsLineChartData from "layouts/masolution2/data/reportsLineChartData";
@@ -103,6 +103,13 @@ function Dashboard() {
               </MDBox>
             </Grid>
           </Grid>
+          <MDBox mt={4.5}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={12} lg={12}>
+                <Projects />
+              </Grid>
+            </Grid>
+          </MDBox>
           <MDBox mt={4.5}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={6} lg={12}>

@@ -53,17 +53,22 @@ function Dashboard() {
     />
   );
   const options1 = [
-    { value: "GLOBAL", label: "GLOBAL" },
-    { value: "US", label: "US" },
-    { value: "KOREA", label: "KR" },
-    { value: "JAPAN", label: "JP" },
+    { value: "GLOBAL", label: "글로벌 전체" },
+    { value: "US", label: "미국" },
+    { value: "KOREA", label: "한국" },
+    { value: "JAPAN", label: "일본" },
   ];
   const options2 = [
-    { value: "Energe", label: "Energe" },
-    { value: "IT", label: "IT" },
-    { value: "Commodity", label: "Commodity" },
-    { value: "Semiconductor", label: "Semiconductor" },
-    { value: "Entertainment", label: "Entertainment" },
+    { value: "배당", label: "스타일 투자 - 배당주" },
+    { value: "성장", label: "스타일 투자 - 성장주" },
+    { value: "퀄리티", label: "스타일 투자 - 퀄리티" },
+    { value: "로우볼", label: "스타일 투자 - 로우볼" },
+    { value: "모멘텀", label: "스타일 투자 - 모멘텀" },
+    { value: "탄소중립", label: "테마 투자 - 탄소중립" },
+    { value: "로보틱스", label: "테마 투자 - 로보틱스" },
+    { value: "클라우드", label: "테마 투자 - 클라우드" },
+    { value: "인프라", label: "테마 투자 - 인프라" },
+    { value: "혼합 자산", label: "테마 투자 - 혼합 자산" },
   ];
   const options3 = [
     { value: "변동성 20% 이내", label: "변동성 20% 이내" },
@@ -98,7 +103,7 @@ function Dashboard() {
         <MDBox mt={4.5}>
           <Grid item xs={2} md={2} lg={2}>
             <MDBox mb={1}>
-              <ComplexStatisticsCard color="error" icon="weekend" count="- 섹터 선택" />
+              <ComplexStatisticsCard color="error" icon="weekend" count="- 테마 선택" />
             </MDBox>
           </Grid>
         </MDBox>
@@ -114,7 +119,7 @@ function Dashboard() {
         <MDBox mt={4.5}>
           <Grid item xs={2} md={2} lg={2}>
             <MDBox mb={1}>
-              <ComplexStatisticsCard color="error" icon="weekend" count="- 제약 조건" />
+              <ComplexStatisticsCard color="error" icon="weekend" count="- 스크리닝 조건" />
             </MDBox>
           </Grid>
         </MDBox>
