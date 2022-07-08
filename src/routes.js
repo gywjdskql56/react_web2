@@ -1,5 +1,5 @@
 import Home from "layouts/home";
-import Home2 from "layouts/home2";
+//import Home2 from "layouts/home2";
 import MAsolution from "layouts/masolution";
 import MAsolution1 from "layouts/masolution1";
 import MAsolution2 from "layouts/masolution2";

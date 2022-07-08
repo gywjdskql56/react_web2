@@ -24,8 +24,6 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
-import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
-import Slider from "react-rangeslider";
 // Data
 
 // Dashboard components
@@ -33,27 +31,12 @@ import React, { useState } from "react";
 
 import MDSnackbar from "components/MDSnackbar";
 import MDButton from "components/MDButton";
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
 import Slider1 from './Slider';
 
 function Dashboard() {
   const [warningSB, setWarningSB] = useState(false);
   const closeWarningSB = () => setWarningSB(false);
   const animatedComponents = makeAnimated();
-  const renderWarningSB = (
-    <MDSnackbar
-      color="warning"
-      icon="star"
-      title="Material Dashboard"
-      content="Hello, world!"
-      dateTime="11 mins ago"
-      open={warningSB}
-      onClose={closeWarningSB}
-      close={closeWarningSB}
-      bgWhite
-    />
-  );
 
   function openWarningSB() {
     console.log("on click!");
