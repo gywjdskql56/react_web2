@@ -25,20 +25,20 @@ export default function SliderARIA(props) {
             min={MIN}
             max={MAX}
             onChange={(values) => {setState({ values }); console.log(values);}}
-            renderTrack={({ propss, children }) => (
+            renderTrack={({ props, children }) => (
               <div
                 aria-hidden="true"
-                onMouseDown={propss.onMouseDown}
-                onTouchStart={propss.onTouchStart}
+                onMouseDown={props.onMouseDown}
+                onTouchStart={props.onTouchStart}
                 style={{
-                  ...propss.style,
+                  ...props.style,
                   height: "36px",
                   display: "flex",
                   width: "100%"
                 }}
               >
                 <div
-                  ref={propss.ref}
+                  ref={props.ref}
                   style={{
                     height: "5px",
                     width: "100%",
@@ -56,11 +56,11 @@ export default function SliderARIA(props) {
                 </div>
               </div>
             )}
-            renderThumb={({ pprops, isDragged }) => (
+            renderThumb={({ props, isDragged }) => (
               <div
-                {...pprops}
+                {...props}
                 style={{
-                  ...pprops.style,
+                  ...props.style,
                   height: "42px",
                   width: "42px",
                   borderRadius: "4px",
