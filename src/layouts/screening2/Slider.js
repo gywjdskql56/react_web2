@@ -31,14 +31,14 @@ export default function SliderARIA(props) {
                 onMouseDown={propss.onMouseDown}
                 onTouchStart={propss.onTouchStart}
                 style={{
-                  ...props.style,
+                  ...propss.style,
                   height: "36px",
                   display: "flex",
                   width: "100%"
                 }}
               >
                 <div
-                  ref={props.ref}
+                  ref={propss.ref}
                   style={{
                     height: "5px",
                     width: "100%",
