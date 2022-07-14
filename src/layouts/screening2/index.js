@@ -15,7 +15,7 @@ Coded by www.creative-tim.com
 
 // @mui material components
 import Grid from "@mui/material/Grid";
-
+import httpGet from "config";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 
@@ -25,13 +25,32 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 // Data
+import axios from "axios";
 
 // Dashboard components
 import React from "react";
 import MDButton from "components/MDButton";
 import Slider1 from './Slider';
 
+global.XMLHttpRequest = require("xhr2");
+
 function Dashboard() {
+const theURL = "https://evening-ridge-28066.herokuapp.com/calc_port_weight2";
+const data = {
+    sim_start:"20150101",
+    sim_end:"20220101",
+    include_sector_num:[1,2,3],
+    include_theme_num:[28],
+    value_adj:1,
+    size_adj:0,
+    quality_adj:0,
+    em_adj:1,
+    pm_adj:1,
+    weight_add_vec:[0.05,-0.05,0,0],
+    num_select:1
+    }
+const postres = httpGet('/green_index');
+console.log(postres);
 
   return (
     <DashboardLayout>

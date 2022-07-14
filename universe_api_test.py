@@ -1,10 +1,10 @@
 import os
-
+import requests
 import pandas as pd
 # from flask import Flask
 # from flask_cors import CORS
 # import FinanceDataReader as fdr
-
+import json
 # app = Flask(__name__)
 # app.config['JSON_AS_ASCII'] = False
 # CORS(app)
@@ -37,7 +37,28 @@ def main():
     return 'hello'
 def cal_thl(start_money, ):
     pass
+
+def get_green_indexing():
+    URL = "https://evening-ridge-28066.herokuapp.com/calc_port_weight2"
+    data = {
+    "sim_start" :"20150101",
+    "sim_end" : "20220101",
+    "include_sector_num" : [1, 2, 3],
+    "include_theme_num" : [28],
+    "value_adj" : 1,
+    "size_adj": 0,
+    "quality_adj": 0,
+    "em_adj" : 1,
+    "pm_adj" : 1,
+    "weight_add_vec" : [0.05, -0.05, 0, 0],
+    "num_select" : 1
+    }
+    res = requests.post(URL, data=json.dumps(data))
+    return res
+
 if __name__ == '__main__':
+    get_green_indexing()
+    print(1)
     data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_NASDAQ100.xlsx',sheet_name='시뮬레이션').reset_index()
 
     # data_1 = data[['연도', '날짜', 'USDKRW', 'TLH 포트\n($)', 'QQQ ETF\n($)']]

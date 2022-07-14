@@ -3,8 +3,10 @@ import math
 import pandas as pd
 from flask import Flask
 from flask_cors import CORS
-# import FinanceDataReader as fdr
 import numpy as np
+import requests
+import json
+
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 CORS(app)
@@ -160,6 +162,27 @@ def TLH_Table():
         'with_tlh': list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], '기본공제\n대비.1'].tolist())),
         'no_tlh': list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], 'QQQ\n실현 수익'].tolist()))
     }
+
+@app.route('/green_index', methods = ['GET','POST'])
+def get_green_indexing():
+    URL = "https://evening-ridge-28066.herokuapp.com/calc_port_weight2"
+    data = {
+    "sim_start" :"20150101",
+    "sim_end" : "20220101",
+    "include_sector_num" : [1, 2, 3],
+    "include_theme_num" : [28],
+    "value_adj" : 1,
+    "size_adj": 0,
+    "quality_adj": 0,
+    "em_adj" : 1,
+    "pm_adj" : 1,
+    "weight_add_vec" : [0.05, -0.05, 0, 0],
+    "num_select" : 1
+    }
+    res = requests.post(URL, data=json.dumps(data))
+    res = json.loads(res.text)
+    return res
+
 if __name__ == '__main__':
     # get_data(file_nm='변동성_20220513.xlsx')
     app.run(debug=True, host='0.0.0.0', port=5000)

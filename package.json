@@ -16,6 +16,7 @@
     "node": "14 || 15 || 16",
     "npm": ">=6"
   },
+  "proxy": "https://evening-ridge-28066.herokuapp.com/calc_port_weight2",
   "dependencies": {
     "@emotion/cache": "11.7.1",
     "@emotion/react": "11.7.1",
