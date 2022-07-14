@@ -183,6 +183,18 @@ def get_green_indexing():
     res = json.loads(res.text)
     return res
 
+@app.route('/green_index_sec', methods = ['GET','POST'])
+def get_green_indexing_sec_num():
+    URL = "https://evening-ridge-28066.herokuapp.com/get_sector_num_tbl"
+    res = requests.get(URL)
+    return res
+
+@app.route('/green_index_theme', methods = ['GET','POST'])
+def get_green_indexing_theme_num():
+    URL = "https://evening-ridge-28066.herokuapp.com/get_theme_num_tbl"
+    res = requests.get(URL)
+    return res
+
 if __name__ == '__main__':
     # get_data(file_nm='변동성_20220513.xlsx')
     app.run(debug=True, host='0.0.0.0', port=5000)

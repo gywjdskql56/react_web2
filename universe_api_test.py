@@ -56,7 +56,18 @@ def get_green_indexing():
     res = requests.post(URL, data=json.dumps(data))
     return res
 
+def get_green_indexing_sec_num():
+    URL = "https://evening-ridge-28066.herokuapp.com/get_sector_num_tbl"
+    res = requests.get(URL)
+    return res
+
+def get_green_indexing_theme_num():
+    URL = "https://evening-ridge-28066.herokuapp.com/get_theme_num_tbl"
+    res = requests.get(URL)
+    return res
+
 if __name__ == '__main__':
+    get_green_indexing_sec_num()
     get_green_indexing()
     print(1)
     data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_NASDAQ100.xlsx',sheet_name='시뮬레이션').reset_index()
