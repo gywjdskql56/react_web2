@@ -187,15 +187,15 @@ def get_green_indexing():
 def get_green_indexing_sec_num():
     URL = "https://evening-ridge-28066.herokuapp.com/get_sector_num_tbl"
     res = requests.get(URL)
-    res = json.loads(res.text)
-    return res
+    # res = json.loads(res.text)
+    return res.text
 
 @app.route('/green_index_theme', methods = ['GET','POST'])
 def get_green_indexing_theme_num():
     URL = "https://evening-ridge-28066.herokuapp.com/get_theme_num_tbl"
     res = requests.get(URL)
-    res = json.loads(res.text)
-    return res
+    # res = json.loads(res.text)
+    return res.text
 
 if __name__ == '__main__':
     # get_data(file_nm='변동성_20220513.xlsx')
