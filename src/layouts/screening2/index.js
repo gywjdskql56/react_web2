@@ -28,37 +28,165 @@ import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 import axios from "axios";
 
 // Dashboard components
-import React from "react";
+import React, { useState } from "react";
 import MDButton from "components/MDButton";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 import Slider1 from './Slider';
 
 global.XMLHttpRequest = require("xhr2");
 
 function Dashboard() {
-const theURL = "https://evening-ridge-28066.herokuapp.com/calc_port_weight2";
-const data = {
-    sim_start:"20150101",
-    sim_end:"20220101",
-    include_sector_num:[1,2,3],
-    include_theme_num:[28],
-    value_adj:1,
-    size_adj:0,
-    quality_adj:0,
-    em_adj:1,
-    pm_adj:1,
-    weight_add_vec:[0.05,-0.05,0,0],
-    num_select:1
-    }
-const postres = httpGet('/green_index');
-console.log(postres);
+ const animatedComponents = makeAnimated();
+ let selectList1= [];
+ let selectList2= [];
+ const [selected1, setSelected1] = useState(selectList1);
+ const [selected2, setSelected2] = useState(selectList2);
+
+ const handleChangeSec1 = event => {
+  selectList1= [];
+  for (let i = 0; i<Object.keys(event).length; i+=1){
+        console.log(event[i].value);
+        selectList1.push(event[i].value)
+  };
+  console.log(selectList1)
+  console.log(selectList1.join(','))
+  setSelected1(selectList1.join(','));
+  }
+
+ const handleChangeThe1 = event => {
+      selectList2= [];
+  for (let i = 0; i<Object.keys(event).length; i+=1){
+        console.log(event[i].value);
+        selectList2.push(event[i].value)
+  };
+  console.log(selectList2)
+  setSelected2(selectList2.join(','));
+  };
+
+ const options1 = [
+    { value: 1, label: "2차전지" },
+    { value: 2, label: "전기차" },
+    { value: 3, label: "대체에너지" },
+    { value: 4, label: "환경보호기술 및 서비스" },
+  ];
+  const options2 = [
+    { value: 1, label: "동박" },
+    { value: 2, label: "배터리장비" },
+    { value: 3, label: "배터리셀" },
+    { value: 4, label: "분리막" },
+    { value: 5, label: "양극재" },
+    { value: 6, label: "음극재" },
+    { value: 7, label: "전해액" },
+    { value: 8, label: "전기차" },
+    { value: 9, label: "전기차 공조 및 모터" },
+    { value: 10, label: "전기차 기타부품" },
+    { value: 11, label: "전동화 부품" },
+    { value: 12, label: "ESS" },
+    { value: 13, label: "수소" },
+    { value: 14, label: "수소차부품" },
+    { value: 15, label: "수소충전소" },
+    { value: 16, label: "연료전지" },
+    { value: 17, label: "재생에너지" },
+    { value: 18, label: "태양광" },
+    { value: 19, label: "풍력자재" },
+    { value: 20, label: "풍력프로젝트" },
+    { value: 21, label: "원자력" },
+    { value: 22, label: "단열재" },
+    { value: 23, label: "스마트그리드" },
+    { value: 24, label: "스마트에너지플랫폼" },
+    { value: 25, label: "친환경선박" },
+    { value: 26, label: "탄소배출권" },
+    { value: 27, label: "자원순환" },
+    { value: 28, label: "폐기물" },
+  ];
+
+ const postres = httpGet('/green_index_'+selected1+'_'+selected2);
+// const postresSec = httpGet('/green_index_sec');
+// const postresTheme = httpGet('/green_index_theme');
+// console.log(postres);
+// console.log(postres.port_return);
+// console.log(postresSec);
+// console.log(postresTheme);
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
+      <Grid container spacing={3}>
+      <Grid item xs={6} md={6} lg={6}>
+      <MDBox mt={1}>
+        <DefaultProjectCard image=""
+                label=""
+                title="섹터 선택"
+                description="편입할 섹터를 선택해주세요."
+                size="large"
+                component="text" />
+          <MDBox mt={1}>
+          <Select
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            defaultValue={[options1[4], options1[5]]}
+            isMulti
+            options={options1}
+            onChange={handleChangeSec1}
+//            value={selected1}
+          />
+        </MDBox>
+        </MDBox>
+       </Grid>
+       <Grid item xs={6} md={6} lg={6}>
+      <MDBox mt={1}>
+        <DefaultProjectCard image=""
+                label=""
+                title="테마 선택"
+                description="편입할 테마를 선택해주세요."
+                size="large"
+                component="text" />
+          <MDBox mt={1}>
+          <Select
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            defaultValue={[options1[4], options1[5]]}
+            isMulti
+            options={options2}
+            onChange={handleChangeThe1}
+          />
+        </MDBox>
+        </MDBox>
+        </Grid>
+        </Grid>
         <Grid container spacing={3}>
+        <Grid item xs={6} md={6} lg={6}>
+            <MDBox mb={1} mt={1}>
+            <DefaultProjectCard image=""
+                label=""
+                title="섹터 비중 조절"
+                description="비중변화의 합은 0이 되어야 합니다."
+                size="large"
+                component="text" />
+                <MDBox mt={2}>
+                <fieldset>
+                    <MDBox mt={0}>
+                        <Slider1 title="2차 전지" />
+                    </MDBox>
+                    <MDBox mt={-5}>
+                        <Slider1 title="전기차" />
+                    </MDBox>
+                    <MDBox mt={-5}>
+                        <Slider1 title="대체 에너지" />
+                    </MDBox>
+                    <MDBox mt={-5}>
+                        <Slider1 title="환경보호기술 및 서비스" />
+                    </MDBox>
+
+                </fieldset>
+                </MDBox>
+            </MDBox>
+
+          </Grid>
           <Grid item xs={6} md={6} lg={6}>
-            <MDBox mb={1}>
+            <MDBox mb={1} mt={1}>
             <DefaultProjectCard image=""
                 label=""
                 title="팩터 가중치 선택"
@@ -86,34 +214,7 @@ console.log(postres);
                 </MDBox>
             </MDBox>
           </Grid>
-          <Grid item xs={6} md={6} lg={6}>
-            <MDBox mb={1}>
-            <DefaultProjectCard image=""
-                label=""
-                title="섹터 비중 조절"
-                description="비중변화의 합은 0이 되어야 합니다. 현재 합은 0입니다."
-                size="large"
-                component="text" />
-                <MDBox mt={2}>
-                <fieldset>
-                    <MDBox mt={0}>
-                        <Slider1 title="2차 전지" />
-                    </MDBox>
-                    <MDBox mt={-5}>
-                        <Slider1 title="전기차" />
-                    </MDBox>
-                    <MDBox mt={-5}>
-                        <Slider1 title="대체 에너지" />
-                    </MDBox>
-                    <MDBox mt={-5}>
-                        <Slider1 title="환경보호기술 및 서비스" />
-                    </MDBox>
 
-                </fieldset>
-                </MDBox>
-            </MDBox>
-
-          </Grid>
           <MDButton variant="gradient" color="warning" fullWidth>
                 NEXT
               </MDButton>

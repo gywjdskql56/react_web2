@@ -163,14 +163,16 @@ def TLH_Table():
         'no_tlh': list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], 'QQQ\n실현 수익'].tolist()))
     }
 
-@app.route('/green_index', methods = ['GET','POST'])
-def get_green_indexing():
+@app.route('/green_index/<sec_num>_<theme_num>', methods = ['GET','POST'])
+def get_green_indexing(sec_num, theme_num):
+    sec_list = sec_num.split(',')
+    theme_list = theme_num.split(',')
     URL = "https://evening-ridge-28066.herokuapp.com/calc_port_weight2"
     data = {
     "sim_start" :"20150101",
     "sim_end" : "20220101",
-    "include_sector_num" : [1, 2, 3],
-    "include_theme_num" : [28],
+    "include_sector_num" : sec_list,
+    "include_theme_num" : theme_list,
     "value_adj" : 1,
     "size_adj": 0,
     "quality_adj": 0,
