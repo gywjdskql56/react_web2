@@ -5,6 +5,7 @@ import MAsolution1 from "layouts/masolution1";
 import MAsolution2 from "layouts/masolution2";
 import Screening from "layouts/screening";
 import Screening2 from "layouts/screening2";
+import Screening3 from "layouts/screening3";
 import TLHsolution from "layouts/tlh_solution";
 import TLHsolution2 from "layouts/tlh_solution2";
 // import Tables from "layouts/tables";
@@ -74,6 +75,14 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/screeening2",
     component: <Screening2 />,
+  },
+  {
+    type: "collapse",
+    name: "--Direct Indexing3",
+    key: "screening3",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/screeening3",
+    component: <Screening3 />,
   },
 //  {
 //    type: "collapse",

@@ -38,8 +38,10 @@ global.XMLHttpRequest = require("xhr2");
 
 function Dashboard() {
  const animatedComponents = makeAnimated();
- let selectList1= [];
- let selectList2= [];
+ let selectList1= [1];
+ let selectList2= [1];
+ sessionStorage.setItem("sector", selectList1)
+ sessionStorage.setItem("theme", selectList2)
  const [selected1, setSelected1] = useState(selectList1);
  const [selected2, setSelected2] = useState(selectList2);
 
@@ -52,6 +54,7 @@ function Dashboard() {
   console.log(selectList1)
   console.log(selectList1.join(','))
   setSelected1(selectList1.join(','));
+  sessionStorage.setItem("sector", selectList1)
   }
 
  const handleChangeThe1 = event => {
@@ -62,6 +65,7 @@ function Dashboard() {
   };
   console.log(selectList2)
   setSelected2(selectList2.join(','));
+  sessionStorage.setItem("theme", selectList2)
   };
 
  const options1 = [
@@ -100,8 +104,9 @@ function Dashboard() {
     { value: 27, label: "자원순환" },
     { value: 28, label: "폐기물" },
   ];
-
- const postres = httpGet('/green_index_'+selected1+'_'+selected2);
+// console.log(`/green_index_${selected1}_${selected2}`);
+// const postres = httpGet(`/green_index/${selected1}_${selected2}`);
+// console.log(postres.port_return);
 // const postresSec = httpGet('/green_index_sec');
 // const postresTheme = httpGet('/green_index_theme');
 // console.log(postres);
@@ -215,7 +220,7 @@ function Dashboard() {
             </MDBox>
           </Grid>
 
-          <MDButton variant="gradient" color="warning" fullWidth>
+          <MDButton variant="gradient" color="warning" href="/screening3" fullWidth>
                 NEXT
               </MDButton>
         </Grid>

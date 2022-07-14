@@ -169,21 +169,50 @@ def get_green_indexing(sec_num, theme_num):
     theme_list = theme_num.split(',')
     URL = "https://evening-ridge-28066.herokuapp.com/calc_port_weight2"
     data = {
-    "sim_start" :"20150101",
-    "sim_end" : "20220101",
-    "include_sector_num" : sec_list,
-    "include_theme_num" : theme_list,
-    "value_adj" : 1,
-    "size_adj": 0,
-    "quality_adj": 0,
-    "em_adj" : 1,
-    "pm_adj" : 1,
-    "weight_add_vec" : [0.05, -0.05, 0, 0],
-    "num_select" : 1
+        "sim_start": "20150101",
+        "sim_end": "20220101",
+        "include_sector_num": sec_list,
+        "include_theme_num": theme_list,
+        "value_adj": 1,
+        "size_adj": 0,
+        "quality_adj": 0,
+        "em_adj": 1,
+        "pm_adj": 1,
+        "weight_add_vec": [0.05, -0.05, 0, 0],
+        "num_select": 1
     }
     res = requests.post(URL, data=json.dumps(data))
     res = json.loads(res.text)
-    return res
+    port_return = res['port_return']
+    port_weight = res['port_weight']
+    port_return = pd.DataFrame.from_dict(port_return)
+    port_weight = pd.DataFrame.from_dict(port_weight)
+
+    return {'port_return': {
+        'date' : port_return.td.tolist(),
+        'rtn' : port_return.rtn.tolist() },
+        'port_weight': {
+            'td': port_weight.td.tolist(),
+            'code': port_weight.code.tolist(),
+            'name': port_weight.name.tolist(),
+            'sector': port_weight.sector.tolist(),
+            'theme': port_weight.theme.tolist(),
+            'value': port_weight.value.tolist(),
+            'size': port_weight.size.tolist(),
+            'quality': port_weight.quality.tolist(),
+            'earnings_momentum': port_weight.earnings_momentum.tolist(),
+            'price_momentum': port_weight.price_momentum.tolist(),
+            'score': port_weight.score.tolist(),
+            'indv_weight': port_weight.indv_weight.tolist(),
+            'sector_score': port_weight.sector_score.tolist(),
+            'sector_weight': port_weight.sector_weight.tolist(),
+            'quaadd_weight_sectorlity': port_weight.add_weight_sector.tolist(),
+            'theme_score': port_weight.theme_score.tolist(),
+            'theme_weight': port_weight.theme_weight.tolist(),
+            'theme_rank': port_weight.theme_rank.tolist(),
+            'weight': port_weight.weight.tolist()
+        }
+            }
 
 @app.route('/green_index_sec', methods = ['GET','POST'])
 def get_green_indexing_sec_num():

@@ -38,23 +38,56 @@ def main():
 def cal_thl(start_money, ):
     pass
 
-def get_green_indexing():
+
+def get_green_indexing(sec_num, theme_num):
+    sec_list = sec_num.split(',')
+    theme_list = theme_num.split(',')
     URL = "https://evening-ridge-28066.herokuapp.com/calc_port_weight2"
     data = {
-    "sim_start" :"20150101",
-    "sim_end" : "20220101",
-    "include_sector_num" : [1, 2, 3],
-    "include_theme_num" : [28],
-    "value_adj" : 1,
-    "size_adj": 0,
-    "quality_adj": 0,
-    "em_adj" : 1,
-    "pm_adj" : 1,
-    "weight_add_vec" : [0.05, -0.05, 0, 0],
-    "num_select" : 1
+        "sim_start": "20150101",
+        "sim_end": "20220101",
+        "include_sector_num": sec_list,
+        "include_theme_num": theme_list,
+        "value_adj": 1,
+        "size_adj": 0,
+        "quality_adj": 0,
+        "em_adj": 1,
+        "pm_adj": 1,
+        "weight_add_vec": [0.05, -0.05, 0, 0],
+        "num_select": 1
     }
     res = requests.post(URL, data=json.dumps(data))
-    return res
+    res = json.loads(res.text)
+    port_return = res['port_return']
+    port_weight = res['port_weight']
+    port_return = pd.DataFrame.from_dict(port_return)
+    port_weight = pd.DataFrame.from_dict(port_weight)
+
+    return {'port_return': {
+        'date' : port_return.td.to_list(),
+        'rtn' : port_return.rtn.to_list() },
+        'port_weight': {
+            'td': port_weight.td.to_list(),
+            'code': port_weight.code.to_list(),
+            'name': port_weight.name.to_list(),
+            'sector': port_weight.sector.to_list(),
+            'theme': port_weight.theme.to_list(),
+            'value': port_weight.value.to_list(),
+            'size': port_weight.size.to_list(),
+            'quality': port_weight.quality.to_list(),
+            'earnings_momentum': port_weight.earnings_momentum.to_list(),
+            'price_momentum': port_weight.price_momentum.to_list(),
+            'score': port_weight.score.to_list(),
+            'indv_weight': port_weight.indv_weight.to_list(),
+            'sector_score': port_weight.sector_score.to_list(),
+            'sector_weight': port_weight.sector_weight.to_list(),
+            'quaadd_weight_sectorlity': port_weight.add_weight_sector.to_list(),
+            'theme_score': port_weight.theme_score.to_list(),
+            'theme_weight': port_weight.theme_weight.to_list(),
+            'theme_rank': port_weight.theme_rank.to_list(),
+            'weight': port_weight.weight.to_list()
+        }
+            }
 
 def get_green_indexing_sec_num():
     URL = "https://evening-ridge-28066.herokuapp.com/get_sector_num_tbl"
@@ -67,8 +100,9 @@ def get_green_indexing_theme_num():
     return res
 
 if __name__ == '__main__':
+    get_green_indexing('1','1')
     get_green_indexing_sec_num()
-    get_green_indexing()
+
     print(1)
     data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_NASDAQ100.xlsx',sheet_name='시뮬레이션').reset_index()
 

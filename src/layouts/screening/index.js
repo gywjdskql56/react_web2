@@ -141,7 +141,7 @@ function Dashboard() {
                   color="warning"
                   onClick={() => openWarningSB()}
                   fullWidth
-                  href="/screening1"
+                  href="/screening2"
                 >
                   다음 단계로
                 </MDButton>
