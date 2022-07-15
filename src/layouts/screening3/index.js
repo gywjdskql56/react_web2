@@ -12,9 +12,6 @@ import Footer from "examples/Footer";
 import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 
-// Data
-// import reportsBarChartData from "layouts/masolution2/data/reportsBarChartData";
-// import reportsLineChartData from "layouts/masolution2/data/reportsLineChartData";
 
 // Dashboard components
 import Projects from "layouts/screening3/components/Projects";

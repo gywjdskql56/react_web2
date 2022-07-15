@@ -106,15 +106,7 @@ function Dashboard() {
     { value: 27, label: "자원순환" },
     { value: 28, label: "폐기물" },
   ];
-// console.log(`/green_index_${selected1}_${selected2}`);
-// const postres = httpGet(`/green_index/${selected1}_${selected2}`);
-// console.log(postres.port_return);
-// const postresSec = httpGet('/green_index_sec');
-// const postresTheme = httpGet('/green_index_theme');
-// console.log(postres);
-// console.log(postres.port_return);
-// console.log(postresSec);
-// console.log(postresTheme);
+
 
   return (
     <DashboardLayout>
@@ -224,14 +216,14 @@ function Dashboard() {
 
 
         </Grid>
-        <MDBox mt={4.5}>
+        {/* <MDBox mt={4.5}>
             <Link to="/screening3">
               <MDButton variant="gradient" color="warning" fullWidth>
                 NEXT
               </MDButton>
             </Link>
             <Routes path="/screening3" component={Screening3} />
-          </MDBox>
+          </MDBox> */}
       </MDBox>
       <Footer />
     </DashboardLayout>
