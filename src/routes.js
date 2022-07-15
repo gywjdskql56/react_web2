@@ -1,4 +1,4 @@
-import Home from "layouts/home";
+// import Home from "layouts/home";
 import Home1 from "layouts/home1";
 // import Home2 from "layouts/home2";
 import MAsolution from "layouts/masolution";
@@ -29,20 +29,13 @@ const routes = [
 //    route: "/react_web2_test_split",
 //    component: <Home2 />,
 //  },
+
    {
     type: "collapse",
     name: "메인",
     key: "react_web2",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/react_web2",
-    component: <Home />,
-  },
-   {
-    type: "collapse",
-    name: "메인_renew",
-    key: "react_web2_1",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/react_web2_1",
     component: <Home1 />,
   },
   {
