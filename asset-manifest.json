@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.js": "/react_web2/static/js/main.e3c07d05.js",
+    "main.js": "/react_web2/static/js/main.5f533208.js",
     "static/media/port_3.png": "/react_web2/static/media/port_3.c5c8ec7a2a61a456e487.png",
     "static/media/port_4.png": "/react_web2/static/media/port_4.e7784f6d53ea104a457b.png",
     "static/media/port_2.png": "/react_web2/static/media/port_2.a5f9b91adf60f1e41a83.png",
@@ -14,6 +14,6 @@
     "index.html": "/react_web2/index.html"
   },
   "entrypoints": [
-    "static/js/main.e3c07d05.js"
+    "static/js/main.5f533208.js"
   ]
 }
