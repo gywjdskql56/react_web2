@@ -39,6 +39,11 @@ import Slider1 from './Slider';
 global.XMLHttpRequest = require("xhr2");
 
 function Dashboard() {
+  function openWarningSB() {
+    console.log("on click!");
+    window.location.href = "layouts/masolution3";
+  }
+
  const animatedComponents = makeAnimated();
  let selectList1= [1];
  let selectList2= [1];
@@ -226,7 +231,7 @@ function Dashboard() {
         </Grid>
         <MDBox mt={4.5}>
             <Link to="/screening3">
-              <MDButton variant="gradient" color="warning" fullWidth>
+              <MDButton variant="gradient" color="warning" onClick={() => openWarningSB()} fullWidth>
                 NEXT
               </MDButton>
             </Link>
