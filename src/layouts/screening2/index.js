@@ -26,13 +26,15 @@ import Footer from "examples/Footer";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 // Data
 import axios from "axios";
-
+import Screening3 from "layouts/screening3";
 // Dashboard components
 import React, { useState } from "react";
 import MDButton from "components/MDButton";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import { Routes, Link } from "react-router-dom";
 import Slider1 from './Slider';
+
 
 global.XMLHttpRequest = require("xhr2");
 
@@ -220,10 +222,16 @@ function Dashboard() {
             </MDBox>
           </Grid>
 
-          <MDButton variant="gradient" color="warning" href="/screening3" fullWidth>
+
+        </Grid>
+        <MDBox mt={4.5}>
+            <Link to="/screening3">
+              <MDButton variant="gradient" color="warning" fullWidth>
                 NEXT
               </MDButton>
-        </Grid>
+            </Link>
+            <Routes path="/screening3" component={Screening3} />
+          </MDBox>
       </MDBox>
       <Footer />
     </DashboardLayout>
