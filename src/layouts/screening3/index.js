@@ -26,13 +26,6 @@ import MDButton from "components/MDButton";
 function Dashboard() {
   //  const { sales, tasks } = reportsLineChartData;
   const postres = httpGet(`/green_index/${sessionStorage.getItem("sector")}_${sessionStorage.getItem("theme")}`);
-//  console.log(postres.port_return.date.slice(-200,-1));
-//  console.log(httpGet("/strategy")[sessionStorage.getItem("port1")]);
-  sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
-  const returns = httpGet(
-    "/returns/".concat(sessionStorage.getItem("port1"), "_", sessionStorage.getItem("port2"))
-  );
-  const std = returns.std.toFixed(4);
   const sales = {
     labels: postres.port_return.date,
     datasets: { label: "수익률", data: postres.port_return.rtn },
