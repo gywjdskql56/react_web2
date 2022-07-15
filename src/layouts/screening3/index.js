@@ -26,16 +26,16 @@ import MDButton from "components/MDButton";
 function Dashboard() {
   //  const { sales, tasks } = reportsLineChartData;
   const postres = httpGet(`/green_index/${sessionStorage.getItem("sector")}_${sessionStorage.getItem("theme")}`);
-  console.log(postres.port_return.date.slice(-200,-1));
-  console.log(httpGet("/strategy")[sessionStorage.getItem("port1")]);
+//  console.log(postres.port_return.date.slice(-200,-1));
+//  console.log(httpGet("/strategy")[sessionStorage.getItem("port1")]);
   sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
   const returns = httpGet(
     "/returns/".concat(sessionStorage.getItem("port1"), "_", sessionStorage.getItem("port2"))
   );
   const std = returns.std.toFixed(4);
   const sales = {
-    labels: postres.port_return.date.slice(-400,-1),
-    datasets: { label: "수익률", data: postres.port_return.rtn.slice(-400,-1) },
+    labels: postres.port_return.date,
+    datasets: { label: "수익률", data: postres.port_return.rtn },
   };
 
   return (
@@ -51,7 +51,7 @@ function Dashboard() {
                   title="수익률"
                   description={
                     <>
-                      전 기간 백테스트 수익률은 <strong>{returns.returns.at(-1)}%</strong> 입니다.
+                      전 기간 백테스트 수익률은 <strong>{Math.round(postres.port_return.rtn.at(-1)*100)}%</strong> 입니다.
                     </>
                   }
                   date="updated 4 min ago"
@@ -108,13 +108,13 @@ function Dashboard() {
               </MDBox>
             </Grid>
           </Grid>
-          <MDBox mt={4.5}>
-            <Grid container spacing={3}>
+          {/* <MDBox mt={4.5}>
+             <Grid container spacing={3}>
               <Grid item xs={12} md={12} lg={12}>
                 <Projects2 />
               </Grid>
             </Grid>
-          </MDBox>
+          </MDBox> */}
           <MDBox mt={4.5}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={12} lg={12}>

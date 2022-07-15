@@ -14,6 +14,8 @@ export default function data() {
       date: universe.td[i],
       code: universe.code[i],
       name: universe.name[i],
+      sector: universe.sector[i],
+      theme: universe.theme[i],
       weight: universe.weight[i],
     };
   }
@@ -21,9 +23,11 @@ export default function data() {
 
   return {
     columns: [
-      { Header: "Date", accessor: "date", width: "20%", align: "left" },
-      { Header: "Code", accessor: "code", width: "20%", align: "left" },
-      { Header: "Name", accessor: "name", width: "30%", align: "center" },
+      { Header: "Date", accessor: "date", width: "10%", align: "left" },
+      { Header: "Code", accessor: "code", width: "10%", align: "left" },
+      { Header: "Name", accessor: "name", width: "20%", align: "center" },
+      { Header: "Sector", accessor: "sector", width: "10%", align: "center" },
+      { Header: "Theme", accessor: "theme", width: "10%", align: "center" },
       { Header: "Weight", accessor: "weight", align: "center" },
     ],
     rows,
