@@ -127,15 +127,15 @@ function Dashboard() {
 
 <Grid item xs={12} md={6} lg={4}>
 <MDBox mb={1} mt={1}>
- <Card sx={{ maxWidth: 345 }}>
+ <Card sx={{ maxWidth: 500 }}>
       <CardMedia
         component="img"
-        height="120"
+        height="180"
         image={img1}
         alt="Paella dish"
       />
       <Card
-        sx={{ maxWidth: 345 }}
+        sx={{ maxWidth: 500 }}
         color = "orange"
       />
       {/* <CardHeader
@@ -144,7 +144,7 @@ function Dashboard() {
       /> */}
       <CardMedia
         component="img"
-        height="270"
+        height="400"
         image={img11}
         alt="Paella dish"
       />
@@ -188,10 +188,10 @@ function Dashboard() {
 
 <Grid item xs={12} md={6} lg={4}>
 <MDBox mb={1} mt={1}>
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 500 }}>
       <CardMedia
         component="img"
-        height="120"
+        height="160"
         image={img2}
         alt="Paella dish"
       />
@@ -201,7 +201,7 @@ function Dashboard() {
       /> */}
       <CardMedia
         component="img"
-        height="230"
+        height="370"
         image={img22}
         alt="Paella dish"
       />
@@ -244,10 +244,10 @@ function Dashboard() {
 
 <Grid item xs={12} md={6} lg={4}>
 <MDBox mb={1} mt={1}>
-        <Card sx={{ maxWidth: 345 }}>
+        <Card sx={{ maxWidth: 500 }}>
       <CardMedia
         component="img"
-        height="120"
+        height="170"
         image={img3}
         alt="Paella dish"
       />
@@ -257,7 +257,7 @@ function Dashboard() {
       /> */}
       <CardMedia
         component="img"
-        height="250"
+        height="380"
         image={img33}
         alt="Paella dish"
       />

@@ -74,7 +74,7 @@ const routes = [
     name: "Direct Indexing",
     key: "screening",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/screeening",
+    route: "/screening",
     component: <Screening />,
   },
   {
@@ -82,7 +82,7 @@ const routes = [
     name: "--Direct Indexing2",
     key: "screening2",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/screeening2",
+    route: "/screening2",
     component: <Screening2 />,
   },
   {
@@ -90,7 +90,7 @@ const routes = [
     name: "--Direct Indexing3",
     key: "screening3",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/screeening3",
+    route: "/screening3",
     component: <Screening3 />,
   },
 //  {
