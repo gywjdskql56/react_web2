@@ -15,10 +15,10 @@ Coded by www.creative-tim.com
 
 // @mui material components
 import Grid from "@mui/material/Grid";
-
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-
+import Screening2 from "layouts/screening2";
+import { Routes, Link } from "react-router-dom";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -136,15 +136,16 @@ function Dashboard() {
           <MDBox mt={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12} lg={12}>
-                <MDButton
-                  variant="gradient"
-                  color="warning"
-                  onClick={() => openWarningSB()}
-                  fullWidth
-                  href="/screening2"
-                >
-                  다음 단계로
-                </MDButton>
+                <MDBox>
+          <MDBox mt={4.5}>
+            <Link to="/screening2">
+              <MDButton variant="gradient" color="warning" fullWidth>
+                NEXT
+              </MDButton>
+            </Link>
+            <Routes path="/screening2" component={Screening2} />
+          </MDBox>
+        </MDBox>
                 {renderWarningSB}
               </Grid>
             </Grid>

@@ -1,17 +1,5 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+import Tlhsolution2 from "layouts/tlh_solution2";
+import { Routes, Link } from "react-router-dom";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -128,15 +116,16 @@ function Dashboard() {
           <MDBox mt={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12} lg={12}>
-                <MDButton
-                  variant="gradient"
-                  color="warning"
-                  onClick={() => openWarningSB()}
-                  fullWidth
-                  href="/tlh_solution2"
-                >
-                  다음 단계로
-                </MDButton>
+ <MDBox>
+          <MDBox mt={4.5}>
+            <Link to="/tlh_solution2">
+              <MDButton variant="gradient" color="warning" fullWidth>
+                NEXT
+              </MDButton>
+            </Link>
+            <Routes path="/tlh_solution2" component={Tlhsolution2} />
+          </MDBox>
+        </MDBox>
                 {renderWarningSB}
               </Grid>
             </Grid>
