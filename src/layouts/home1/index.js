@@ -156,12 +156,12 @@ function Dashboard() {
         </Typography>  */}
       </CardContent>
       <MDBox mt={4.5}>
-            <Link to="/masolution1">
+            <Link to="/masolution">
               <MDButton variant="gradient" color="warning" fullWidth>
                 로보펀드 바로가기
               </MDButton>
             </Link>
-            <Routes path="/masolution1" component={MAsolution1} />
+            <Routes path="/masolution" component={MAsolution1} />
           </MDBox>
       <CardActions disableSpacing>
 
@@ -213,12 +213,12 @@ function Dashboard() {
         </Typography> */}
       </CardContent>
       <MDBox mt={4.5}>
-            <Link to="/masolution1">
+            <Link to="/screening">
               <MDButton variant="gradient" color="success" fullWidth>
                 다이렉트 인덱싱 바로가기
               </MDButton>
             </Link>
-            <Routes path="/masolution1" component={MAsolution1} />
+            <Routes path="/screening" component={MAsolution1} />
           </MDBox>
       <CardActions disableSpacing>
         <ExpandMore2
@@ -269,12 +269,12 @@ function Dashboard() {
         </Typography> */}
       </CardContent>
       <MDBox mt={4.5}>
-            <Link to="/masolution1">
+            <Link to="/tlh_solution">
               <MDButton variant="gradient" color="error" fullWidth>
                 절세전략 바로가기
               </MDButton>
             </Link>
-            <Routes path="/masolution1" component={MAsolution1} />
+            <Routes path="/tlh_solution" component={MAsolution1} />
           </MDBox>
       <CardActions disableSpacing>
         <ExpandMore3
