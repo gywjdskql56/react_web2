@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.js": "/react_web2/static/js/main.fffc7145.js",
+    "main.js": "/react_web2/static/js/main.be54f5a0.js",
     "static/media/port_3.png": "/react_web2/static/media/port_3.c5c8ec7a2a61a456e487.png",
     "static/media/port_4.png": "/react_web2/static/media/port_4.e7784f6d53ea104a457b.png",
     "static/media/port_2.png": "/react_web2/static/media/port_2.a5f9b91adf60f1e41a83.png",
@@ -11,10 +11,9 @@
     "static/media/img111.png": "/react_web2/static/media/img111.4575b7edf6636828786d.png",
     "static/media/img1_1.png": "/react_web2/static/media/img1_1.a0f5519ee637cac35e7f.png",
     "static/media/img2_2.png": "/react_web2/static/media/img2_2.730180a170fe96efeb71.png",
-    "static/media/logo-atlassian.svg": "/react_web2/static/media/logo-atlassian.d92c4f81bb3efbf288b3ef71ce2fbfb0.svg",
     "index.html": "/react_web2/index.html"
   },
   "entrypoints": [
-    "static/js/main.fffc7145.js"
+    "static/js/main.be54f5a0.js"
   ]
 }
