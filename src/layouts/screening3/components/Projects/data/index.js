@@ -3,9 +3,6 @@ import httpGet from "config";
 export default function data() {
   const postres = httpGet(`/green_index/${sessionStorage.getItem("sector")}_${sessionStorage.getItem("theme")}`);
   const universe = postres.port_weight
-  console.log(postres.port_return.date.slice(-200,-1));
-  console.log(httpGet("/strategy")[sessionStorage.getItem("port1")]);
-
 
   const rows = [];
   for (let i = 0; i < universe.td.length; i += 1) {

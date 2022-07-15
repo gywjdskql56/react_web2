@@ -182,7 +182,9 @@ def get_green_indexing(sec_num, theme_num):
         "num_select": 1
     }
     res = requests.post(URL, data=json.dumps(data))
+    print(res)
     res = json.loads(res.text)
+    print(res)
     port_return = res['port_return']
     port_weight = res['port_weight']
     port_return = pd.DataFrame.from_dict(port_return)
