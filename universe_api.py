@@ -189,8 +189,8 @@ def get_green_indexing(sec_num, theme_num):
     port_weight = pd.DataFrame.from_dict(port_weight)
 
     return {'port_return': {
-        'date' : port_return.td.tolist(),
-        'rtn' : port_return.rtn.tolist().cumsum() },
+        'date' : port_return.td.tolist()[-300:],
+        'rtn' : port_return.iloc[-300:].rtn.cumsum().tolist() },
         'port_weight': {
             'td': port_weight.td.tolist(),
             'code': port_weight.code.tolist(),
