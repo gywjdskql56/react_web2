@@ -29,7 +29,7 @@ import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import data from "layouts/masolution2/components/Projects/data";
+import data from "layouts/screening3/components/Projects/data";
 
 function Projects() {
   const { columns, rows } = data();

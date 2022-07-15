@@ -29,10 +29,10 @@ import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import data from "layouts/dashboard/components/Projects/data";
+import data from "layouts/screening2/components/Projects/data";
 
 function Projects() {
-  const { columns, rows } = data();
+  const { columns, rows } = data;
   const [menu, setMenu] = useState(null);
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
