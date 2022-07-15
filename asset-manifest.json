@@ -1,15 +1,20 @@
 {
   "files": {
-    "main.js": "/react_web2/static/js/main.e7b9f583.js",
+    "main.js": "/react_web2/static/js/main.eaab4ded.js",
     "static/media/port_3.png": "/react_web2/static/media/port_3.c5c8ec7a2a61a456e487.png",
     "static/media/port_4.png": "/react_web2/static/media/port_4.e7784f6d53ea104a457b.png",
     "static/media/port_2.png": "/react_web2/static/media/port_2.a5f9b91adf60f1e41a83.png",
     "static/media/port_1.png": "/react_web2/static/media/port_1.7ec2d46518c2755269e9.png",
     "static/media/port_5.png": "/react_web2/static/media/port_5.e4393f78ab1bcb28795f.png",
+    "static/media/img22.png": "/react_web2/static/media/img22.9785e0c0ae9aca0ff95c.png",
+    "static/media/img33.png": "/react_web2/static/media/img33.0c5b5fd221548173d536.png",
+    "static/media/img111.png": "/react_web2/static/media/img111.4575b7edf6636828786d.png",
+    "static/media/img1_1.png": "/react_web2/static/media/img1_1.a0f5519ee637cac35e7f.png",
+    "static/media/img2_2.png": "/react_web2/static/media/img2_2.730180a170fe96efeb71.png",
     "static/media/logo-atlassian.svg": "/react_web2/static/media/logo-atlassian.d92c4f81bb3efbf288b3ef71ce2fbfb0.svg",
     "index.html": "/react_web2/index.html"
   },
   "entrypoints": [
-    "static/js/main.e7b9f583.js"
+    "static/js/main.eaab4ded.js"
   ]
 }
