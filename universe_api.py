@@ -13,7 +13,7 @@ from datetime import datetime
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 CORS(app)
-conn = pymssql.connect(server='10.93.20.65', user='roboadv', password='roboadv123!', database='ROBO')
+# conn = pymssql.connect(server='10.93.20.65', user='roboadv', password='roboadv123!', database='ROBO')
 
 
 def get_data(file_nm, skiprows=0, sheet_name =0, index_col=0):
