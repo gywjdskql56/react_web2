@@ -46,12 +46,13 @@ function configs(labels, datasets) {
         mode: "index",
       },
       scales: {
+
         y: {
           grid: {
-            drawBorder: false,
+            drawBorder: true,
             display: true,
             drawOnChartArea: true,
-            drawTicks: false,
+            drawTicks: true,
             borderDash: [10, 10],
             color: "rgba(255, 255, 255, .2)",
           },
@@ -69,11 +70,12 @@ function configs(labels, datasets) {
           },
         },
         x: {
+          axis : 'x',
           grid: {
             drawBorder: true,
-            display: false,
-            drawOnChartArea: false,
-            drawTicks: false,
+            display: true,
+            drawOnChartArea: true,
+            drawTicks: true,
             borderDash: [5, 5],
           },
           ticks: {

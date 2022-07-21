@@ -1,9 +1,10 @@
 // import Home from "layouts/home";
 import Home1 from "layouts/home1";
-// import Home2 from "layouts/home2";
-import MAsolution from "layouts/masolution";
-import MAsolution1 from "layouts/masolution1";
-import MAsolution2 from "layouts/masolution2";
+// import Home2 from "layouts/home11";
+// import MAsolution from "layouts/masolution";
+import MAsolutionTest from "layouts/masolution_test";
+// import MAsolution1 from "layouts/masolution1";
+// import MAsolution2 from "layouts/masolution2";
 import Screening from "layouts/screening";
 import Screening2 from "layouts/screening2";
 import Screening3 from "layouts/screening3";
@@ -24,9 +25,9 @@ const routes = [
 //  {
 //    type: "collapse",
 //    name: "test page",
-//    key: "react_web2_test_split",
+//    key: "react_web2_one",
 //    icon: <Icon fontSize="small">dashboard</Icon>,
-//    route: "/react_web2_test_split",
+//    route: "/react_web2_one",
 //    component: <Home2 />,
 //  },
 
@@ -44,24 +45,32 @@ const routes = [
     key: "masolution",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/masolution",
-    component: <MAsolution />,
+    component: <MAsolutionTest />,
   },
-  {
-    type: "collapse",
-    name: "  -- 유형 선택",
-    key: "masolution1",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/masolution1",
-    component: <MAsolution1 />,
-  },
-  {
-    type: "collapse",
-    name: "  --포트폴리오 현황",
-    key: "masolution2",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/masolution2",
-    component: <MAsolution2 />,
-  },
+//  {
+//    type: "collapse",
+//    name: "미래에셋 맞춤형 테스트",
+//    key: "masolution_test",
+//    icon: <Icon fontSize="small">dashboard</Icon>,
+//    route: "/masolution_test",
+//    component: <MAsolutionTest />,
+//  },
+//  {
+//    type: "collapse",
+//    name: "  -- 유형 선택",
+//    key: "masolution1",
+//    icon: <Icon fontSize="small">dashboard</Icon>,
+//    route: "/masolution1",
+//    component: <MAsolution1 />,
+//  },
+//  {
+//    type: "collapse",
+//    name: "  --포트폴리오 현황",
+//    key: "masolution2",
+//    icon: <Icon fontSize="small">dashboard</Icon>,
+//    route: "/masolution2",
+//    component: <MAsolution2 />,
+//  },
   {
     type: "collapse",
     name: "Direct Indexing",

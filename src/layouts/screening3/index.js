@@ -9,7 +9,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 // import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
+import ReportsLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 
 
@@ -23,9 +23,15 @@ import MDButton from "components/MDButton";
 function Dashboard() {
   //  const { sales, tasks } = reportsLineChartData;
   const postres = httpGet(`/green_index/${sessionStorage.getItem("sector")}_${sessionStorage.getItem("theme")}`);
+  const xtick = [];
+  for (let i=0; i<postres.port_return.date.length; i+=1){
+  xtick.push(0)
+  }
   const sales = {
     labels: postres.port_return.date,
-    datasets: { label: "수익률", data: postres.port_return.rtn },
+    datasets: [{ label: "수익률", data: postres.port_return.rtn,color: "error", pointRadius:1, borderWidth:2  },
+    { label: "기준선", data: xtick, color: "secondary", pointRadius:0, borderWidth:1 }
+    ]
   };
 
   return (
@@ -98,13 +104,13 @@ function Dashboard() {
               </MDBox>
             </Grid>
           </Grid>
-          {/* <MDBox mt={4.5}>
+          <MDBox mt={4.5}>
              <Grid container spacing={3}>
               <Grid item xs={12} md={12} lg={12}>
                 <Projects2 />
               </Grid>
             </Grid>
-          </MDBox> */}
+          </MDBox>
           <MDBox mt={4.5}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={12} lg={12}>

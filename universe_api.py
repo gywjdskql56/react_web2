@@ -6,13 +6,45 @@ from flask_cors import CORS
 import numpy as np
 import requests
 import json
+import pandas as pd
+import pymssql
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 CORS(app)
+conn = pymssql.connect(server='10.93.20.65', user='roboadv', password='roboadv123!', database='ROBO')
+
 
 def get_data(file_nm, skiprows=0, sheet_name =0, index_col=0):
     return pd.read_excel('data/'+file_nm, index_col=index_col , skiprows=skiprows, sheet_name=sheet_name)
+
+def load_data_db(sql):
+    cursor = conn.cursor(as_dict=True)
+    # print(sql)
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    data = pd.DataFrame(data)
+    return data
+
+@app.route('/returns_db/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
+@app.route('/returns_db/<port1>_<port2>', methods = ['GET','POST'])
+def load_returns(port1, port2):
+    fd_return_query = '''
+    select * 
+    from FD_RETURN
+    '''
+    date_parsing = lambda x: datetime.strptime(x, '%Y%m%d').strftime('%Y-%m-%d')
+
+    fd_return = load_data_db(fd_return_query)
+    fd_return = fd_return[fd_return['TD']!='########']
+    fd_return['TD'] = fd_return['TD'].apply(lambda x: date_parsing(x))
+    fd_return['FD_NM'] = fd_return['FD_NM'].apply(lambda x: x.encode('ISO-8859-1').decode('euc-kr'))
+    fd_return = fd_return[fd_return.FD_NM == port1 + port2 + '2']
+    fd_return = fd_return.dropna(subset=['RTN'])
+    # return fd_return.RTN.tolist()
+    return {"returns": list(map(lambda x: int(10000*x)/100,fd_return.RTN.tolist())), "date":fd_return.TD.tolist(), "std": int(np.std(fd_return.RTN.tolist())*10000)/10000}
+
 
 @app.route('/returns/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
 @app.route('/returns/<port1>_<port2>', methods = ['GET','POST'])
@@ -28,6 +60,7 @@ def period_returns(port1, port2):
     data = get_data("RATB_성과표_18차추가.xlsx", sheet_name="성과(요약)", skiprows=2, index_col=1)
     col_list = ['1D', '1W', '2W', '1M', '2M', '3M', '6M', '1Y', 'MTD', 'YTD', 'ITD']
     data = data[col_list]
+    data = data*100
     data.index = list(map(lambda x: str(x).replace('2', ''), data.index))
     data = data.fillna("")
     mapping_dict = {
@@ -94,8 +127,7 @@ def index():
 @app.route('/universes/<port1>_<port2>', methods = ['GET','POST'])
 def universe(port1, port2):
     if port1 == "변동성":
-        mapping = {'공격': '적극',
-        '위험중립': '중립',}
+        mapping = {'공격': '적극', '위험중립': '중립',}
         if port2 in mapping.keys():
             port2 =  mapping[port2]
 
@@ -137,7 +169,10 @@ def main():
 
 @app.route('/tlh_solution', methods = ['GET','POST'])
 def TLH():
-    data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과.xlsx',sheet_name='차트')
+    data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_SPY.xlsx',sheet_name='차트')
+    data.columns = ['Unnamed: 1', 'QQQ 보유 수량', 'TLH 보유 수량', 'Unnamed: 4', '날짜1',
+       'QQQ 평가 금액', 'TLH 평가 금액', 'Unnamed: 8', '날짜2', 'TLH 전략',
+       'QQQ 바이홀드 전략']
     # data_1 = data[['연도', '날짜', 'USDKRW', 'TLH 포트\n($)', 'QQQ ETF\n($)']]
     data_1 = data[['날짜1','QQQ 평가 금액','TLH 평가 금액']]
     data_1['날짜1'] = data_1['날짜1'].apply(lambda x: x.strftime('%Y-%m-%d'))
@@ -152,15 +187,16 @@ def TLH():
     data_2 = data_2[data_2['tf'] == True]
 
     return {'평가금액': {'date': data_1['날짜1'].tolist(), 'QQQ 평가 금액': list(map(lambda x: x/10000000, data_1['QQQ 평가 금액'].tolist())), 'TLH 평가금액': list(map(lambda x: x/10000000,data_1['TLH 평가 금액'].tolist()))} ,
-            '전략': {'date': data_2['날짜2'].tolist(),  'TLH 전략': list(map(lambda x: x,data_2['TLH 전략'].tolist())), 'QQQ 바이홀드 전략': list(map(lambda x: x/10000000,data_2['QQQ 바이홀드 전략'].tolist()))}, 'returns':round((data_2['TLH 전략'].iloc[-1]-data_2['TLH 전략'].iloc[0])/data_2['TLH 전략'].iloc[0]*10000)/100,
+            '전략': {'date': data_2['날짜2'].tolist(),  'TLH 전략': data_2['TLH 전략'].tolist(), 'QQQ 바이홀드 전략': data_2['QQQ 바이홀드 전략'].tolist()}, 'returns':round((data_2['TLH 전략'].iloc[-1]-data_2['TLH 전략'].iloc[0])/data_2['TLH 전략'].iloc[0]*10000)/100,
             'cagr': round(((data_2['TLH 전략'].iloc[-1]/data_2['TLH 전략'].iloc[0])**(1/10)-1)*10000)/100}
+
 @app.route('/tlh_table', methods = ['GET','POST'])
 def TLH_Table():
-    data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_NASDAQ100.xlsx', sheet_name='시뮬레이션').reset_index()
+    data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_SPY.xlsx', sheet_name='시뮬레이션').reset_index()
     return {
-        'col': data.loc[[28, 30, 33, 35, 37, 39], '기본공제\n대비'].tolist(),
-        'with_tlh': list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], '기본공제\n대비.1'].tolist())),
-        'no_tlh': list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], 'QQQ\n실현 수익'].tolist()))
+        'col': data.loc[[23, 25, 26, 27, 29, 30], 'TLH\n누적수익'].tolist(),
+        'with_tlh': list(map(lambda x: int(x*100)/100,data.loc[[23, 25, 26, 27, 29, 30], '기본공제\n대비'].tolist())),
+        'no_tlh': list(map(lambda x: int(x*100)/100,data.loc[[23, 25, 26, 27, 29, 30], '기본공제\n대비.1'].tolist()))
     }
 
 @app.route('/green_index/<sec_num>_<theme_num>', methods = ['GET','POST'])
@@ -189,6 +225,9 @@ def get_green_indexing(sec_num, theme_num):
     port_weight = res['port_weight']
     port_return = pd.DataFrame.from_dict(port_return)
     port_weight = pd.DataFrame.from_dict(port_weight)
+    port_weight = port_weight.sort_values('td', ascending=False)
+    port_weight['weight'] = port_weight['weight'].apply(lambda x: int(x*10000)/100)
+
 
     return {'port_return': {
         'date' : port_return.td.tolist()[-300:],

@@ -112,7 +112,7 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-      <Grid container spacing={3}>
+      {/* <Grid container spacing={3}>
       <Grid item xs={6} md={6} lg={6}>
       <MDBox mt={1}>
         <DefaultProjectCard image=""
@@ -154,7 +154,7 @@ function Dashboard() {
         </MDBox>
         </MDBox>
         </Grid>
-        </Grid>
+        </Grid> */}
         <Grid container spacing={3}>
         <Grid item xs={6} md={6} lg={6}>
             <MDBox mb={1} mt={1}>

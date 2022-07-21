@@ -9,7 +9,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 // import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
+import ReportsLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import Projects from "layouts/tlh_solution2/components/Projects";
 // Data
@@ -27,10 +27,16 @@ function Dashboard() {
   console.log(returns["전략"]);
   console.log(returns["전략"]["TLH 전략"]);
   console.log(returns["전략"]["TLH 전략"].at(-1));
-  console.log(returns["전략"].date);
+  console.log(returns["전략"]["QQQ 바이홀드 전략"]);
+  const xtick = [];
+  for (let i=0; i<returns["전략"]["TLH 전략"].length; i+=1){
+  xtick.push(0)
+  }
   const sales = {
     labels: returns["전략"].date,
-    datasets: { label: "수익률", data: returns["전략"]["TLH 전략"] },
+    datasets: [{ label: "TLH 적용 수익률", data: returns["전략"]["TLH 전략"],color: "error", pointRadius:1, borderWidth:2 },
+    { label: "TLH 미적용 수익률", data: returns["전략"]["QQQ 바이홀드 전략"],color: "info", pointRadius:1, borderWidth:2 },
+    ],
   };
 
   return (
@@ -43,7 +49,7 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="success"
-                  title="수익률"
+                  title="평가금액"
                   description={
                     <>
                       전 기간 백테스트 수익률은 <strong>{returns.returns}%</strong> 입니다.

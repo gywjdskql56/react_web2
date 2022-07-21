@@ -40,8 +40,8 @@ function DefaultLineChart({ icon, title, description, height, chart }) {
     ? chart.datasets.map((dataset) => ({
         ...dataset,
         tension: 0,
-        pointRadius: 3,
-        borderWidth: 4,
+        pointRadius: dataset.pointRadius,
+        borderWidth: dataset.borderWidth,
         backgroundColor: "transparent",
         fill: true,
         pointBackgroundColor: colors[dataset.color]
@@ -50,7 +50,7 @@ function DefaultLineChart({ icon, title, description, height, chart }) {
         borderColor: colors[dataset.color]
           ? colors[dataset.color || "dark"].main
           : colors.dark.main,
-        maxBarThickness: 6,
+        maxBarThickness: 1,
       }))
     : [];
 

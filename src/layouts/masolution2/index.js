@@ -9,7 +9,8 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 // import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
+// import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
+import ReportsLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 
 // Data
@@ -31,9 +32,16 @@ function Dashboard() {
     "/returns/".concat(sessionStorage.getItem("port1"), "_", sessionStorage.getItem("port2"))
   );
   const std = returns.std.toFixed(4);
+  const xtick = [];
+  for (let i=0; i<returns.returns.length; i+=1){
+  xtick.push(0)
+  }
+  console.log(xtick);
+
   const sales = {
     labels: returns.date,
-    datasets: { label: "수익률", data: returns.returns },
+    datasets: [{ label: "수익률", data: returns.returns,color: "error", pointRadius:1, borderWidth:2 },
+    { label: "기준선", data: xtick, color: "secondary", pointRadius:0, borderWidth:1 }],
   };
   console.log(sessionStorage.getItem("port1"));
   console.log(sessionStorage.getItem("port2"));
