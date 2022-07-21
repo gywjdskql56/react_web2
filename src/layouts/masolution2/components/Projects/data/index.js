@@ -5,6 +5,7 @@ export default function data() {
     "/universes/".concat(sessionStorage.getItem("port1"), "_", sessionStorage.getItem("port2"))
   );
   console.log(sessionStorage.getItem("port1"));
+  console.log(sessionStorage.getItem("port2"));
   console.log(Object.keys(universe));
   console.log(typeof universe);
   console.log(universe.ticker);

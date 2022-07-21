@@ -21,6 +21,8 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import MAsolution1 from "layouts/masolution1";
+import DIsolution from "layouts/screening";
+import TLHsolution from "layouts/tlh_solution";
 import { Routes, Link } from "react-router-dom";
 import { useState } from "react";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
@@ -109,9 +111,9 @@ function Dashboard() {
   });
 
   const strategyList = [
-    {strategy: '로보펀드 바로가기', img :img1, ex_title: '로포펀드에 대한 자세한 설명:', ex_content:'로보 펀드에 대한 설명은 다음과 같습니다.', color :"warning" },
-    {strategy: '다이렉트 인덱싱 바로가기', img :img2, ex_title: '다이렉트 인덱싱에 대한 자세한 설명:', ex_content:'다이렉트 인덱싱에 대한 설명은 다음과 같습니다.', color : "success" },
-    {strategy: '절세전략 바로가기', img :img3, ex_title: '절세전략에 대한 자세한 설명:', ex_content:'절세전략에 대한 설명은 다음과 같습니다.', color : "error" },
+    {strategy: '로보펀드 바로가기', img :img1, ex_title: '로포펀드에 대한 자세한 설명:', ex_content:'로보 펀드에 대한 설명은 다음과 같습니다.', color :"warning", component:MAsolution1, path:'/masolution' },
+    {strategy: '다이렉트 인덱싱 바로가기', img :img2, ex_title: '다이렉트 인덱싱에 대한 자세한 설명:', ex_content:'다이렉트 인덱싱에 대한 설명은 다음과 같습니다.', color : "success", component: DIsolution, path:'/screening'},
+    {strategy: '절세전략 바로가기', img :img3, ex_title: '절세전략에 대한 자세한 설명:', ex_content:'절세전략에 대한 설명은 다음과 같습니다.', color : "error", component:TLHsolution, path:'/tlh_solution' },
     ]
 
   function onClickNext(e) {
@@ -139,12 +141,12 @@ function Dashboard() {
                 color = "orange"
               />
               <MDBox mt={4.5}>
-                    <Link to="/masolution">
+                    <Link to={strategy.path}>
                       <MDButton variant="gradient" color={strategy.color} fullWidth>
                         {strategy.strategy}
                       </MDButton>
                     </Link>
-                    <Routes path="/masolution" component={MAsolution1} />
+                    <Routes path={strategy.path} component={strategy.component} />
                   </MDBox>
               <CardActions disableSpacing>
 
@@ -171,18 +173,6 @@ function Dashboard() {
       )}
     </Grid>
 </MDBox>
-      <MDBox py={3}>
-        <MDBox>
-          <MDBox mt={4.5}>
-            <Link to="/masolution1">
-              <MDButton variant="gradient" color="warning" onClick={() => onClickNext()} fullWidth>
-                NEXT
-              </MDButton>
-            </Link>
-            <Routes path="/masolution1" component={MAsolution1} />
-          </MDBox>
-        </MDBox>
-      </MDBox>
       <Footer />
     </DashboardLayout>
   );

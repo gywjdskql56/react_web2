@@ -19,16 +19,20 @@ import httpGet from "config";
 
 function Dashboard() {
   const [port, setPort] = useState("1");
+  const [start1, setStart1] = React.useState(false);
+  const [start2, setStart2] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   sessionStorage.setItem("selected1", false);
   sessionStorage.setItem("selected2", false);
-
+  if (start1===false){
+    sessionStorage.setItem("port1", "변동성");
+    sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
+    setStart1(true);
+  }
   window.addEventListener("port1", () => {
     const portfolio1 = sessionStorage.getItem("port1");
     console.log("change to local storage!");
-    //    setPort(localStorage.getItem("port"));
-    //    console.log(localStorage.getItem("port"));
     let portnm = "미래변동성공격1";
     if (portfolio1 === "변동성") {
       setPort("1");
@@ -54,12 +58,17 @@ function Dashboard() {
   {title:'테마 로테이션', color: 'success', subtitle:"해외 / ETF", val:'+13%', icon:"store" },
   {title:'멀티에셋 인컴', color: 'primary', subtitle:"다양한 인컴 자산", val:'+16%', icon:"person_add" },
   ];
+//  function onClickNext(e) {
+//    setOpen1(true);
+//    console.log('next를 누르셨습니다.');
+//    console.log(open1);
+//  }
+  /// //////////////////////////////////////////////////////////////////////////////////////////
   function onClickNext(e) {
     setOpen1(true);
     console.log('next를 누르셨습니다.');
     console.log(open1);
   }
-  /// //////////////////////////////////////////////////////////////////////////////////////////
   let strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
   const strategyEx = httpGet("/strategy_explain");
   sessionStorage.setItem("strategy_explain", strategyEx);
@@ -71,9 +80,7 @@ function Dashboard() {
   //  const [strategy, setStrategy] = useState(strategy[sessionStorage.getItem("port1")]);
   sessionStorage.setItem("selected2", false);
   console.log("strategy is ".concat(sessionStorage.getItem("port2")));
-  console.log(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")]);
   const color = ["error", "warning", "success", "info"];
-  console.log(strategy);
   useEffect(() => {
     setTitle(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")].title);
     setDesc(strategyEx[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")].desc);
@@ -85,7 +92,6 @@ function Dashboard() {
     strategy = httpGet("/strategy")[sessionStorage.getItem("port1")];
   });
   function click() {
-    console.log(sessionStorage.getItem("selected2"));
     if (sessionStorage.getItem("selected2") === "false") {
       setComponent(MAsolution1);
       setPath("/masolution1");
@@ -99,7 +105,10 @@ function Dashboard() {
   }
   /// //////////////////////////////////////////////////////////////////////////////////////////
   console.log(httpGet("/strategy")[sessionStorage.getItem("port1")]);
+  if (start2 === false){
   sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
+  setStart2(true);
+  }
   const returns = httpGet(
     "/returns/".concat(sessionStorage.getItem("port1"), "_", sessionStorage.getItem("port2"))
   );
@@ -117,8 +126,6 @@ function Dashboard() {
   };
   console.log(sessionStorage.getItem("port1"));
   console.log(sessionStorage.getItem("port2"));
-  console.log(returns.returns[returns.returns.length - 1]);
-  console.log(returns.returns.at(-1));
 
   return (
     <DashboardLayout>

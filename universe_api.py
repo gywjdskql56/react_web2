@@ -27,23 +27,23 @@ def load_data_db(sql):
     data = pd.DataFrame(data)
     return data
 
-@app.route('/returns_db/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
-@app.route('/returns_db/<port1>_<port2>', methods = ['GET','POST'])
-def load_returns(port1, port2):
-    fd_return_query = '''
-    select * 
-    from FD_RETURN
-    '''
-    date_parsing = lambda x: datetime.strptime(x, '%Y%m%d').strftime('%Y-%m-%d')
-
-    fd_return = load_data_db(fd_return_query)
-    fd_return = fd_return[fd_return['TD']!='########']
-    fd_return['TD'] = fd_return['TD'].apply(lambda x: date_parsing(x))
-    fd_return['FD_NM'] = fd_return['FD_NM'].apply(lambda x: x.encode('ISO-8859-1').decode('euc-kr'))
-    fd_return = fd_return[fd_return.FD_NM == port1 + port2 + '2']
-    fd_return = fd_return.dropna(subset=['RTN'])
-    # return fd_return.RTN.tolist()
-    return {"returns": list(map(lambda x: int(10000*x)/100,fd_return.RTN.tolist())), "date":fd_return.TD.tolist(), "std": int(np.std(fd_return.RTN.tolist())*10000)/10000}
+# @app.route('/returns_db/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
+# @app.route('/returns_db/<port1>_<port2>', methods = ['GET','POST'])
+# def load_returns(port1, port2):
+#     fd_return_query = '''
+#     select *
+#     from FD_RETURN
+#     '''
+#     date_parsing = lambda x: datetime.strptime(x, '%Y%m%d').strftime('%Y-%m-%d')
+#
+#     fd_return = load_data_db(fd_return_query)
+#     fd_return = fd_return[fd_return['TD']!='########']
+#     fd_return['TD'] = fd_return['TD'].apply(lambda x: date_parsing(x))
+#     fd_return['FD_NM'] = fd_return['FD_NM'].apply(lambda x: x.encode('ISO-8859-1').decode('euc-kr'))
+#     fd_return = fd_return[fd_return.FD_NM == port1 + port2 + '2']
+#     fd_return = fd_return.dropna(subset=['RTN'])
+#     # return fd_return.RTN.tolist()
+#     return {"returns": list(map(lambda x: int(10000*x)/100,fd_return.RTN.tolist())), "date":fd_return.TD.tolist(), "std": int(np.std(fd_return.RTN.tolist())*10000)/10000}
 
 
 @app.route('/returns/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
