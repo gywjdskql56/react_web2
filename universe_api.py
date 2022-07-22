@@ -63,19 +63,21 @@ def period_returns(port1, port2):
     data = data*100
     data.index = list(map(lambda x: str(x).replace('2', ''), data.index))
     data = data.fillna("")
-    mapping_dict = {
-        '테마로테션적극' : '테마로테션공격',
-        '테마로테션중립' : '테마로테션적극',
-        '테마로테션안정' : '테마로테션중립',
-        '멀티에셋인컴적극' : '멀티에셋인컴공',
-        '멀티에셋인컴중립' : '멀티에셋인컴적',
-        '멀티에셋인컴안정' : '멀티에셋인컴중',
-    }
-    if port1+port2 in mapping_dict.keys():
-        return data.loc[mapping_dict[port1 + port2]].to_dict()
-    else:
-        return data.loc[port1+port2].to_dict()
-
+    if port1=='멀티에셋인컴':
+        port2 = port2[0]
+    # mapping_dict = {
+    #     '테마로테션적극' : '테마로테션공격',
+    #     '테마로테션중립' : '테마로테션적극',
+    #     '테마로테션안정' : '테마로테션중립',
+    #     '멀티에셋인컴적극' : '멀티에셋인컴공',
+    #     '멀티에셋인컴중립' : '멀티에셋인컴적',
+    #     '멀티에셋인컴안정' : '멀티에셋인컴중',
+    # }
+    # if port1+port2 in mapping_dict.keys():
+    #     return data.loc[mapping_dict[port1 + port2]].to_dict()
+    # else:
+    #     return data.loc[port1+port2].to_dict()
+    return data.loc[port1 + port2].to_dict()
 
 @app.route('/strategy/', methods=['GET', 'POST'])
 def strategy():
