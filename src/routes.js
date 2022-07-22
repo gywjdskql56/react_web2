@@ -54,7 +54,7 @@ const routes = [
     key: "screening",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/screening",
-    component: <Screening />,
+    component: <Screening2 />,
   },
   {
     type: "collapse",
@@ -62,16 +62,16 @@ const routes = [
     key: "screening2",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/screening2",
-    component: <Screening2 />,
-  },
-  {
-    type: "collapse",
-    name: "--Direct Indexing3",
-    key: "screening3",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/screening3",
     component: <Screening3 />,
   },
+//  {
+//    type: "collapse",
+//    name: "--Direct Indexing3",
+//    key: "screening3",
+//    icon: <Icon fontSize="small">dashboard</Icon>,
+//    route: "/screening3",
+//    component: <Screening3 />,
+//  },
 //  {
 //    type: "collapse",
 //    name: "Direct Indexing 솔루션",

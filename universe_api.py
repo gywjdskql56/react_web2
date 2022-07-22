@@ -19,13 +19,13 @@ CORS(app)
 def get_data(file_nm, skiprows=0, sheet_name =0, index_col=0):
     return pd.read_excel('data/'+file_nm, index_col=index_col , skiprows=skiprows, sheet_name=sheet_name)
 
-def load_data_db(sql):
-    cursor = conn.cursor(as_dict=True)
-    # print(sql)
-    cursor.execute(sql)
-    data = cursor.fetchall()
-    data = pd.DataFrame(data)
-    return data
+# def load_data_db(sql):
+#     cursor = conn.cursor(as_dict=True)
+#     # print(sql)
+#     cursor.execute(sql)
+#     data = cursor.fetchall()
+#     data = pd.DataFrame(data)
+#     return data
 
 # @app.route('/returns_db/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
 # @app.route('/returns_db/<port1>_<port2>', methods = ['GET','POST'])
@@ -82,8 +82,8 @@ def strategy():
     return {
         '변동성': ['공격', '위험중립', '안정'],
         '초개인로보': ['적극','성장', '안정'],
-        '테마로테션':[ '적극','중립','안정'],
-        '멀티에셋인컴': [ '적극','중립','안정']
+        '테마로테션':[ '공격','적극','중립'],
+        '멀티에셋인컴': [ '공격','적극','중립']
     }
 
 @app.route('/strategy_explain/', methods=['GET', 'POST'])

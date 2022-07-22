@@ -11,6 +11,7 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import React, { useState } from "react";
+import httpGet from "config";
 
 // import React from "react";
 function handleClick(title, solutionNum) {
@@ -19,12 +20,16 @@ function handleClick(title, solutionNum) {
     sessionStorage.setItem("selected1", true);
     if (title === "변동성 알고리즘") {
       sessionStorage.setItem("port1", "변동성");
+      sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
     } else if (title === "초개인화 자산관리") {
       sessionStorage.setItem("port1", "초개인로보");
+      sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
     } else if (title === "테마 로테이션") {
       sessionStorage.setItem("port1", "테마로테션");
+      sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
     } else if (title === "멀티에셋 인컴") {
       sessionStorage.setItem("port1", "멀티에셋인컴");
+      sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
     }
     localStorage.setItem("color", "salmon");
     console.log(sessionStorage.getItem("port1"));
