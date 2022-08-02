@@ -178,7 +178,7 @@ def universe(port1, port2):
 def main():
     return 'flask is working'
 
-@app.route('/tlh_solution', methods = ['GET','POST'])
+@app.route('/tlh_solution_spy', methods = ['GET','POST'])
 def TLH():
     data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_SPY.xlsx',sheet_name='차트')
     data.columns = ['Unnamed: 1', 'QQQ 보유 수량', 'TLH 보유 수량', 'Unnamed: 4', '날짜1',
@@ -201,13 +201,51 @@ def TLH():
             '전략': {'date': data_2['날짜2'].tolist(),  'TLH 전략': data_2['TLH 전략'].tolist(), 'QQQ 바이홀드 전략': data_2['QQQ 바이홀드 전략'].tolist()}, 'returns':round((data_2['TLH 전략'].iloc[-1]-data_2['TLH 전략'].iloc[0])/data_2['TLH 전략'].iloc[0]*10000)/100,
             'cagr': round(((data_2['TLH 전략'].iloc[-1]/data_2['TLH 전략'].iloc[0])**(1/10)-1)*10000)/100}
 
-@app.route('/tlh_table', methods = ['GET','POST'])
+@app.route('/tlh_table_spy', methods = ['GET','POST'])
 def TLH_Table():
     data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_SPY.xlsx', sheet_name='시뮬레이션').reset_index()
+    list_a = list(map(lambda x: int(x * 100) / 100, data.loc[[23, 25, 26, 27, 29, 30], '기본공제\n대비'].tolist()))
+    list_b = list(map(lambda x: int(x * 100) / 100, data.loc[[23, 25, 26, 27, 29, 30], '기본공제\n대비.1'].tolist()))
     return {
         'col': data.loc[[23, 25, 26, 27, 29, 30], 'TLH\n누적수익'].tolist(),
-        'with_tlh': list(map(lambda x: int(x*100)/100,data.loc[[23, 25, 26, 27, 29, 30], '기본공제\n대비'].tolist())),
-        'no_tlh': list(map(lambda x: int(x*100)/100,data.loc[[23, 25, 26, 27, 29, 30], '기본공제\n대비.1'].tolist()))
+        'with_tlh': list_a,
+        'no_tlh': list_b,
+        'diff_tlh' : list(map(lambda x: int(x*100)/100, list(i-j for i, j in zip(list_a, list_b))))
+    }
+
+@app.route('/tlh_solution_nasdaq', methods = ['GET','POST'])
+def TLH_Nasdaq():
+    data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_NASDAQ100.xlsx',sheet_name='차트')
+    data.columns = ['Unnamed: 1', 'QQQ 보유 수량', 'TLH 보유 수량', 'Unnamed: 4', '날짜1',
+       'QQQ 평가 금액', 'TLH 평가 금액', 'Unnamed: 8', '날짜2', 'TLH 전략',
+       'QQQ 바이홀드 전략']
+    # data_1 = data[['연도', '날짜', 'USDKRW', 'TLH 포트\n($)', 'QQQ ETF\n($)']]
+    data_1 = data[['날짜1','QQQ 평가 금액','TLH 평가 금액']]
+    data_1['날짜1'] = data_1['날짜1'].apply(lambda x: x.strftime('%Y-%m-%d'))
+    data_1 = data_1.reset_index()
+    data_1['tf'] = data_1.index.map(lambda x: x%20==0)
+    data_1 = data_1[data_1['tf']==True]
+
+    data_2 = data[['날짜2','TLH 전략','QQQ 바이홀드 전략']]
+    data_2['날짜2'] = data_2['날짜2'].apply(lambda x: x.strftime('%Y-%m-%d'))
+    data_2 = data_2.reset_index()
+    data_2['tf'] = data_2.index.map(lambda x: x % 20 == 0)
+    data_2 = data_2[data_2['tf'] == True]
+
+    return {'평가금액': {'date': data_1['날짜1'].tolist(), 'QQQ 평가 금액': list(map(lambda x: x/10000000, data_1['QQQ 평가 금액'].tolist())), 'TLH 평가금액': list(map(lambda x: x/10000000,data_1['TLH 평가 금액'].tolist()))} ,
+            '전략': {'date': data_2['날짜2'].tolist(),  'TLH 전략': data_2['TLH 전략'].tolist(), 'QQQ 바이홀드 전략': data_2['QQQ 바이홀드 전략'].tolist()}, 'returns':round((data_2['TLH 전략'].iloc[-1]-data_2['TLH 전략'].iloc[0])/data_2['TLH 전략'].iloc[0]*10000)/100,
+            'cagr': round(((data_2['TLH 전략'].iloc[-1]/data_2['TLH 전략'].iloc[0])**(1/10)-1)*10000)/100}
+
+@app.route('/tlh_table_nasdaq', methods = ['GET','POST'])
+def TLH_Table_Nasdaq():
+    data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_NASDAQ100.xlsx', sheet_name='시뮬레이션').reset_index()
+    list_a = list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], '기본공제\n대비.1'].tolist()))
+    list_b = list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], 'QQQ\n실현 수익'].tolist()))
+    return {
+        'col': data.loc[[28, 30, 33, 35, 37, 39], '기본공제\n대비'].tolist(),
+        'with_tlh': list_a,
+        'no_tlh': list_b,
+        'diff_tlh': list(i-j for i, j in zip(list_a, list_b))
     }
 
 @app.route('/green_index/<sec_num>_<theme_num>', methods = ['GET','POST'])

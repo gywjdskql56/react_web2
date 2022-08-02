@@ -1,8 +1,8 @@
 import Home1 from "layouts/home1";
 import MAsolutionTest from "layouts/masolution_test";
-import Screening from "layouts/screening";
+// import Screening from "layouts/screening";
 import Screening2 from "layouts/screening2";
-import Screening3 from "layouts/screening3";
+// import Screening3 from "layouts/screening3";
 import TLHsolution from "layouts/tlh_solution";
 import TLHsolution2 from "layouts/tlh_solution2";
 import Icon from "@mui/material/Icon";
@@ -56,14 +56,14 @@ const routes = [
     route: "/screening",
     component: <Screening2 />,
   },
-  {
-    type: "collapse",
-    name: "--Direct Indexing2",
-    key: "screening2",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/screening2",
-    component: <Screening3 />,
-  },
+//  {
+//    type: "collapse",
+//    name: "--Direct Indexing2",
+//    key: "screening2",
+//    icon: <Icon fontSize="small">dashboard</Icon>,
+//    route: "/screening2",
+//    component: <Screening3 />,
+//  },
 //  {
 //    type: "collapse",
 //    name: "--Direct Indexing3",
@@ -87,14 +87,14 @@ const routes = [
     route: "/tlh_solution",
     component: <TLHsolution />,
   },
-  {
-    type: "collapse",
-    name: "  --TLH 솔루션2",
-    key: "tlh_solution2",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/tlh_solution2",
-    component: <TLHsolution2 />,
-  },
+//  {
+//    type: "collapse",
+//    name: "  --TLH 솔루션2",
+//    key: "tlh_solution2",
+//    icon: <Icon fontSize="small">dashboard</Icon>,
+//    route: "/tlh_solution2",
+//    component: <TLHsolution2 />,
+//  },
 ];
 
 export default routes;

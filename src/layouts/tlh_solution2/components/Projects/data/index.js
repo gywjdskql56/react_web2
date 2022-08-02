@@ -1,7 +1,7 @@
 import httpGet from "config";
 
 export default function data() {
-  const tlh = httpGet("/tlh_table");
+  const tlh = httpGet(`/tlh_table_${sessionStorage.getItem("index")}`);
   console.log(tlh);
   console.log(tlh.no_tlh);
   console.log(tlh.with_tlh);
@@ -12,6 +12,7 @@ export default function data() {
       col: tlh.col[i],
       with_tlh: tlh.with_tlh[i],
       no_tlh: tlh.no_tlh[i],
+      diff_tlh : tlh.diff_tlh[i]
     };
   }
   console.log(rows);
@@ -19,8 +20,9 @@ export default function data() {
   return {
     columns: [
       { Header: "", accessor: "col", width: "30%", align: "left" },
-      { Header: "TLH 적용", accessor: "with_tlh", width: "40%", align: "left" },
+      { Header: "TLH 적용", accessor: "with_tlh",  align: "left" },
       { Header: "TLH 미적용", accessor: "no_tlh", align: "center" },
+      { Header: "절세전략 효과", accessor: "diff_tlh", align: "center" },
     ],
     rows,
   };

@@ -22,7 +22,7 @@ import MDButton from "components/MDButton";
 
 function Dashboard() {
   //  const { sales, tasks } = reportsLineChartData;
-  const returns = httpGet("/tlh_solution");
+  const returns = httpGet("/tlh_solution_spy");
   console.log(returns);
   console.log(returns["전략"]);
   console.log(returns["전략"]["TLH 전략"]);
@@ -38,6 +38,7 @@ function Dashboard() {
     { label: "TLH 미적용 수익률", data: returns["전략"]["QQQ 바이홀드 전략"],color: "info", pointRadius:1, borderWidth:2 },
     ],
   };
+
 
   return (
     <DashboardLayout>

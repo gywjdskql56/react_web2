@@ -18,8 +18,10 @@ import Grid from "@mui/material/Grid";
 import httpGet from "config";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-
-// Material Dashboard 2 React example components
+import ReportsLineChart from "examples/Charts/LineCharts/DefaultLineChart";
+import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
+import Projects from "layouts/screening3/components/Projects";
+import Projects2 from "layouts/screening3/components/Projects2";// Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -46,6 +48,7 @@ function Dashboard() {
  sessionStorage.setItem("theme", selectList2)
  const [selected1, setSelected1] = useState(selectList1);
  const [selected2, setSelected2] = useState(selectList2);
+ const [open1, setOpen1] = React.useState(false);
 
  const handleChangeSec1 = event => {
   selectList1= [];
@@ -53,8 +56,8 @@ function Dashboard() {
         console.log(event[i].value);
         selectList1.push(event[i].value)
   };
-  console.log(selectList1)
-  console.log(selectList1.join(','))
+  console.log("sector",selectList1)
+  console.log("sector",selectList1.join(','))
   setSelected1(selectList1.join(','));
   sessionStorage.setItem("sector", selectList1)
   }
@@ -70,11 +73,12 @@ function Dashboard() {
   sessionStorage.setItem("theme", selectList2)
   };
 
+
  const options1 = [
-    { value: 1, label: "2차전지" },
-    { value: 2, label: "전기차" },
-    { value: 3, label: "대체에너지" },
-    { value: 4, label: "환경보호기술 및 서비스" },
+    { value: 1, label: "글로벌" },
+    { value: 2, label: "미국" },
+    { value: 3, label: "한국" },
+    { value: 4, label: "일본" },
   ];
   const options2 = [
     { value: 1, label: "동박" },
@@ -106,18 +110,33 @@ function Dashboard() {
     { value: 27, label: "자원순환" },
     { value: 28, label: "폐기물" },
   ];
-
+  function onClickNext(e) {
+    setOpen1(true);
+    console.log('next를 누르셨습니다.');
+    console.log(open1);
+  }
+  const postres = httpGet(`/green_index/${sessionStorage.getItem("sector")}_${sessionStorage.getItem("theme")}`);
+  const xtick = [];
+  for (let i=0; i<postres.port_return.date.length; i+=1){
+  xtick.push(0)
+  }
+  const sales = {
+    labels: postres.port_return.date,
+    datasets: [{ label: "수익률", data: postres.port_return.rtn,color: "error", pointRadius:1, borderWidth:2  },
+    { label: "기준선", data: xtick, color: "secondary", pointRadius:0, borderWidth:1 }
+    ]
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-      {/* <Grid container spacing={3}>
+      <Grid container spacing={3}>
       <Grid item xs={6} md={6} lg={6}>
       <MDBox mt={1}>
         <DefaultProjectCard image=""
                 label=""
-                title="섹터 선택"
+                title="투자 대상 국가 선택"
                 description="편입할 섹터를 선택해주세요."
                 size="large"
                 component="text" />
@@ -129,7 +148,6 @@ function Dashboard() {
             isMulti
             options={options1}
             onChange={handleChangeSec1}
-//            value={selected1}
           />
         </MDBox>
         </MDBox>
@@ -138,8 +156,8 @@ function Dashboard() {
       <MDBox mt={1}>
         <DefaultProjectCard image=""
                 label=""
-                title="테마 선택"
-                description="편입할 테마를 선택해주세요."
+                title="투자 유니버스 선택"
+                description="편입할 유니버스를 선택해주세요."
                 size="large"
                 component="text" />
           <MDBox mt={1}>
@@ -154,7 +172,7 @@ function Dashboard() {
         </MDBox>
         </MDBox>
         </Grid>
-        </Grid> */}
+        </Grid>
         <Grid container spacing={3}>
         <Grid item xs={6} md={6} lg={6}>
             <MDBox mb={1} mt={1}>
@@ -216,14 +234,101 @@ function Dashboard() {
 
 
         </Grid>
-        {/* <MDBox mt={4.5}>
-            <Link to="/screening3">
-              <MDButton variant="gradient" color="warning" fullWidth>
+         <MDBox mt={4.5}>
+              <MDButton variant="gradient" color="warning" onClick={() => onClickNext()} fullWidth>
                 NEXT
               </MDButton>
-            </Link>
-            <Routes path="/screening3" component={Screening3} />
-          </MDBox> */}
+          </MDBox>
+
+          {open1===true && <MDBox py={3}>
+        <MDBox mt={4.5}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={12} lg={12}>
+              <MDBox mb={3}>
+                <ReportsLineChart
+                  color="success"
+                  title="수익률"
+                  description={
+                    <>
+                      전 기간 백테스트 수익률은 <strong>{Math.round(postres.port_return.rtn.at(-1)*100)}%</strong> 입니다.
+                    </>
+                  }
+                  date="updated 4 min ago"
+                  chart={sales}
+                />
+              </MDBox>
+            </Grid>
+          </Grid>
+        </MDBox>
+        <MDBox>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="dark"
+                  icon="weekend"
+                  title="변동성"
+                  count="-"
+                  percentage={{
+                    color: "success",
+                    amount: "2,000,000",
+                    label: "than last week",
+                  }}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  icon="leaderboard"
+                  title="현재 자산"
+                  count="-"
+                  percentage={{
+                    color: "success",
+                    amount: "2,300,000",
+                    label: "than last month",
+                  }}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="success"
+                  icon="store"
+                  title="배당성"
+                  count="-"
+                  percentage={{
+                    color: "success",
+                    amount: "0.9%",
+                    label: "than yesterday",
+                  }}
+                />
+              </MDBox>
+            </Grid>
+          </Grid>
+          <MDBox mt={4.5}>
+             <Grid container spacing={3}>
+              <Grid item xs={12} md={12} lg={12}>
+                <Projects2 />
+              </Grid>
+            </Grid>
+          </MDBox>
+          <MDBox mt={4.5}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={12} lg={12}>
+                <Projects />
+                <MDBox mt={4.5}>
+                  <MDButton variant="gradient" color="warning" fullWidth>
+                    주문 실행하기
+                  </MDButton>
+                </MDBox>
+              </Grid>
+            </Grid>
+          </MDBox>
+        </MDBox>
+      </MDBox>}
+
       </MDBox>
       <Footer />
     </DashboardLayout>
