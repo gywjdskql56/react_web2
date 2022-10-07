@@ -27,10 +27,10 @@ import { Routes, Link } from "react-router-dom";
 import { useState } from "react";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 import img1 from "assets/images/img111.png";
-import img2 from "assets/images/img222.png";
+import img2 from "assets/images/img22.png";
 import img3 from "assets/images/img333.png";
 import img11 from "assets/images/img1.png";
-import img22 from "assets/images/img2.png";
+// import img22 from "assets/images/img2.png";
 import img33 from "assets/images/img33.png";
 import MDButton from "components/MDButton";
 
@@ -111,7 +111,7 @@ function Dashboard() {
   });
 
   const strategyList = [
-    {strategy: '로보펀드 바로가기', img :img1, ex_title: '로포펀드에 대한 자세한 설명:', ex_content:'로보 펀드에 대한 설명은 다음과 같습니다.', color :"warning", component:MAsolution1, path:'/masolution' },
+    {strategy: '미래에셋 EMP펀드 바로가기', img :img1, ex_title: '미래에셋 EMP펀드에 대한 자세한 설명:', ex_content:'미래에셋 EMP펀드에 대한 설명은 다음과 같습니다.', color :"warning", component:MAsolution1, path:'/masolution' },
     {strategy: '다이렉트 인덱싱 바로가기', img :img2, ex_title: '다이렉트 인덱싱에 대한 자세한 설명:', ex_content:'다이렉트 인덱싱에 대한 설명은 다음과 같습니다.', color : "success", component: DIsolution, path:'/screening'},
     {strategy: '절세전략 바로가기', img :img3, ex_title: '절세전략에 대한 자세한 설명:', ex_content:'절세전략에 대한 설명은 다음과 같습니다.', color : "error", component:TLHsolution, path:'/tlh_solution' },
     ]

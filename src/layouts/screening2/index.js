@@ -27,6 +27,9 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 // Data
+import img1 from "assets/images/다이렉트인덱싱1.png";
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
 import axios from "axios";
 import Screening3 from "layouts/screening3";
 // Dashboard components
@@ -49,6 +52,7 @@ function Dashboard() {
  const [selected1, setSelected1] = useState(selectList1);
  const [selected2, setSelected2] = useState(selectList2);
  const [open1, setOpen1] = React.useState(false);
+ const [open2, setOpen2] = React.useState(false);
 
  const handleChangeSec1 = event => {
   selectList1= [];
@@ -75,45 +79,20 @@ function Dashboard() {
 
 
  const options1 = [
-    { value: 1, label: "글로벌" },
-    { value: 2, label: "미국" },
-    { value: 3, label: "한국" },
-    { value: 4, label: "일본" },
+    { value: 1, label: "한국" },
   ];
   const options2 = [
-    { value: 1, label: "동박" },
-    { value: 2, label: "배터리장비" },
-    { value: 3, label: "배터리셀" },
-    { value: 4, label: "분리막" },
-    { value: 5, label: "양극재" },
-    { value: 6, label: "음극재" },
-    { value: 7, label: "전해액" },
-    { value: 8, label: "전기차" },
-    { value: 9, label: "전기차 공조 및 모터" },
-    { value: 10, label: "전기차 기타부품" },
-    { value: 11, label: "전동화 부품" },
-    { value: 12, label: "ESS" },
-    { value: 13, label: "수소" },
-    { value: 14, label: "수소차부품" },
-    { value: 15, label: "수소충전소" },
-    { value: 16, label: "연료전지" },
-    { value: 17, label: "재생에너지" },
-    { value: 18, label: "태양광" },
-    { value: 19, label: "풍력자재" },
-    { value: 20, label: "풍력프로젝트" },
-    { value: 21, label: "원자력" },
-    { value: 22, label: "단열재" },
-    { value: 23, label: "스마트그리드" },
-    { value: 24, label: "스마트에너지플랫폼" },
-    { value: 25, label: "친환경선박" },
-    { value: 26, label: "탄소배출권" },
-    { value: 27, label: "자원순환" },
-    { value: 28, label: "폐기물" },
+    { value: 1, label: "친환경 투자" },
   ];
   function onClickNext(e) {
     setOpen1(true);
     console.log('next를 누르셨습니다.');
     console.log(open1);
+  }
+  function onClickNext2(e) {
+    setOpen2(true);
+    console.log('next를 누르셨습니다.');
+    console.log(open2);
   }
   const postres = httpGet(`/green_index/${sessionStorage.getItem("sector")}_${sessionStorage.getItem("theme")}`);
   const xtick = [];
@@ -130,21 +109,34 @@ function Dashboard() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+       <Card>
+        <CardMedia
+                component="img"
+                height="400"
+                image={img1}
+                alt="Paella dish"
+              />
+              <Card
+                sx={{ maxWidth: 1200 }}
+                color = "orange"
+              />
+       </Card>
       <MDBox py={3}>
       <Grid container spacing={3}>
       <Grid item xs={6} md={6} lg={6}>
       <MDBox mt={1}>
-        <DefaultProjectCard image=""
+       <ComplexStatisticsCard color="success" icon="weekend" count="투자 대상 국가 선택" />
+        {/* <DefaultProjectCard image=""
                 label=""
                 title="투자 대상 국가 선택"
                 description="편입할 섹터를 선택해주세요."
                 size="large"
-                component="text" />
+                component="text" /> */}
           <MDBox mt={1}>
           <Select
             closeMenuOnSelect={false}
             components={animatedComponents}
-            defaultValue={[options1[4], options1[5]]}
+            defaultValue={[options1[1]]}
             isMulti
             options={options1}
             onChange={handleChangeSec1}
@@ -152,19 +144,21 @@ function Dashboard() {
         </MDBox>
         </MDBox>
        </Grid>
+
        <Grid item xs={6} md={6} lg={6}>
       <MDBox mt={1}>
-        <DefaultProjectCard image=""
+      <ComplexStatisticsCard color="success" icon="weekend" count="투자 유니버스 선택" />
+        {/* <DefaultProjectCard image=""
                 label=""
                 title="투자 유니버스 선택"
                 description="편입할 유니버스를 선택해주세요."
                 size="large"
-                component="text" />
+                component="text" /> */}
           <MDBox mt={1}>
           <Select
             closeMenuOnSelect={false}
             components={animatedComponents}
-            defaultValue={[options1[4], options1[5]]}
+            defaultValue={[options1[1]]}
             isMulti
             options={options2}
             onChange={handleChangeThe1}
@@ -173,7 +167,15 @@ function Dashboard() {
         </MDBox>
         </Grid>
         </Grid>
-        <Grid container spacing={3}>
+        <MDBox mt={4.5}>
+              <MDButton variant="gradient" color="success" onClick={() => onClickNext2()} fullWidth>
+                NEXT
+              </MDButton>
+        </MDBox>
+
+{   open2===true &&
+<MDBox py={3}>
+    <Grid container spacing={3}>
         <Grid item xs={6} md={6} lg={6}>
             <MDBox mb={1} mt={1}>
             <DefaultProjectCard image=""
@@ -200,7 +202,6 @@ function Dashboard() {
                 </fieldset>
                 </MDBox>
             </MDBox>
-
           </Grid>
           <Grid item xs={6} md={6} lg={6}>
             <MDBox mb={1} mt={1}>
@@ -231,14 +232,15 @@ function Dashboard() {
                 </MDBox>
             </MDBox>
           </Grid>
-
-
         </Grid>
          <MDBox mt={4.5}>
               <MDButton variant="gradient" color="warning" onClick={() => onClickNext()} fullWidth>
                 NEXT
               </MDButton>
           </MDBox>
+          </MDBox>
+          }
+
 
           {open1===true && <MDBox py={3}>
         <MDBox mt={4.5}>
@@ -319,7 +321,7 @@ function Dashboard() {
               <Grid item xs={12} md={12} lg={12}>
                 <Projects />
                 <MDBox mt={4.5}>
-                  <MDButton variant="gradient" color="warning" fullWidth>
+                  <MDButton variant="gradient" color="success" fullWidth>
                     주문 실행하기
                   </MDButton>
                 </MDBox>

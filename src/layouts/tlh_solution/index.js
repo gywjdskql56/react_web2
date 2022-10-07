@@ -1,5 +1,7 @@
-import Tlhsolution2 from "layouts/tlh_solution2";
 import { Routes, Link } from "react-router-dom";
+import img1 from "assets/images/절세전략 설명2.png";
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -9,6 +11,7 @@ import MDBox from "components/MDBox";
 import ReportsLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import Projects from "layouts/tlh_solution2/components/Projects";
+import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -38,6 +41,8 @@ function Dashboard() {
   const closeWarningSB = () => setWarningSB(false);
   const animatedComponents = makeAnimated();
   const [selected1, setSelected1] = useState("spy");
+  const [profit, setProfit] = useState(null);
+  const [tax, setTax] = useState(null);
   const [open1, setOpen1] = React.useState(false);
   const renderWarningSB = (
     <MDSnackbar
@@ -81,9 +86,17 @@ function Dashboard() {
   function onClickNext(e) {
     setOpen1(true);
     console.log('next를 누르셨습니다.');
+    console.log(sessionStorage.getItem("index"));
     console.log(open1);
     console.log(`/tlh_solution_${sessionStorage.getItem("index")}`);
     returns = httpGet(`/tlh_solution_${sessionStorage.getItem("index")}`);
+    const tlh = httpGet(`/tlh_table_${sessionStorage.getItem("index")}`);
+
+      console.log(tlh.diff_tlh);
+      sessionStorage.setItem('수익', tlh.diff_tlh[0]);
+      sessionStorage.setItem('세금', tlh.diff_tlh[3]);
+      setProfit(tlh.diff_tlh[0]);
+      setTax(tlh.diff_tlh[3]);
 //    console.log(returns);
 //    console.log(returns["전략"]);
 //    console.log(returns["전략"]["TLH 전략"]);
@@ -100,18 +113,38 @@ function Dashboard() {
       ],
     };
   }
+  console.log(sessionStorage.getItem('수익'));
+  console.log(sessionStorage.getItem('세금'));
   console.log(returns);
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Card>
+        <CardMedia
+                component="img"
+                height="400"
+                image={img1}
+                alt="Paella dish"
+              />
+              <Card
+                sx={{ maxWidth: 1200 }}
+                color = "orange"
+              />
+        </Card>
+      {/* <MDBox py={3}>
+        <Grid container spacing={3}>
+
+      <DefaultProjectCard image={img1} label="" title="" description="" size="large" />
+      </Grid>
+      </MDBox> */}
       <MDBox py={3}>
         <Grid container spacing={3}>
-          <Grid item xs={2} md={2} lg={2}>
+          <Grid item xs={4} md={4} lg={4}>
             <MDBox mb={1}>
-              <ComplexStatisticsCard color="error" icon="weekend" count="- 투자 지수" />
+            <ComplexStatisticsCard color="error" icon="weekend" count="- 투자 지수" />
+
             </MDBox>
-          </Grid>
-        </Grid>
+
         <MDBox mt={4.5}>
           <Select
             closeMenuOnSelect={false}
@@ -121,13 +154,13 @@ function Dashboard() {
             onChange={handleChange}
           />
         </MDBox>
-        <MDBox mt={4.5}>
-          <Grid item xs={2} md={2} lg={2}>
+        </Grid>
+
+          <Grid item xs={4} md={4} lg={4}>
             <MDBox mb={1}>
               <ComplexStatisticsCard color="error" icon="weekend" count="- 투자 금액" />
             </MDBox>
-          </Grid>
-        </MDBox>
+
         <MDBox mt={4.5}>
           <Select
             closeMenuOnSelect={false}
@@ -137,13 +170,11 @@ function Dashboard() {
             options={options2}
           />
         </MDBox>
-        <MDBox mt={4.5}>
-          <Grid item xs={2} md={2} lg={2}>
+        </Grid>
+          <Grid item xs={4} md={4} lg={4}>
             <MDBox mb={1}>
               <ComplexStatisticsCard color="error" icon="weekend" count="- 일임 계약" />
             </MDBox>
-          </Grid>
-        </MDBox>
         <MDBox mt={4.5}>
           <Select
             closeMenuOnSelect={false}
@@ -153,15 +184,15 @@ function Dashboard() {
             options={options3}
           />
         </MDBox>
+        </Grid>
+        </Grid>
         <MDBox mt={4.5}>
           <MDBox mt={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12} lg={12}>
-                <MDBox mt={4.5}>
-                    <MDButton variant="gradient" color="warning" onClick={() => onClickNext()} fullWidth>
+                    <MDButton variant="gradient" color="error" onClick={() => onClickNext()} fullWidth>
                       NEXT
                     </MDButton>
-                </MDBox>
                 {renderWarningSB}
               </Grid>
             </Grid>
@@ -235,6 +266,43 @@ function Dashboard() {
               </MDBox>
             </Grid>
           </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6} lg={6}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="error"
+                  icon="weekend"
+                  title="절세 금액"
+                  count={tax}
+                  percentage={{
+                    color: "error",
+                    amount: tax,
+                    label: "원의 세금이 절약되는 효과",
+                  }}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={6}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="error"
+                  icon="leaderboard"
+                  title="수익 효과"
+                  count={profit}
+                  percentage={{
+                    color: "error",
+                    amount: profit,
+                    label: "원의 수익이 창출되는 효과",
+                  }}
+                />
+              </MDBox>
+            </Grid>
+            </Grid>
+          <MDBox mt={4.5}>
+            <MDButton variant="gradient" color="error" onClick={() => onClickNext()} fullWidth>
+              2000만원을 10년간 투자하는 경우 TLH 전략을 통해  {sessionStorage.getItem('세금')} 원의 세금을 절약하여 총  {sessionStorage.getItem('수익')} 원의 수익을 낼 수 있습니다.
+            </MDButton>
+          </MDBox>
           <MDBox mt={4.5}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={12} lg={12}>

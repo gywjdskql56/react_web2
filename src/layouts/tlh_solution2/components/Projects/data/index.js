@@ -2,7 +2,10 @@ import httpGet from "config";
 
 export default function data() {
   const tlh = httpGet(`/tlh_table_${sessionStorage.getItem("index")}`);
-  console.log(tlh);
+
+  console.log(tlh.diff_tlh);
+  sessionStorage.setItem('수익', tlh.diff_tlh[0]);
+  sessionStorage.setItem('세금', tlh.diff_tlh[3]);
   console.log(tlh.no_tlh);
   console.log(tlh.with_tlh);
 

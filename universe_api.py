@@ -9,7 +9,7 @@ import json
 import pandas as pd
 import pymssql
 from datetime import datetime
-
+import math
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 CORS(app)
@@ -204,13 +204,16 @@ def TLH():
 @app.route('/tlh_table_spy', methods = ['GET','POST'])
 def TLH_Table():
     data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_SPY.xlsx', sheet_name='시뮬레이션').reset_index()
-    list_a = list(map(lambda x: int(x * 100) / 100, data.loc[[23, 25, 26, 27, 29, 30], '기본공제\n대비'].tolist()))
-    list_b = list(map(lambda x: int(x * 100) / 100, data.loc[[23, 25, 26, 27, 29, 30], '기본공제\n대비.1'].tolist()))
+    data.loc[30,'기본공제\n대비'] *= 100
+    data.loc[30,'기본공제\n대비.1'] *= 100
+    list_a = list(map(lambda x: round(x*10)/10, data.loc[[23, 25, 26, 27, 29, 30], '기본공제\n대비'].tolist()))
+    list_b = list(map(lambda x: round(x*10)/10, data.loc[[23, 25, 26, 27, 29, 30], '기본공제\n대비.1'].tolist()))
+
     return {
         'col': data.loc[[23, 25, 26, 27, 29, 30], 'TLH\n누적수익'].tolist(),
-        'with_tlh': list_a,
-        'no_tlh': list_b,
-        'diff_tlh' : list(map(lambda x: int(x*100)/100, list(i-j for i, j in zip(list_a, list_b))))
+        'with_tlh': list(map(lambda x:format(x,','),list_a)),
+        'no_tlh': list(map(lambda x:format(x,','),list_b)),
+        'diff_tlh' : list(map(lambda x: format(round(x*10)/10,','), list(i-j for i, j in zip(list_a, list_b))))
     }
 
 @app.route('/tlh_solution_nasdaq', methods = ['GET','POST'])
@@ -239,13 +242,15 @@ def TLH_Nasdaq():
 @app.route('/tlh_table_nasdaq', methods = ['GET','POST'])
 def TLH_Table_Nasdaq():
     data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_NASDAQ100.xlsx', sheet_name='시뮬레이션').reset_index()
-    list_a = list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], '기본공제\n대비.1'].tolist()))
-    list_b = list(map(lambda x: int(x*100)/100,data.loc[[28, 30, 33, 35, 37, 39], 'QQQ\n실현 수익'].tolist()))
+    data.loc[39, 'QQQ\n실현 수익'] *= 100
+    data.loc[39, '기본공제\n대비.1'] *= 100
+    list_a = list(map(lambda x: round(x*10)/10,data.loc[[28, 30, 33, 35, 37, 39], '기본공제\n대비.1'].tolist()))
+    list_b = list(map(lambda x: round(x*10)/10,data.loc[[28, 30, 33, 35, 37, 39], 'QQQ\n실현 수익'].tolist()))
     return {
         'col': data.loc[[28, 30, 33, 35, 37, 39], '기본공제\n대비'].tolist(),
-        'with_tlh': list_a,
-        'no_tlh': list_b,
-        'diff_tlh': list(i-j for i, j in zip(list_a, list_b))
+        'with_tlh': list(map(lambda x:format(x,','),list_a)),
+        'no_tlh': list(map(lambda x:format(x,','),list_b)),
+        'diff_tlh': list(format(round((i-j)*10)/10,',') for i, j in zip(list_a, list_b))
     }
 
 @app.route('/green_index/<sec_num>_<theme_num>', methods = ['GET','POST'])
@@ -267,9 +272,7 @@ def get_green_indexing(sec_num, theme_num):
         "num_select": 1
     }
     res = requests.post(URL, data=json.dumps(data))
-    print(res)
     res = json.loads(res.text)
-    print(res)
     port_return = res['port_return']
     port_weight = res['port_weight']
     port_return = pd.DataFrame.from_dict(port_return)
@@ -287,19 +290,6 @@ def get_green_indexing(sec_num, theme_num):
             'name': port_weight.name.tolist(),
             'sector': port_weight.sector.tolist(),
             'theme': port_weight.theme.tolist(),
-            # 'value': port_weight.value.tolist(),
-            # 'size': port_weight.size.tolist(),
-            # 'quality': port_weight.quality.tolist(),
-            # 'earnings_momentum': port_weight.earnings_momentum.tolist(),
-            # 'price_momentum': port_weight.price_momentum.tolist(),
-            # 'score': port_weight.score.tolist(),
-            # 'indv_weight': port_weight.indv_weight.tolist(),
-            # 'sector_score': port_weight.sector_score.tolist(),
-            # 'sector_weight': port_weight.sector_weight.tolist(),
-            # 'quaadd_weight_sectorlity': port_weight.add_weight_sector.tolist(),
-            # 'theme_score': port_weight.theme_score.tolist(),
-            # 'theme_weight': port_weight.theme_weight.tolist(),
-            # 'theme_rank': port_weight.theme_rank.tolist(),
             'weight': port_weight.weight.tolist()
         }
             }
