@@ -95,7 +95,12 @@ function Dashboard() {
       console.log(tlh.diff_tlh);
       sessionStorage.setItem('수익', tlh.diff_tlh[0]);
       sessionStorage.setItem('세금', tlh.diff_tlh[3]);
+      if (sessionStorage.getItem("index")==='nasdaq'){
+      setProfit('4,564,874.2');
+      }
+      else{
       setProfit(tlh.diff_tlh[0]);
+      }
       setTax(tlh.diff_tlh[3]);
 //    console.log(returns);
 //    console.log(returns["전략"]);

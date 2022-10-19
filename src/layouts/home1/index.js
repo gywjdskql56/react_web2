@@ -21,7 +21,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import MAsolution1 from "layouts/masolution1";
-import DIsolution from "layouts/screening";
+import Screening2 from "layouts/screening2";
 import TLHsolution from "layouts/tlh_solution";
 import { Routes, Link } from "react-router-dom";
 import { useState } from "react";
@@ -112,7 +112,7 @@ function Dashboard() {
 
   const strategyList = [
     {strategy: '미래에셋 EMP펀드 바로가기', img :img1, ex_title: '미래에셋 EMP펀드에 대한 자세한 설명:', ex_content:'미래에셋 EMP펀드에 대한 설명은 다음과 같습니다.', color :"warning", component:MAsolution1, path:'/masolution' },
-    {strategy: '다이렉트 인덱싱 바로가기', img :img2, ex_title: '다이렉트 인덱싱에 대한 자세한 설명:', ex_content:'다이렉트 인덱싱에 대한 설명은 다음과 같습니다.', color : "success", component: DIsolution, path:'/screening'},
+    {strategy: '다이렉트 인덱싱 바로가기', img :img2, ex_title: '다이렉트 인덱싱에 대한 자세한 설명:', ex_content:'다이렉트 인덱싱에 대한 설명은 다음과 같습니다.', color : "success", component: Screening2, path:'/direct_indexing'},
     {strategy: '절세전략 바로가기', img :img3, ex_title: '절세전략에 대한 자세한 설명:', ex_content:'절세전략에 대한 설명은 다음과 같습니다.', color : "error", component:TLHsolution, path:'/tlh_solution' },
     ]
 
@@ -125,30 +125,30 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-<Grid container spacing={3}>
-    {strategyList.map(strategy =>
-        <Grid item xs={12} md={6} lg={4}>
-        <MDBox mb={1} mt={1}>
-         <Card sx={{ maxWidth: 500 }}>
-              <CardMedia
-                component="img"
-                height="600"
-                image={strategy.img}
-                alt="Paella dish"
-              />
-              <Card
-                sx={{ maxWidth: 500 }}
-                color = "orange"
-              />
-              <MDBox mt={4.5}>
-                    <Link to={strategy.path}>
-                      <MDButton variant="gradient" color={strategy.color} fullWidth>
-                        {strategy.strategy}
-                      </MDButton>
-                    </Link>
-                    <Routes path={strategy.path} component={strategy.component} />
-                  </MDBox>
-              <CardActions disableSpacing>
+        <Grid container spacing={3}>
+            {strategyList.map(strategy =>
+                <Grid item xs={12} md={6} lg={4}>
+                <MDBox mb={1} mt={1}>
+                 <Card sx={{ maxWidth: 500 }}>
+                      <CardMedia
+                        component="img"
+                        height="600"
+                        image={strategy.img}
+                        alt="Paella dish"
+                      />
+                      <Card
+                        sx={{ maxWidth: 500 }}
+                        color = "orange"
+                      />
+                      <MDBox mt={4.5}>
+                            <Link to={strategy.path}>
+                              <MDButton variant="gradient" color={strategy.color} fullWidth>
+                                {strategy.strategy}
+                              </MDButton>
+                            </Link>
+                            <Routes path={strategy.path} component={strategy.component} />
+                          </MDBox>
+                      <CardActions disableSpacing>
 
                 <ExpandMore1
                   expand={expanded}

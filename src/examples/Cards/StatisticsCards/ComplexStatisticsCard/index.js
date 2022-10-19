@@ -41,7 +41,24 @@ function handleClick(title, solutionNum) {
     console.log(sessionStorage.getItem("port2"));
     window.dispatchEvent(new Event("port2"));
     //    const strategyEx = sessionStorage.getItem("strategy_explain")[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")];
-  } else {
+  } else if (solutionNum === "3") {
+    console.log(title);
+    sessionStorage.setItem("selected3", true);
+    sessionStorage.setItem("DI_1", title);
+    localStorage.setItem("color", "green");
+    console.log(sessionStorage.getItem("selected3"));
+    window.dispatchEvent(new Event("selected3"));
+    //    const strategyEx = sessionStorage.getItem("strategy_explain")[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")];
+  } else if (solutionNum === "4") {
+    console.log(title);
+    sessionStorage.setItem("selected4", true);
+    sessionStorage.setItem("DI_2", title);
+    localStorage.setItem("color", "green");
+    console.log(sessionStorage.getItem("selected4"));
+    window.dispatchEvent(new Event("selected4"));
+    //    const strategyEx = sessionStorage.getItem("strategy_explain")[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")];
+  }
+   else {
     localStorage.setItem("color", "");
   }
   window.dispatchEvent(new Event("title"));
@@ -125,7 +142,7 @@ ComplexStatisticsCard.propTypes = {
     "light",
     "dark",
   ]),
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   percentage: PropTypes.shape({
     color: PropTypes.oneOf([
@@ -141,7 +158,7 @@ ComplexStatisticsCard.propTypes = {
     amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     label: PropTypes.string,
   }),
-  icon: PropTypes.node.isRequired,
+  icon: PropTypes.node,
 };
 
 export default ComplexStatisticsCard;

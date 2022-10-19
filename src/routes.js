@@ -1,6 +1,7 @@
 import Home1 from "layouts/home1";
 import MAsolutionTest from "layouts/masolution_test";
 import Screening2 from "layouts/screening2";
+//import DI from "layouts/direct_indexing";
 import TLHsolution from "layouts/tlh_solution";
 import Icon from "@mui/material/Icon";
 
@@ -21,15 +22,22 @@ const routes = [
     route: "/masolution",
     component: <MAsolutionTest />,
   },
-  {
+//  {
+//    type: "collapse",
+//    name: "Direct Indexing",
+//    key: "screening",
+//    icon: <Icon fontSize="small">dashboard</Icon>,
+//    route: "/screening",
+//    component: <DI />,
+//  },
+    {
     type: "collapse",
     name: "Direct Indexing",
-    key: "screening",
+    key: "direct_indexing",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/screening",
+    route: "/direct_indexing",
     component: <Screening2 />,
   },
-
   {
     type: "collapse",
     name: "절세 전략",

@@ -8,13 +8,35 @@ import requests
 import json
 import pandas as pd
 import pymssql
+import pickle
+import random
 from datetime import datetime
 import math
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 CORS(app)
+factor_list = ['growth', 'liquidity', 'price_mom', 'quality', 'sentiment', 'size', 'value', 'volatility']
 # conn = pymssql.connect(server='10.93.20.65', user='roboadv', password='roboadv123!', database='ROBO')
 
+
+# df_rtn_all = pd.read_excel('data/rtn.xlsx', sheet_name='Sheet1',index_col=0)
+# df_rtn = pd.read_excel('data/rtn_light.xlsx', sheet_name='Sheet2',index_col=0)
+# with open('rtn_light.pickle', 'wb') as file:
+#     pickle.dump(df_rtn, file, protocol = pickle.HIGHEST_PROTOCOL)
+# with open('rtn_light.pickle', 'rb') as file:
+#     df_rtn = pickle.load(file)
+#
+# with open('rtn.pickle', 'wb') as file:
+#     pickle.dump(df_rtn_all, file, protocol = pickle.HIGHEST_PROTOCOL)
+# with open('rtn.pickle', 'rb') as file:
+#     df_rtn = pickle.load(file)
+def save_pickle(df, file_nm):
+    with open('data/{}.pickle'.format((file_nm)), 'wb') as file:
+        pickle.dump(df, file, protocol = pickle.HIGHEST_PROTOCOL)
+def read_pickle(file_nm):
+    with open('data/{}.pickle'.format((file_nm)), 'rb') as file:
+        df = pickle.load(file)
+    return df
 
 def get_data(file_nm, skiprows=0, sheet_name =0, index_col=0):
     return pd.read_excel('data/'+file_nm, index_col=index_col , skiprows=skiprows, sheet_name=sheet_name)
@@ -45,6 +67,342 @@ def get_data(file_nm, skiprows=0, sheet_name =0, index_col=0):
 #     # return fd_return.RTN.tolist()
 #     return {"returns": list(map(lambda x: int(10000*x)/100,fd_return.RTN.tolist())), "date":fd_return.TD.tolist(), "std": int(np.std(fd_return.RTN.tolist())*10000)/10000}
 
+@app.route('/big_di/', methods=['GET', 'POST'])
+def get_all_big_DI():
+    df = read_pickle('테마분류_221012')
+    df = df.drop_duplicates(subset=['ticker'])
+    df['count'] = 1
+    count = df.groupby('sector').sum()['count'].to_dict().items()
+    return {'val': list(set(df['sector'])), 'count':[{'key': k, 'val': v} for k,v in count]}
+
+@app.route('/medium_di/<big_col>', methods=['GET', 'POST'])
+def get_all_medium_DI(big_col):
+    df = read_pickle('테마분류_221012')
+    df = df.drop_duplicates(subset=['ticker'])
+    df = df[df['sector']==big_col]
+    df['count'] = 1
+    count = df.groupby('theme').sum()['count'].to_dict().items()
+    return {'val':list(set(df['theme'])), 'count':[{'key': k, 'val': v} for k,v in count]}
+
+@app.route('/small_di_org/<big_col>_<md_col>', methods=['GET', 'POST'])
+def get_all_small_DI_org(big_col,md_col):
+    df = read_pickle('테마분류_221012')
+    df = df.drop_duplicates(subset=['ticker'])
+    df = df[df['sector']==big_col]
+    df = df[df['theme'] == md_col]
+    df_mcap = read_pickle('mcap_dollar_last') # pd.read_excel('data/mcap_dollar.xlsx', sheet_name='Sheet1')
+    # count = df.groupby('industry').sum()['count'].to_dict().items()
+
+    wgt = df_mcap.bfill()[list(df['ticker'])].iloc[-1] / \
+          df_mcap.bfill()[list(df['ticker'])].iloc[-1].sum() * 100
+    df = df.set_index('ticker')
+    df['wgt'] = wgt
+    df = df.reset_index()
+    df['wgt'] = df['wgt'].fillna(min(df['wgt']))
+    area_data = list()
+    for sec in list(set(df['industry'])):
+        area_data_ch = list()
+        sub_df = df[df['industry']==sec]
+        for t, w in zip(sub_df['ticker'], sub_df['wgt']):
+            child_ch = {"name": t,"color": "hsl({}, 70%, 50%)".format(random.randint(5, 200)),"loc": int(w*100)/100}
+            area_data_ch.append(child_ch)
+        child = {"name": sec, "color": "hsl({}, 70%, 50%)".format(random.randint(200, 350)), "children": area_data_ch}
+        area_data.append(child)
+    return {'val': list(set(df['industry'])), 'ticker': list(df['ticker']), 'wgt': list(df['wgt']), "area" : {"name": "포트폴리오", "color": "hsl(336, 70%, 50%)", "children": area_data}}
+
+
+@app.route('/screen_DI/<big_col>_<md_col>_<factor_score>_<rm_ticker>', methods=['GET', 'POST'])
+def get_screen_DI(big_col,md_col,factor_score,rm_ticker):
+    # factor_score = '2I0I0I2I0I0'
+    # rm_ticker = '1'
+    factor_score = factor_score.split('I')
+    factor_score = list(filter(lambda x: len(x)>0, factor_score))
+    print(factor_score)
+    if rm_ticker=='':
+        rm_ticker = []
+    else:
+        rm_ticker = list(filter(lambda x:len(x)>0, rm_ticker.split('111')))
+    df = read_pickle('테마분류_221012')
+    df = df.drop_duplicates(subset=['ticker'])
+    df = df[df['sector']==big_col]
+    df = df[df['theme'] == md_col]
+    df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+    df = df[df['TF'] == True]
+
+    model_score = read_pickle('model_score_add_last')
+    model_score = model_score[model_score['sector'] == big_col]
+    model_score = model_score[model_score['theme'] == md_col]
+    model_score['TF'] = model_score['ticker'].apply(lambda x : x not in rm_ticker)
+    model_score = model_score[model_score['TF']==True]
+    if sum(list(map(lambda x: int(x), factor_score)))==0:
+        model_score['wgt'] = model_score['mcap'].fillna(0) * 1000000
+    else:
+        model_score['wgt'] = model_score['mcap'].fillna(0) * 100
+    for f, s in zip(factor_list,factor_score):
+        print(f, '---', s)
+        model_score['wgt'] += model_score[f].fillna(0).apply(lambda x: x*int(s)*0.1)
+    df = pd.merge(model_score, df, left_on=['industry', 'sector', 'theme', 'ticker', 'name'],
+             right_on=['industry', 'sector', 'theme', 'ticker', 'name'], how='left')
+    area_data = list()
+    for sec in list(set(df['industry'])):
+        area_data_ch = list()
+        sub_df = df[df['industry']==sec].fillna(0)
+        for t, w in zip(sub_df['ticker'], sub_df['wgt']):
+            child_ch = {"name": t,"color": "hsl({}, 70%, 50%)".format(random.randint(5, 200)),"loc": int(w*100)/100}
+            area_data_ch.append(child_ch)
+        child = {"name": sec, "color": "hsl({}, 70%, 50%)".format(random.randint(200, 350)), "children": area_data_ch}
+        area_data.append(child)
+    print({"area" : {"name": "포트폴리오", "color": "hsl(336, 70%, 50%)", "children": area_data}})
+    return {"area" : {"name": "포트폴리오", "color": "hsl(336, 70%, 50%)", "children": area_data}, "portn":len(set(df['ticker'].tolist()))}
+
+@app.route('/finalPort_DI/', methods=['GET', 'POST'], defaults={"big_col":"기타", "md_col":"반려동물", 'factor_score':'2I0I0I2I0I0I0I0','rm_ticker':'1','num':'5' } )
+@app.route('/finalPort_DI/<big_col>_<md_col>_<factor_score>_<rm_ticker>_<num>', methods=['GET', 'POST'])
+def final_port_DI(big_col, md_col, factor_score, rm_ticker, num):
+    # factor_score = '2I0I0I2I0I0'
+    # rm_ticker = '1'
+    factor_score = factor_score.split('I')
+    factor_score = list(filter(lambda x: len(x) > 0, factor_score))
+    print(factor_score)
+    if rm_ticker == '':
+        rm_ticker = []
+    else:
+        rm_ticker = list(filter(lambda x: len(x) > 0, rm_ticker.split('111')))
+    df = read_pickle('테마분류_221012')
+    df = df.drop_duplicates(subset=['ticker'])
+    df = df[df['sector'] == big_col]
+    df = df[df['theme'] == md_col]
+    df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+    df = df[df['TF'] == True]
+    del df['TF']
+    ticker_list = list(set(df.ticker))
+
+    model_score = read_pickle('model_score_add')
+    model_score = model_score[model_score['sector'] == big_col]
+    model_score = model_score[model_score['theme'] == md_col]
+    model_score['TF'] = model_score['ticker'].apply(lambda x: x not in rm_ticker)
+    model_score = model_score[model_score['TF'] == True]
+    del model_score['TF']
+    if sum(list(map(lambda x: int(x), factor_score))) == 0:
+        model_score['wgt'] = model_score['mcap'].fillna(0) * 1000000
+    else:
+        model_score['wgt'] = model_score['mcap'].fillna(0) * 10
+    for f, s in zip(factor_list, factor_score):
+        print(f, '---', s)
+        model_score['wgt'] += model_score[f].fillna(0).apply(lambda x: x * int(s) * 0.1)
+        del model_score[f]
+    df = pd.merge(model_score, df, left_on=['industry', 'sector', 'theme', 'ticker', 'name'],
+                  right_on=['industry', 'sector', 'theme', 'ticker', 'name'], how='left')
+    df = df.sort_values(['td', 'wgt'])
+    rtn = read_pickle('rtn_add')
+    rtn = rtn[ticker_list + ['td','SP500']]
+    # rtn['td'] = rtn['td'].apply(lambda x: x.strftime('%Y-%m-%d'))
+    rtn_melt = rtn.melt('td').dropna()
+    rtn_melt.columns = ['td', 'ticker', 'rtn']
+    total = pd.merge(df, rtn_melt, left_on=['td', 'ticker'],
+                     right_on=['td', 'ticker'], how='left')
+    total = total.dropna(subset=['rtn','wgt'])
+    rebal_dates = sorted(list(set(df['td'])))
+    total_rebal_df = pd.DataFrame()
+    for rebal in rebal_dates:
+
+        rebal_df = total[total['td'] == rebal][['industry', 'sector', 'theme', 'td', 'ticker', 'name', 'wgt']].iloc[-1*int(num):]
+        print(len(total[total['td'] == rebal]),'=====',len(rebal_df))
+        rebal_df['wgt'] = rebal_df['wgt'].apply(lambda x: x/rebal_df['wgt'].sum())
+        total_rebal_df = total_rebal_df.append(rebal_df)
+    total_df = pd.merge(rtn_melt, total_rebal_df, left_on=['td', 'ticker'],
+                  right_on=['td', 'ticker'], how='left')
+    # total['wgt'] = total.apply(lambda row: 0 if row.loc['td'] in rebal_dates and row.loc['wgt']<0 else row.loc['wgt'],axis=1)
+    total_df = total_df.pivot(index='td', columns='ticker', values='wgt')
+    total_df = total_df.reset_index()
+    total_df = total_df.apply(lambda row:row.fillna(0) if row.loc['td'] in rebal_dates else row,axis=1)
+    total_df = total_df.set_index('td').ffill()
+    rtn = rtn.set_index('td')
+    Trtn = rtn.mul(total_df, fill_value=0)
+    Trtn = (Trtn.sum(axis=1)*0.01+1).cumprod()
+    Brtn = (rtn['SP500']+1).cumprod()
+    # total = total.apply(lambda row: row/row.sum(), axis=1)
+
+
+    return {"date": Trtn.index.tolist(),
+            "rtn": list(map(lambda x: int(x*100)/100, Trtn.values.tolist())),
+            "rtn_bm": list(map(lambda x: int(x*100)/100, Brtn.values.tolist())),
+            "tot_rtn": ((list(map(lambda x: int(x*10000)/10000, Trtn.values.tolist()))[-1]-1)*100)}
+
+@app.route('/finalUniverse_DI/<big_col>_<md_col>_<factor_score>_<rm_ticker>_<num>', methods=['GET', 'POST'])
+def final_universe_DI(big_col, md_col, factor_score, rm_ticker, num):
+    # factor_score = '2I0I0I2I0I0'
+    # rm_ticker = '1'
+    factor_score = factor_score.split('I')
+    factor_score = list(filter(lambda x: len(x) > 0, factor_score))
+    print(factor_score)
+    if rm_ticker == '':
+        rm_ticker = []
+    else:
+        rm_ticker = list(filter(lambda x: len(x) > 0, rm_ticker.split('111')))
+    df = read_pickle('테마분류_221012')
+    df = df.drop_duplicates(subset=['ticker'])
+    df = df[df['sector'] == big_col]
+    df = df[df['theme'] == md_col]
+    df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+    df = df[df['TF'] == True]
+    del df['TF']
+    ticker_list = list(set(df.ticker))
+
+    model_score = read_pickle('model_score_add')
+    model_score = model_score[model_score['sector'] == big_col]
+    model_score = model_score[model_score['theme'] == md_col]
+    model_score['TF'] = model_score['ticker'].apply(lambda x: x not in rm_ticker)
+    model_score = model_score[model_score['TF'] == True]
+    del model_score['TF']
+    if sum(list(map(lambda x: int(x), factor_score))) == 0:
+        model_score['wgt'] = model_score['mcap'].fillna(0) * 1000000
+    else:
+        model_score['wgt'] = model_score['mcap'].fillna(0) * 10
+    for f, s in zip(factor_list, factor_score):
+        print(f, '---', s)
+        model_score['wgt'] += model_score[f].fillna(0).apply(lambda x: x * int(s) * 0.1)
+        del model_score[f]
+    df = pd.merge(model_score, df, left_on=['industry', 'sector', 'theme', 'ticker', 'name'],
+                  right_on=['industry', 'sector', 'theme', 'ticker', 'name'], how='left')
+    df = df.sort_values(['td', 'wgt'])
+    rtn = read_pickle('rtn_add')
+    rtn = rtn[ticker_list + ['td']]
+    # rtn['td'] = rtn['td'].apply(lambda x: x.strftime('%Y-%m-%d'))
+    rtn_melt = rtn.melt('td').dropna()
+    rtn_melt.columns = ['td', 'ticker', 'rtn']
+    total = pd.merge(df, rtn_melt, left_on=['td', 'ticker'],
+                     right_on=['td', 'ticker'], how='left')
+    total = total.dropna(subset=['rtn', 'wgt'])
+    rebal_dates = sorted(list(set(df['td'])))
+    total_rebal_df = pd.DataFrame()
+    for rebal in rebal_dates:
+        rebal_df = total[total['td'] == rebal][['industry', 'sector', 'theme', 'td', 'ticker', 'name', 'wgt']].iloc[
+                   -1 * int(num):]
+        print(len(total[total['td'] == rebal]), '=====', len(rebal_df))
+        rebal_df['wgt'] = rebal_df['wgt'].apply(lambda x:round(x /rebal_df['wgt'].sum()*100,2))
+        total_rebal_df = total_rebal_df.append(rebal_df)
+    total_rebal_df = total_rebal_df.dropna()
+    print(total_rebal_df)
+    total_rebal_df = total_rebal_df.sort_values(['td'], ascending=False)
+
+
+    return {"ticker": total_rebal_df.ticker.tolist(),
+            "name": total_rebal_df.name.tolist(),
+            "theme1": total_rebal_df.sector.tolist(),
+            "theme2": total_rebal_df.theme.tolist(),
+            "theme3": total_rebal_df.industry.tolist(),
+            "weight": total_rebal_df.wgt.tolist(),
+            "td": total_rebal_df.td.tolist(),
+            "td_list": sorted(list(set(total_rebal_df.td.tolist()))),
+            }
+
+@app.route('/sec_ex_DI/<md_col>', methods=['GET', 'POST'])
+def sec_explain_DI(md_col):
+    ex = read_pickle('sec_explain')
+    if md_col in ex.keys():
+        return {"ex":ex[md_col]}
+    else:
+        return {"ex":md_col}
+
+@app.route('/fac_ex_DI/', methods=['GET', 'POST'])
+def fac_explain_DI():
+    ex = read_pickle('fac_explain')
+    return {"ex": ex}
+
+    print(1)
+    # with open('rtn_light.pickle', 'rb') as file:
+    #     df_rtn = pickle.load(file)
+    # if len(list(df[df['theme'] == md_col]['ticker'])) > 20:
+    #     ticker_list = df_mcap.bfill()[list(df[df['theme'] == md_col]['ticker'])].iloc[-1].transpose().sort_values(ascending=False).iloc[:20].index.tolist()
+    #     df['TF'] = df['ticker'].apply(lambda x:x in ticker_list)
+    #     df = df[df['TF']==True]
+    # else:
+    #     ticker_list = list(df[df['theme'] == md_col]['ticker'].tolist())
+    # wgt = df_mcap.bfill()[list(df[df['theme'] == md_col]['ticker'])].iloc[-1] / \
+    # df_mcap.bfill()[list(df[df['theme'] == md_col]['ticker'])].iloc[-1].sum() * 100
+    # df_rtn = df_rtn[ticker_list]
+    # df_rtn['count'] = df_rtn[ticker_list].apply(lambda row: len(row.dropna()), axis=1)
+    # df_rtn['mean'] = df_rtn[ticker_list].fillna(0).sum(axis=1) / df_rtn['count']
+    # df_rtn['cum_rtn'] = (df_rtn['mean']*0.01 +1).cumprod().fillna(1)
+    # df = df.set_index('ticker')
+    # df['wgt'] = wgt
+    # df['wgt'] = df['wgt'].apply(lambda x: int(x*100)/100)
+    # df_rtn['cum_rtn'] = df_rtn['cum_rtn'].apply(lambda x: int(x*100)/100)
+    # df['bg_theme'] = big_col
+    # df['md_theme'] = md_col
+    # df = df.reset_index()
+    # area_data = list()
+    # for sec in list(set(df['industry'])):
+    #     area_data_ch = list()
+    #     sub_df = df[df['industry']==sec]
+    #     for t, w in zip(sub_df['ticker'], sub_df['wgt']):
+    #         child_ch = {"name": t,"color": "hsl({}, 70%, 50%)".format(random.randint(5, 200)),"loc": int(w*100)/100}
+    #         area_data_ch.append(child_ch)
+    #     child = {"name": sec, "color": "hsl({}, 70%, 50%)".format(random.randint(200, 350)), "children": area_data_ch}
+    #     area_data.append(child)
+    # return {
+    # "bg_theme": list(df['bg_theme']),
+    # "md_theme": list(df['md_theme']),
+    # "sm_theme": list(df['industry']),
+    # "ticker": list(df['ticker']),
+    # "name": list(df['name']),
+    # "date": df_rtn.index.tolist(),
+    # "rtn": df_rtn['cum_rtn'].tolist(),
+    # "tot_rtn" : df_rtn['cum_rtn'].tolist()[-1] - 1,
+    # "wgt" : list(df['wgt']),
+    # "area" : {"name": "포트폴리오", "color": "hsl(336, 70%, 50%)", "children": area_data}
+    # }
+
+# @app.route('/small_di_save/<big_col>_<md_col>', methods=['GET', 'POST'])
+# def get_all_small_DI_save(big_col,md_col):
+#     df = pd.read_excel('data/테마분류_221006.xlsx')
+#     df = df.drop_duplicates(subset=['ticker'])
+#     df = df[df['sector']==big_col]
+#     df = df[df['theme'] == md_col]
+#     df_mcap = pd.read_excel('data/mcap_dollar.xlsx', sheet_name = 'Sheet1')
+#     with open('rtn_light.pickle', 'rb') as file:
+#         df_rtn = pickle.load(file)
+#     if len(list(df[df['theme'] == md_col]['ticker'])) > 20:
+#         ticker_list = df_mcap.bfill()[list(df[df['theme'] == md_col]['ticker'])].iloc[-1].transpose().sort_values(ascending=False).iloc[:20].index.tolist()
+#         df['TF'] = df['ticker'].apply(lambda x:x in ticker_list)
+#         df = df[df['TF']==True]
+#     else:
+#         ticker_list = list(df[df['theme'] == md_col]['ticker'].tolist())
+#     wgt = df_mcap.bfill()[list(df[df['theme'] == md_col]['ticker'])].iloc[-1] / \
+#     df_mcap.bfill()[list(df[df['theme'] == md_col]['ticker'])].iloc[-1].sum() * 100
+#     df_rtn = df_rtn[ticker_list]
+#     df_rtn['count'] = df_rtn[ticker_list].apply(lambda row: len(row.dropna()), axis=1)
+#     df_rtn['mean'] = df_rtn[ticker_list].fillna(0).sum(axis=1) / df_rtn['count']
+#     df_rtn['cum_rtn'] = (df_rtn['mean']*0.01 +1).cumprod().fillna(1)
+#     df = df.set_index('ticker')
+#     df['wgt'] = wgt
+#     df['wgt'] = df['wgt'].apply(lambda x: int(x*100)/100)
+#     df_rtn['cum_rtn'] = df_rtn['cum_rtn'].apply(lambda x: int(x*100)/100)
+#     df['bg_theme'] = big_col
+#     df['md_theme'] = md_col
+#     df = df.reset_index()
+#     area_data = list()
+#     for sec in list(set(df['industry'])):
+#         area_data_ch = list()
+#         sub_df = df[df['industry']==sec]
+#         for t, w in zip(sub_df['ticker'], sub_df['wgt']):
+#             child_ch = {"name": t,"color": "hsl({}, 70%, 50%)".format(random.randint(5, 200)),"loc": int(w*100)/100}
+#             area_data_ch.append(child_ch)
+#         child = {"name": sec, "color": "hsl({}, 70%, 50%)".format(random.randint(200, 350)), "children": area_data_ch}
+#         area_data.append(child)
+#     return {
+#     "bg_theme": list(df['bg_theme']),
+#     "md_theme": list(df['md_theme']),
+#     "sm_theme": list(df['industry']),
+#     "ticker": list(df['ticker']),
+#     "name": list(df['name']),
+#     "date": df_rtn.index.tolist(),
+#     "rtn": df_rtn['cum_rtn'].tolist(),
+#     "tot_rtn" : df_rtn['cum_rtn'].tolist()[-1] - 1,
+#     "wgt" : list(df['wgt']),
+#     "area" : {"name": "포트폴리오", "color": "hsl(336, 70%, 50%)", "children": area_data}
+#     }
+print(1)
 
 @app.route('/returns/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
 @app.route('/returns/<port1>_<port2>', methods = ['GET','POST'])
