@@ -11,8 +11,8 @@ import React, { useState, useEffect } from "react";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 import MDButton from "components/MDButton";
 import ReportsLineChart from "examples/Charts/LineCharts/DefaultLineChart";
-import Projects from "layouts/masolution_test/components/Projects";
-import Projects2 from "layouts/masolution_test/components/Projects2";
+import Projects from "layouts/masolution2/components/Projects";
+import Projects2 from "layouts/masolution2/components/Projects2";
 import OrdersOverview from "layouts/masolution2/components/OrdersOverview";
 import httpGet from "config";
 
@@ -23,8 +23,15 @@ function Dashboard() {
   const [start2, setStart2] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [start1, setStart1] = React.useState(false);
   sessionStorage.setItem("selected1", false);
   sessionStorage.setItem("selected2", false);
+
+    if (start1===false){
+    sessionStorage.setItem("port1", "변동성");
+    sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
+    setStart1(true);
+  }
 
   window.addEventListener("port1", () => {
     const portfolio1 = sessionStorage.getItem("port1");
@@ -98,14 +105,17 @@ function Dashboard() {
     setOpen2(true);
     console.log('next를 누르셨습니다.');
     console.log(open2);
-
-//  sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
+    }
+  console.log(httpGet("/strategy")[sessionStorage.getItem("port1")]);
+  if (start2 === false){
+  sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
   setStart2(true);
+  }
     const returns = httpGet(
     "/returns/".concat(sessionStorage.getItem("port1"), "_", sessionStorage.getItem("port2"))
   );
+  const std = returns.std.toFixed(4);
 
-  sessionStorage.setItem("std", returns.std.toFixed(4));
   const xtick = [];
   for (let i=0; i<returns.returns.length; i+=1){
   xtick.push(0)
@@ -117,10 +127,7 @@ function Dashboard() {
     datasets: [{ label: "수익률", data: returns.returns,color: "error", pointRadius:1, borderWidth:2 },
     { label: "기준선", data: xtick, color: "secondary", pointRadius:0, borderWidth:1 }],
   };
-  setSale(sales)
-  sessionStorage.setItem("sale", returns.returns.at(-1));
-  sessionStorage.setItem("returns", returns.returns.at(-1));
-  }
+
 
   console.log(sessionStorage.getItem("port1"));
   console.log(sessionStorage.getItem("port2"));
@@ -150,14 +157,14 @@ function Dashboard() {
           </Grid>)}
 
         </Grid>
-        {localStorage.getItem("color") === "salmon" &&
+
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={15} md={15} xl={12}>
               <DefaultProjectCard image={port} label="" title="" description="" size="large" />
             </Grid>
           </Grid>
-        </MDBox> }
+        </MDBox>
 
         <MDBox>
           <MDBox mt={4.5}>
@@ -233,11 +240,11 @@ function Dashboard() {
                   title="수익률"
                   description={
                     <>
-                      전 기간 백테스트 수익률은 <strong>{sessionStorage.getItem("returns")}%</strong> 입니다.
+                      전 기간 백테스트 수익률은 <strong>{returns.returns.at(-1)}%</strong> 입니다.
                     </>
                   }
                   date="updated 4 min ago"
-                  chart={sale}
+                  chart={sales}
                 />
               </MDBox>
             </Grid>
@@ -251,7 +258,7 @@ function Dashboard() {
                   color="dark"
                   icon="weekend"
                   title="변동성"
-                  count={sessionStorage.getItem("std")}
+                  count={std}
                   percentage={{
                     color: "success",
                     amount: "2,000,000",
