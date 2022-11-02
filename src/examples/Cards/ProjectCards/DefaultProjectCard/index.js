@@ -49,7 +49,6 @@ function DefaultProjectCard({ image, title, description }) {
     imagepath = apple;
   }
 
-  console.log("IMAGE IS".concat(imagepath));
   return (
     <Card
       sx={{

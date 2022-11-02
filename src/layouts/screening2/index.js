@@ -142,6 +142,19 @@ console.log(t);
 
 
   }
+  function onClickOPT(e) {
+  const opt = httpGet(`/OptimalScore/${sessionStorage.getItem("DI_2")}`);
+  console.log(opt.score);
+  console.log(opt.score[0]);
+  sessionStorage.setItem('factor', JSON.stringify({0:opt.score[0], 1:opt.score[1], 2:opt.score[2], 3:opt.score[3], 4:opt.score[4], 5:opt.score[5], 6:opt.score[6], 7:opt.score[7]}));
+      let factor_s = JSON.parse(sessionStorage.getItem("factor"))
+    console.log(factor_s)
+    let rmticker_str = sessionStorage.getItem("rmticker_str")
+    const area_update = httpGet(`/screen_DI/${sessionStorage.getItem("DI_1")}_${sessionStorage.getItem("DI_2")}_${factor_s[0]}I${factor_s[1]}I${factor_s[2]}I${factor_s[3]}I${factor_s[4]}I${factor_s[5]}_${rmticker_str}`).area // _${rmticker_str}
+    console.log(area_update)
+    setPort(area_update);
+    sessionStorage.setItem("area", JSON.stringify(area_update));
+  }
 
  function onClickNext3(e) {
     setOpen3(true);
@@ -159,7 +172,7 @@ console.log(t);
       const sales = {
         labels:  finalPort.date,
         datasets: [{ label: "PORT", data: finalPort.rtn, color: "error", pointRadius:1, borderWidth:2  },
-        { label: "BM(S&P500)", data: finalPort.rtn_bm, color: "warning", pointRadius:1, borderWidth:2 },
+        { label: finalPort.bm_nm, data: finalPort.rtn_bm, color: "warning", pointRadius:1, borderWidth:2 },
         { label: "기준선", data: xtick, color: "secondary", pointRadius:0, borderWidth:2 }
         ]
       };
@@ -367,9 +380,9 @@ console.log(t);
         </Grid>
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
-          <Grid item xs={1} md={1} lg={1}>
+          <Grid item xs={0.5} md={0.5} lg={0.5}>
           </Grid>
-          <Grid item xs={4} md={4} lg={4}>
+          <Grid item xs={3} md={3} lg={3}>
           <MDButton variant="gradient" color="error" fullWidth>
             포트폴리오에 편입할 종목 수 선택 (최대 {sessionStorage.getItem('portn')})
           </MDButton>
@@ -392,18 +405,27 @@ console.log(t);
           <MDButton variant="gradient" color="error" fullWidth>
             {sessionStorage.getItem("portn_select")} 개 선택
           </MDButton>
-          </Grid>
+        </Grid>
+        <Grid item xs={1} md={1} lg={1}/>
+        <Grid item xs={2} md={2} lg={2}>
+          <MDButton variant="gradient" color="success" onClick={() => onClickOPT()} fullWidth>
+            스코어 최적화하기
+          </MDButton>
+        </Grid>
         </Grid>
         </MDBox>
+
+
+
     {factors.map((factor, idx)=>
      <MDBox mt={4.5}>
         <Grid container spacing={3}>
-          <Grid item xs={2.5} md={2.5} lg={2.5}>
+          <Grid item xs={2} md={2} lg={2}>
           <MDButton variant="gradient" color="warning" fullWidth>
             {factor.one}
           </MDButton>
           </Grid>
-        <Grid item xs={2.5} md={2.5} lg={2.5}>
+        <Grid item xs={1.5} md={1.5} lg={1.5}>
           <Slider
             onChange={(e) => handleChange_factor(e, idx*2)}
             onChangeCommitted={(e) => {
@@ -416,7 +438,7 @@ console.log(t);
                 sessionStorage.setItem("area", JSON.stringify(area_update));
                 }}
             aria-label="Default"
-            defaultValue={0}
+            defaultValue={JSON.parse(sessionStorage.getItem("factor"))[idx*2]*0.1}
             getAriaValueText={valuetext}
             step={0.1}
             marks
@@ -427,12 +449,12 @@ console.log(t);
           </Grid>
         <Grid item xs={2} md={2} lg={2} />
 
-        <Grid item xs={2.5} md={2.5} lg={2.5}>
+        <Grid item xs={2} md={2} lg={2}>
           <MDButton variant="gradient" color="warning" fullWidth>
             {factor.two}
           </MDButton>
           </Grid>
-        <Grid item xs={2.5} md={2.5} lg={2.5}>
+        <Grid item xs={1.5} md={1.5} lg={1.5}>
           <Slider
             onChange={(e) => handleChange_factor(e, idx*2+1)}
             onChangeCommitted={(e) => {
@@ -445,7 +467,7 @@ console.log(t);
                 sessionStorage.setItem("area", JSON.stringify(area_update));
                 }}
             aria-label="Default"
-            defaultValue={0}
+            defaultValue={JSON.parse(sessionStorage.getItem("factor"))[idx*2+1]*0.1}
             getAriaValueText={valuetext}
             step={0.1}
             marks
@@ -498,60 +520,6 @@ console.log(t);
         </MDBox>
         <MDBox>
 
-       {/*   <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="dark"
-                  icon="weekend"
-                  title="변동성"
-                  count="-"
-                  percentage={{
-                    color: "success",
-                    amount: "2,000,000",
-                    label: "than last week",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  icon="leaderboard"
-                  title="현재 자산"
-                  count="-"
-                  percentage={{
-                    color: "success",
-                    amount: "2,300,000",
-                    label: "than last month",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="success"
-                  icon="store"
-                  title="배당성"
-                  count="-"
-                  percentage={{
-                    color: "success",
-                    amount: "0.9%",
-                    label: "than yesterday",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-          </Grid> */}
-{/*          <MDBox mt={4.5}>
-//             <Grid container spacing={3}>
-//              <Grid item xs={12} md={12} lg={12}>
-//                <Projects2 />
-//              </Grid>
-//            </Grid>
-//          </MDBox> */}
-
           <MDBox mt={4.5}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={12} lg={12}>
@@ -587,9 +555,7 @@ console.log(t);
           </MDButton>
         </MDBox>
       </MDBox>
-
     }
-
       </MDBox>
       <Footer />
     </DashboardLayout>

@@ -29,7 +29,7 @@ import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import data from "layouts/home/components/Projects/data";
+import data from "layouts/masolution2/components/Projects/data";
 
 function Projects() {
   const { columns, rows } = data();
@@ -64,7 +64,7 @@ function Projects() {
       <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
         <MDBox>
           <MDTypography variant="h6" gutterBottom>
-            Projects
+            최종 포트폴리오
           </MDTypography>
           <MDBox display="flex" alignItems="center" lineHeight={0}>
             <Icon
@@ -77,7 +77,7 @@ function Projects() {
               done
             </Icon>
             <MDTypography variant="button" fontWeight="regular" color="text">
-              &nbsp;<strong>30 done</strong> this month
+              &nbsp;<strong>포트폴리오에 편입된 종목과 비중내역입니다.</strong>
             </MDTypography>
           </MDBox>
         </MDBox>

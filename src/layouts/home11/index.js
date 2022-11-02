@@ -24,7 +24,7 @@ import MAsolution1 from "layouts/masolution1";
 import { Routes, Link } from "react-router-dom";
 import { useState } from "react";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
-import img1 from "assets/images/img111.png";
+import img1 from "assets/images/img111_v2.png";
 import img2 from "assets/images/img222.png";
 import img3 from "assets/images/img333.png";
 import img11 from "assets/images/img1.png";
