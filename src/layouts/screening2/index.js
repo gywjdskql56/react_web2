@@ -420,12 +420,12 @@ console.log(t);
     {factors.map((factor, idx)=>
      <MDBox mt={4.5}>
         <Grid container spacing={3}>
-          <Grid item xs={2} md={2} lg={2}>
+          <Grid item xs={2.5} md={2.5} lg={2.5}>
           <MDButton variant="gradient" color="warning" fullWidth>
             {factor.one}
           </MDButton>
           </Grid>
-        <Grid item xs={1.5} md={1.5} lg={1.5}>
+        <Grid item xs={2.5} md={2.5} lg={2.5}>
           <Slider
             onChange={(e) => handleChange_factor(e, idx*2)}
             onChangeCommitted={(e) => {
@@ -449,12 +449,12 @@ console.log(t);
           </Grid>
         <Grid item xs={2} md={2} lg={2} />
 
-        <Grid item xs={2} md={2} lg={2}>
+        <Grid item xs={2.5} md={2.5} lg={2.5}>
           <MDButton variant="gradient" color="warning" fullWidth>
             {factor.two}
           </MDButton>
           </Grid>
-        <Grid item xs={1.5} md={1.5} lg={1.5}>
+        <Grid item xs={2.5} md={2.5} lg={2.5}>
           <Slider
             onChange={(e) => handleChange_factor(e, idx*2+1)}
             onChangeCommitted={(e) => {
