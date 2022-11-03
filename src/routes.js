@@ -16,7 +16,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "미래에셋 EMP 솔루션",
+    name: "미래에셋 자문 솔루션",
     key: "masolution",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/masolution",
