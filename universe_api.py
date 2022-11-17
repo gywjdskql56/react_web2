@@ -6,7 +6,7 @@ import pickle
 import random
 import matplotlib
 matplotlib.use('TkAgg')
-from eft_screening_func import *
+# from eft_screening_func import *
 from TLH import *
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False

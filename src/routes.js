@@ -1,7 +1,7 @@
 import Home1 from "layouts/home1";
 import MAsolutionTest from "layouts/masolution_test";
 import Screening2 from "layouts/screening2";
- import Screening4 from "layouts/screening4";
+// import Screening4 from "layouts/screening4";
 // import DI from "layouts/direct_indexing";
 import TLHsolution from "layouts/tlh_solution";
 import Icon from "@mui/material/Icon";

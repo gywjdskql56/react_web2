@@ -21,7 +21,7 @@ etf_comp_dict = {
                        "JNJ US EQUITY": 0.05263,
                        "WMT US EQUITY": 0.05263,
                        "NEE US EQUITY": 0.05263,
-                       "XOM US EQUITY": 0.05263, 
+                       "XOM US EQUITY": 0.05263,
                        "PEP US EQUITY": 0.05263,
                        "MCD US EQUITY": 0.05263,
                        "IBM US EQUITY": 0.05263,
