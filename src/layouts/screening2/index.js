@@ -20,9 +20,10 @@ import { Routes, Link } from "react-router-dom";
 import { ResponsiveTreeMapHtml } from '@nivo/treemap'
 import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import Slider1 from './Slider';
 import data from './data/areaChartData';
-
 
 
 global.XMLHttpRequest = require("xhr2");
@@ -57,13 +58,16 @@ console.log(t);
  sessionStorage.setItem("theme", selectList2)
  const [selected1, setSelected1] = useState(selectList1);
  const [selected2, setSelected2] = useState(selectList2);
+ const [open, setOpen] = React.useState(false);
  const [open1, setOpen1] = React.useState(false);
  const [open2, setOpen2] = React.useState(false);
  const [open3, setOpen3] = React.useState(false);
+ const [open4, setOpen4] = React.useState(false);
  const [port, setPort] = React.useState(false);
  const [sale, setSale] = React.useState(false);
  const [smalls, setSmalls] = React.useState(false);
  const [portn, setPortn] = React.useState(false);
+ const [popular, setPopular] = React.useState(false);
  const [rmticker, setRmticker] = React.useState([]);
  const [factor, setFactor] = React.useState({0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0});
 
@@ -93,13 +97,69 @@ console.log(t);
   sessionStorage.setItem("theme", selectList2)
   };
 
-
+// const popular = ['그린-스마트그리드', '기타-반려동물', '디지털-반도체', '바이오-바이오텍', '인플레이션-인프라'];
+ const popularCol = ['수익률(1개월)', '수익률(3개월)', '수익률(6개월)','이익추정치(1개월)','이익추정치(3개월)'];
  const options1 = [
     { value: 1, label: "한국" },
   ];
   const options2 = [
     { value: 1, label: "친환경 투자" },
   ];
+
+ const onClickNextNew3 = event => {
+    console.log(event.target.innerText)
+    const rank = httpGet(`/sort_ranking/${event.target.innerText}`);
+    console.log(rank.rank);
+    sessionStorage.setItem("rank", JSON.stringify(rank))
+    setPopular(rank)
+  };
+ const onClickNextNew2 = event => {
+
+    console.log(event.target.innerText)
+    const Pports = event.target.innerText.split('-');
+    console.log(Pports)
+    sessionStorage.setItem("DI_1", Pports[0])
+    sessionStorage.setItem("DI_2", Pports[1]);
+
+  };
+
+    function onClickNextNew(e) {
+   const small = httpGet(`/screen_DI/${sessionStorage.getItem("DI_1")}_${sessionStorage.getItem("DI_2")}_0I0I0I0I0I0_1`)
+    setOpen2(true);
+    console.log('next를 누르셨습니다.');
+  const xtick = [];
+  setPort(small.area);
+  setPortn(small.portn);
+  sessionStorage.setItem('portn', small.portn);
+  sessionStorage.setItem('portn_select', small.portn);
+  sessionStorage.setItem("area", JSON.stringify(small.area));
+  setRmticker([]);
+  sessionStorage.setItem('factor', JSON.stringify({0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0}));
+  setFactor({0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0});
+  sessionStorage.setItem('rmticker', JSON.stringify([]));
+  sessionStorage.setItem('rmticker_str', '111');
+  setSmalls(small);
+  console.log(JSON.parse(sessionStorage.getItem('rmticker')))
+  console.log(typeof(JSON.parse(sessionStorage.getItem('rmticker'))))
+
+  const secEX=httpGet(`/sec_ex_DI/${sessionStorage.getItem("DI_2")}`).ex
+  const facEX=httpGet(`/fac_ex_DI`).ex
+  sessionStorage.setItem('secEX', secEX);
+  sessionStorage.setItem('facEX', JSON.stringify(facEX));
+
+
+
+  }
+   function onClickNext(e) {
+    const ranks = httpGet(`/sort_ranking/수익률(1개월)`);
+    console.log(ranks.rank);
+    sessionStorage.setItem("rank", JSON.stringify(ranks))
+    setPopular(ranks)
+    setOpen(true);
+    console.log('next를 누르셨습니다.');
+    console.log(open);
+
+  }
     function onClickNext1(e) {
     setOpen1(true);
     console.log('next를 누르셨습니다.');
@@ -179,6 +239,7 @@ console.log(t);
       console.log(sales);
       setSale(sales);
       sessionStorage.setItem("tot_rtn", finalPort.tot_rtn);
+
 //    const finalPort = httpGet(`/small_di_org/${sessionStorage.getItem("DI_1")}_${sessionStorage.getItem("DI_2")}`);
 
   }
@@ -218,7 +279,38 @@ console.log(t);
                 color = "orange"
               />
        </Card>
-      <MDBox py={3}>
+       <MDBox mt={3}>
+       <Grid container spacing={3}>
+        <Grid item xs={6} md={6} lg={6}>
+            <MDBox mt={1}>
+                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="포트폴리오 추천받기" percentage={{
+                  color: "error",
+                  amount: "수익률, 이익추정치",
+                  label: "로 유니버스 추천받기",
+                }}/>
+            </MDBox>
+        </Grid>
+        <Grid item xs={6} md={6} lg={6}>
+            <MDBox mt={1}>
+                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="포트폴리오 직접 선택하기" percentage={{
+                  color: "error",
+                  amount: "내가 투자하고 싶은",
+                  label: "유니버스 직접 고르기",
+                }}/>
+            </MDBox>
+        </Grid>
+        </Grid>
+        </MDBox>
+
+       <MDBox mt={4.5}>
+          <MDButton variant="gradient" color="success" onClick={() => onClickNext()} fullWidth>
+            NEXT
+          </MDButton>
+        </MDBox>
+      {open===false?
+         <MDBox mt={3} />
+      : ((sessionStorage.getItem("포트폴리오 타입")==="포트폴리오 직접 선택하기") ?
+      (<MDBox mt={3}>
       <Grid container spacing={3}>
         {theme.map((dict, val)=>
         <Grid item xs={12/theme.length} md={12/theme.length} lg={12/theme.length}>
@@ -233,11 +325,76 @@ console.log(t);
         )}
 
         </Grid>
+
         <MDBox mt={4.5}>
               <MDButton variant="gradient" color="success" onClick={() => onClickNext1()} fullWidth>
                 NEXT
               </MDButton>
         </MDBox>
+        </MDBox>)
+        :
+ (<MDBox mt={1}>
+ <Grid container spacing={3}>
+  {popularCol.map((val, idx)=>
+
+    <Grid item xs={12/popularCol.length} md={12/popularCol.length} lg={12/popularCol.length}>
+    <MDBox mt={1}>
+    <Button variant="primary" sx={{ color: 'yellow', backgroundColor: 'orange', borderColor: 'orange' }} onClick={onClickNextNew3}>
+        <Typography variant="h5" component="div" color="common.white">
+          {val}
+        </Typography>
+    </Button>
+    </MDBox>
+     </Grid>
+     )}
+     </Grid>
+
+
+    <MDBox mt={2}>
+    { popular.rank.map((val, idx)=>
+        <Grid container spacing={3}>
+        <Grid item xs={1} md={1} lg={1}>
+        <MDBox mt={1}>
+        <Button sx={{ color: 'yellow', backgroundColor: 'green', borderColor: 'green'}} >
+            <Typography variant="h5" component="div" color="common.white">
+              {idx+1}
+            </Typography>
+        </Button>
+        </MDBox>
+         </Grid>
+
+        <Grid item xs={3} md={3} lg={3}>
+        <MDBox mt={1}>
+        <Button variant="contained" sx={{ color: 'yellow', backgroundColor: 'green', borderColor: 'green' }} onClick={onClickNextNew2}>
+            <Typography variant="h5" component="div" color="common.white">
+              {val}
+            </Typography>
+        </Button>
+        </MDBox>
+        </Grid>
+        <Grid item xs={2} md={2} lg={2}>
+        <MDBox mt={1}>
+        <Button sx={{ color: 'yellow', backgroundColor: 'blue', borderColor: 'blue' }} >
+            <Typography variant="h5" component="div" color="common.white">
+              {popular.rank_val[idx]}
+            </Typography>
+        </Button>
+        </MDBox>
+        </Grid>
+        </Grid>
+        )}
+        </MDBox>
+
+        <MDBox mt={4.5}>
+              <MDButton variant="gradient" color="success" onClick={() => onClickNextNew()} fullWidth>
+                선택한 유니버스에 바로 투자하기
+              </MDButton>
+        </MDBox>
+        </MDBox>)
+      )}
+
+
+
 
      {open1===true &&
 
@@ -270,7 +427,7 @@ console.log(t);
         </MDBox>
           }
           {open2===true &&
-          <MDBox py={1}>
+          <MDBox mt={1}>
         <MDBox mt={0.5}>
           <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
@@ -556,7 +713,7 @@ console.log(t);
         </MDBox>
       </MDBox>
     }
-      </MDBox>
+
       <Footer />
     </DashboardLayout>
   );

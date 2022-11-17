@@ -10,7 +10,7 @@ import httpGet from "config";
 import MDBox from "components/MDBox";
 import ReportsLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
-import Projects from "layouts/tlh_solution2/components/Projects";
+import Projects from "layouts/tlh_solution/components/Projects";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 
 // Material Dashboard 2 React example components
@@ -29,20 +29,15 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
 function Dashboard() {
-  let returns = httpGet("/tlh_solution_spy");
-  let sales = {
-      labels: returns["전략"].date,
-      datasets: [{ label: "TLH 적용 수익률", data: returns["전략"]["TLH 전략"],color: "error", pointRadius:1, borderWidth:2 },
-      { label: "TLH 미적용 수익률", data: returns["전략"]["QQQ 바이홀드 전략"],color: "info", pointRadius:1, borderWidth:2 },
-      ],
-    };
-  sessionStorage.setItem("index", 'spy')
+  let returns = 0
+//  sessionStorage.setItem("index", 'SPY')
   const [warningSB, setWarningSB] = useState(false);
   const closeWarningSB = () => setWarningSB(false);
   const animatedComponents = makeAnimated();
-  const [selected1, setSelected1] = useState("spy");
+  const [selected1, setSelected1] = useState("SPY US EQUITY");
   const [profit, setProfit] = useState(null);
   const [tax, setTax] = useState(null);
+  const [sale, setSale] = useState(null);
   const [open1, setOpen1] = React.useState(false);
   const renderWarningSB = (
     <MDSnackbar
@@ -58,8 +53,10 @@ function Dashboard() {
     />
   );
   const options1 = [
-    { value: "nasdaq", label: "Nasdaq 100" },
-    { value: "spy", label: "S&P500" },
+    { value: "QQQ", label: "Nasdaq 100 INDEX" },
+    { value: "SPY", label: "S&P500 INDEX" },
+    { value: "NOBL", label: "ProShares S&P 500 Dividend Aristocrats ETF" },
+    { value: "SOXX", label: "iShares Semiconductor ETF" },
   ];
   const options2 = [
     { value: "10000000", label: "1000만원" },
@@ -83,44 +80,45 @@ function Dashboard() {
       setSelected1(event.value);
       sessionStorage.setItem("index", event.value);
       }
+  const handleChange2 = event => {
+      sessionStorage.setItem("init_invest", event.value);
+      console.log(sessionStorage.getItem("init_invest"))
+      }
   function onClickNext(e) {
     setOpen1(true);
     console.log('next를 누르셨습니다.');
     console.log(sessionStorage.getItem("index"));
     console.log(open1);
-    console.log(`/tlh_solution_${sessionStorage.getItem("index")}`);
-    returns = httpGet(`/tlh_solution_${sessionStorage.getItem("index")}`);
-    const tlh = httpGet(`/tlh_table_${sessionStorage.getItem("index")}`);
-
+    const TLHport = httpGet(`/tlh_solution/${sessionStorage.getItem("index")}_${sessionStorage.getItem("init_invest")}`);
+    returns = TLHport.SIMUL
+    sessionStorage.setItem("returns",JSON.stringify(returns))
+    const tlh = TLHport.TABLE
+    sessionStorage.setItem("table",JSON.stringify(tlh))
       console.log(tlh.diff_tlh);
-      sessionStorage.setItem('수익', tlh.diff_tlh[0]);
-      sessionStorage.setItem('세금', tlh.diff_tlh[3]);
-      if (sessionStorage.getItem("index")==='nasdaq'){
-      setProfit('4,564,874.2');
-      }
-      else{
-      setProfit(tlh.diff_tlh[0]);
-      }
+      sessionStorage.setItem('수익', tlh.diff_tlh[3]);
+      sessionStorage.setItem('세금', tlh.diff_tlh[5]);
+      setProfit(tlh.diff_tlh[2])
+
       setTax(tlh.diff_tlh[3]);
-//    console.log(returns);
-//    console.log(returns["전략"]);
-//    console.log(returns["전략"]["TLH 전략"]);
-//    console.log(returns["전략"]["TLH 전략"].at(-1));
-//    console.log(returns["전략"]["QQQ 바이홀드 전략"]);
+
     const xtick = [];
-    for (let i=0; i<returns["전략"]["TLH 전략"].length; i+=1){
+    for (let i=0; i<returns.TLH_SIMUL.length; i+=1){
       xtick.push(0)
     }
-    sales = {
-      labels: returns["전략"].date,
-      datasets: [{ label: "TLH 적용 수익률", data: returns["전략"]["TLH 전략"],color: "error", pointRadius:1, borderWidth:2 },
-      { label: "TLH 미적용 수익률", data: returns["전략"]["QQQ 바이홀드 전략"],color: "info", pointRadius:1, borderWidth:2 },
+    const sales = {
+      labels: returns.Date,
+      datasets: [{ label: "TLH 적용 수익률", data: returns.TLH_SIMUL,color: "error", pointRadius:1, borderWidth:2 },
+      { label: "TLH 미적용 수익률", data: returns.PORT_SIMUL,color: "info", pointRadius:1, borderWidth:2 },
       ],
     };
+    setSale(sales)
+    console.log(sales)
+    console.log(returns.TLH_SIMUL)
+    console.log(returns.PORT_SIMUL)
+    sessionStorage.setItem("sales", JSON.stringify(sales))
   }
   console.log(sessionStorage.getItem('수익'));
   console.log(sessionStorage.getItem('세금'));
-  console.log(returns);
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -144,7 +142,7 @@ function Dashboard() {
       </MDBox> */}
       <MDBox py={3}>
         <Grid container spacing={3}>
-          <Grid item xs={4} md={4} lg={4}>
+          <Grid item xs={6} md={6} lg={6}>
             <MDBox mb={1}>
             <ComplexStatisticsCard color="error" icon="weekend" count="- 투자 지수" />
 
@@ -154,14 +152,13 @@ function Dashboard() {
           <Select
             closeMenuOnSelect={false}
             components={animatedComponents}
-            defaultValue={[options1[1]]}
             options={options1}
             onChange={handleChange}
           />
         </MDBox>
         </Grid>
 
-          <Grid item xs={4} md={4} lg={4}>
+          <Grid item xs={6} md={6} lg={6}>
             <MDBox mb={1}>
               <ComplexStatisticsCard color="error" icon="weekend" count="- 투자 금액" />
             </MDBox>
@@ -170,26 +167,12 @@ function Dashboard() {
           <Select
             closeMenuOnSelect={false}
             components={animatedComponents}
-            defaultValue={[options2[1]]}
-            isMulti
             options={options2}
+            onChange={handleChange2}
           />
         </MDBox>
         </Grid>
-          <Grid item xs={4} md={4} lg={4}>
-            <MDBox mb={1}>
-              <ComplexStatisticsCard color="error" icon="weekend" count="- 일임 계약" />
-            </MDBox>
-        <MDBox mt={4.5}>
-          <Select
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            defaultValue={[options3[4], options3[5]]}
-            isMulti
-            options={options3}
-          />
-        </MDBox>
-        </Grid>
+
         </Grid>
         <MDBox mt={4.5}>
           <MDBox mt={4}>
@@ -204,7 +187,8 @@ function Dashboard() {
           </MDBox>
         </MDBox>
       </MDBox>
-      {open1===true &&     <MDBox py={3}>
+      {open1===true &&
+      <MDBox py={3}>
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12} lg={12}>
@@ -214,11 +198,11 @@ function Dashboard() {
                   title="평가금액"
                   description={
                     <>
-                      전 기간 백테스트 수익률은 <strong>{returns.returns}%</strong> 입니다.
+                      전 기간 백테스트 수익률은 <strong>{JSON.parse(sessionStorage.getItem("returns")).returns}%</strong> 입니다.
                     </>
                   }
                   date="updated 4 min ago"
-                  chart={sales}
+                  chart={sale}
                 />
               </MDBox>
             </Grid>
@@ -232,7 +216,7 @@ function Dashboard() {
                   color="dark"
                   icon="weekend"
                   title="CAGR"
-                  count={returns.cagr}
+                  count={JSON.parse(sessionStorage.getItem("returns")).CAGR}
                   percentage={{
                     color: "success",
                     amount: "2,000,000",
@@ -246,7 +230,7 @@ function Dashboard() {
                 <ComplexStatisticsCard
                   icon="leaderboard"
                   title="초기 자산"
-                  count={Math.round(returns["전략"]["TLH 전략"].at(0))}
+                  count={JSON.parse(sessionStorage.getItem("table")).with_tlh[0]}
                   percentage={{
                     color: "success",
                     amount: "2,300,000",
@@ -261,7 +245,7 @@ function Dashboard() {
                   color="success"
                   icon="store"
                   title="현재 자산"
-                  count={Math.round(returns["전략"]["TLH 전략"].at(-1))}
+                  count={JSON.parse(sessionStorage.getItem("table")).with_tlh[1]}
                   percentage={{
                     color: "success",
                     amount: "0.9%",
@@ -305,7 +289,7 @@ function Dashboard() {
             </Grid>
           <MDBox mt={4.5}>
             <MDButton variant="gradient" color="error" onClick={() => onClickNext()} fullWidth>
-              2000만원을 10년간 투자하는 경우 TLH 전략을 통해  {sessionStorage.getItem('세금')} 원의 세금을 절약하여 총  {sessionStorage.getItem('수익')} 원의 수익을 낼 수 있습니다.
+              2000만원을 10년간 투자하는 경우 TLH 전략을 통해  {sessionStorage.getItem('세금')} 원의 세금을 절약하여 총  {sessionStorage.getItem('수익')}의 수익을 낼 수 있습니다.
             </MDButton>
           </MDBox>
           <MDBox mt={4.5}>

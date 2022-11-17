@@ -1,34 +1,19 @@
-import os
-import math
-import pandas as pd
 from flask import Flask
 from flask_cors import CORS
-import numpy as np
 import requests
 import json
-import pandas as pd
-import pymssql
 import pickle
 import random
-from datetime import datetime
-import math
+import matplotlib
+matplotlib.use('TkAgg')
+from eft_screening_func import *
+from TLH import *
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 CORS(app)
 factor_list = ['growth', 'liquidity', 'price_mom', 'quality', 'sentiment', 'size', 'value', 'volatility']
 # conn = pymssql.connect(server='10.93.20.65', user='roboadv', password='roboadv123!', database='ROBO')
 
-# df_rtn_all = pd.read_excel('data/rtn.xlsx', sheet_name='Sheet1',index_col=0)
-# df_rtn = pd.read_excel('data/rtn_light.xlsx', sheet_name='Sheet2',index_col=0)
-# with open('rtn_light.pickle', 'wb') as file:
-#     pickle.dump(df_rtn, file, protocol = pickle.HIGHEST_PROTOCOL)
-# with open('rtn_light.pickle', 'rb') as file:
-#     df_rtn = pickle.load(file)
-#
-# with open('rtn.pickle', 'wb') as file:
-#     pickle.dump(df_rtn_all, file, protocol = pickle.HIGHEST_PROTOCOL)
-# with open('rtn.pickle', 'rb') as file:
-#     df_rtn = pickle.load(file)
 
 def save_pickle(df, file_nm):
     with open('data/{}.pickle'.format((file_nm)), 'wb') as file:
@@ -39,9 +24,95 @@ def read_pickle(file_nm):
         df = pickle.load(file)
     return df
 
-
 def get_data(file_nm, skiprows=0, sheet_name =0, index_col=0):
     return pd.read_excel('data/'+file_nm, index_col=index_col , skiprows=skiprows, sheet_name=sheet_name)
+
+@app.route('/make_corr_heatmap/', methods=['GET', 'POST'])
+def make_corr_heatmap():
+    corr = read_pickle('corr')
+    return corr
+
+@app.route('/make_corr_heatmap_col/<col>', methods=['GET', 'POST'])
+def make_corr_heatmap_col(col):
+    corr = read_pickle('{}_corr'.format(col))
+    return corr
+
+# @app.route('/make_corr_heatmap/', methods=['GET', 'POST'])
+# def make_corr_heatmap():
+#     # Define Tickers
+#     tickers_equity=['ACWI','SPY', 'QQQ','EFA','EEM', 'VLUE', 'IVW', 'MTUM', 'QUAL', 'USMV', 'IWM']
+#     tickers_gx=['BUG','DRIV', 'LIT', 'NXTG', 'PAVE', 'QCLN', 'SNSR', 'WCLD', 'XSD', 'FIVG', 'FBT', 'IGF', 'KWEB', 'BND']
+#     tickers_income=['CWB', 'FPE', 'JNK', 'ICVT', 'SRLN', 'BKLN', 'SCHD', 'VIG', 'VCSH', 'VCIT']
+#
+#
+#     tickers_bond=['TLT','IEF','SHY','TIP','LQD','HYG','BIL']
+#     tickers_etc=['GLD','DBC','KRW=X']
+#     tickers=tickers_equity + tickers_bond+tickers_etc+tickers_gx+tickers_income
+#
+#     tickers= list(set(tickers))
+#
+#     ETF = pd.read_pickle("data/ETF.pkl")
+#     ETF = ETF.sort_values('Tickers')
+#     ETF = ETF.reset_index(drop=True)
+#     annualization = 52
+#
+#     # Download Yahoo Data
+#     df_yahoo_index = pd.read_pickle("data/df_yahoo_index.pkl")
+#
+#     df_asset_index=df_yahoo_index.dropna()
+#     df_asset_ret=df_asset_index.pct_change()
+#     df_asset_ret=df_asset_ret.reindex(columns=tickers)
+#
+#     #####################calculate factor returns
+#     df_factor_ret=calculate_factor_ret(df_asset_ret, method='specific')
+#
+#     df_factor_summary=pd.DataFrame([])
+#     df_factor_summary['Annualized Return']=df_factor_ret.mean()*annualization
+#     df_factor_summary['Annualized Volatility']=df_factor_ret.std()*(annualization**0.5)
+#     df_factor_summary['Sharpe(Rf=0%)']=df_factor_summary['Annualized Return'] / df_factor_summary['Annualized Volatility']
+#
+#     print('factor start')
+#     #####################calculate and display factor exposures
+#     regression_result = factor_model(df_asset_ret.dropna(), df_factor_ret.dropna(), regression='stepwise')
+#
+#     even_range=1.5
+#     cm = sns.diverging_palette(240, 10, as_cmap=True)
+#     factor_exposures=regression_result.exposures.copy()
+#     factor_exposures=factor_exposures.reset_index()
+#     factor_exposures=factor_exposures.sort_values('index')
+#     factor_exposures['ETF']=ETF['Name'].values
+#     factor_exposures.set_index(['index', 'ETF'], inplace=True)
+#     print('data start')
+#     data = []
+#     for idx in factor_exposures.index:
+#         ticker = idx[0]
+#         sub_data = {}
+#         sub_data["id"] = ticker
+#         sub_sub_data = []
+#         for factor in factor_exposures.loc[idx].index:
+#             val = factor_exposures.loc[idx, factor]
+#             sub_sub_data.append({
+#                 "x":factor,
+#                 "y":round(val,4) * 100000
+#             })
+#         sub_data['data'] = sub_sub_data
+#         data.append(sub_data)
+#     return {"data": data}
+
+
+@app.route('/sort_ranking/<col>', methods=['GET', 'POST'])
+def sort_ranking(col):
+    df = read_pickle('테마분류_221012')
+    df = df[['sector', 'theme']].drop_duplicates().set_index('theme').to_dict()['sector']
+    recom = pd.read_excel('data/recom_dat.xlsx').rename(
+        columns={'pm_1m': '수익률(1개월)', 'pm_3m': '수익률(3개월)', 'pm_6m': '수익률(6개월)', 'ni_1m_chg': '이익추정치(1개월)',
+                 'ni_3m_chg': '이익추정치(3개월)'}).set_index('theme')
+    recom = recom.sort_values(by=col, ascending=False)
+    recom_idx = recom.index.tolist()[:10]
+    recom_idx = list(map(lambda x: df[x]+'-'+x, recom_idx))
+    recom_val = recom[col].tolist()[:10]
+    recom_val = list(map(lambda x: round(x,2), recom_val))
+    return {'rank':recom_idx, 'rank_val': recom_val}
 
 
 @app.route('/big_di/', methods=['GET', 'POST'])
@@ -302,7 +373,6 @@ def fac_explain_DI():
 
     print(1)
 
-print(1)
 
 @app.route('/returns/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
 @app.route('/returns/<port1>_<port2>', methods = ['GET','POST'])
@@ -436,6 +506,32 @@ def universe(port1, port2):
 def main():
     return 'flask is working'
 
+@app.route('/tlh_solution/<etf>_<init_invest>', methods = ['GET','POST'])
+def calc_TLH(etf, init_invest):
+    etf += " US EQUITY"
+    print(etf)
+    init_invest = int(init_invest)
+    port_year_df, port_df = make_all_port(etf, init_invest)
+    simul_df = make_simul(etf, port_year_df, port_df, init_invest)
+    table_df = make_table(etf, port_year_df, init_invest)
+    return {
+        "SIMUL": {
+            "Date": list(map(lambda x: x.strftime('%Y-%m-%d'), simul_df.index)),
+            "PORT_SIMUL".format(etf): simul_df["{}_SIMUL".format(etf)].values.tolist(),
+            "TLH_SIMUL": simul_df["TLH_SIMUL"].values.tolist(),
+            "CAGR" : table_df.loc['세후수익률(연환산)','TLH 적용']
+        },
+        "TABLE": {
+            "col": list(table_df.index),
+            "diff_tlh": table_df['절세전략 효과'].values.tolist(),
+            "no_tlh": table_df['TLH 미적용'].values.tolist(),
+            "with_tlh": table_df['TLH 적용'].values.tolist(),
+        }
+
+    }
+
+
+
 @app.route('/tlh_solution_spy', methods = ['GET','POST'])
 def TLH():
     data = get_data(file_nm='TLH 계산 로직 및 시뮬레이션 결과_SPY.xlsx',sheet_name='차트')
@@ -456,7 +552,8 @@ def TLH():
     data_2 = data_2[data_2['tf'] == True]
 
     return {'평가금액': {'date': data_1['날짜1'].tolist(), 'QQQ 평가 금액': list(map(lambda x: x/10000000, data_1['QQQ 평가 금액'].tolist())), 'TLH 평가금액': list(map(lambda x: x/10000000,data_1['TLH 평가 금액'].tolist()))} ,
-            '전략': {'date': data_2['날짜2'].tolist(),  'TLH 전략': data_2['TLH 전략'].tolist(), 'QQQ 바이홀드 전략': data_2['QQQ 바이홀드 전략'].tolist()}, 'returns':round((data_2['TLH 전략'].iloc[-1]-data_2['TLH 전략'].iloc[0])/data_2['TLH 전략'].iloc[0]*10000)/100,
+            '전략': {'date': data_2['날짜2'].tolist(),  'TLH 전략': data_2['TLH 전략'].tolist(), 'QQQ 바이홀드 전략': data_2['QQQ 바이홀드 전략'].tolist()},
+            'returns':round((data_2['TLH 전략'].iloc[-1]-data_2['TLH 전략'].iloc[0])/data_2['TLH 전략'].iloc[0]*10000)/100,
             'cagr': round(((data_2['TLH 전략'].iloc[-1]/data_2['TLH 전략'].iloc[0])**(1/10)-1)*10000)/100}
 
 @app.route('/tlh_table_spy', methods = ['GET','POST'])

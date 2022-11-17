@@ -1,7 +1,7 @@
 import httpGet from "config";
 
 export default function data() {
-  const tlh = httpGet(`/tlh_table_${sessionStorage.getItem("index")}`);
+  const tlh = httpGet(`/tlh_solution/${sessionStorage.getItem("index")}_${sessionStorage.getItem("init_invest")}`).TABLE;
 
   console.log(tlh.diff_tlh);
   sessionStorage.setItem('수익', tlh.diff_tlh[0]);

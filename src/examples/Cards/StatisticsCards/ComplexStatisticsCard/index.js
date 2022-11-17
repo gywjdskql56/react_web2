@@ -57,6 +57,12 @@ function handleClick(title, solutionNum) {
     console.log(sessionStorage.getItem("selected4"));
     window.dispatchEvent(new Event("selected4"));
     //    const strategyEx = sessionStorage.getItem("strategy_explain")[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")];
+  } else if (solutionNum === "5") {
+    console.log(title);
+    sessionStorage.setItem("포트폴리오 타입", title);
+    console.log(sessionStorage.getItem("포트폴리오 타입"));
+    localStorage.setItem("color", "green");
+    //    const strategyEx = sessionStorage.getItem("strategy_explain")[sessionStorage.getItem("port1")][sessionStorage.getItem("port2")];
   }
    else {
     localStorage.setItem("color", "");

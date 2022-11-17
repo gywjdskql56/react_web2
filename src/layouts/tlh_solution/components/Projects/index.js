@@ -29,7 +29,7 @@ import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import data from "layouts/dashboard/components/Projects/data";
+import data from "layouts/tlh_solution/components/Projects/data";
 
 function Projects() {
   const { columns, rows } = data();
@@ -37,7 +37,11 @@ function Projects() {
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
   const closeMenu = () => setMenu(null);
-
+  const myNewTheme = {
+    rows: {
+      fontSize: "25px",
+    },
+  };
   const renderMenu = (
     <Menu
       id="simple-menu"
@@ -64,7 +68,7 @@ function Projects() {
       <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
         <MDBox>
           <MDTypography variant="h6" gutterBottom>
-            Projects
+            절세 포트폴리오 누적 기대 수익률
           </MDTypography>
           <MDBox display="flex" alignItems="center" lineHeight={0}>
             <Icon
@@ -77,12 +81,12 @@ function Projects() {
               done
             </Icon>
             <MDTypography variant="button" fontWeight="regular" color="text">
-              &nbsp;<strong>30 done</strong> this month
+              &nbsp;<strong>절세 포트폴리오 적용시 효과를 나타낸 표입니다.</strong>
             </MDTypography>
           </MDBox>
         </MDBox>
         <MDBox color="text" px={2}>
-          <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
+          <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="medium" onClick={openMenu}>
             more_vert
           </Icon>
         </MDBox>
@@ -95,6 +99,7 @@ function Projects() {
           isSorted={false}
           noEndBorder
           entriesPerPage={false}
+          customTheme={myNewTheme}
         />
       </MDBox>
     </Card>
