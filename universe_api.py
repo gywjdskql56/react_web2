@@ -243,7 +243,11 @@ def final_port_DI(big_col, md_col, factor_score, rm_ticker, num):
     df = df.sort_values(['td', 'wgt'])
 
     bm_idx = read_pickle('bm_index')
+
     rtn = read_pickle('rtn_add_v2')
+    if md_col in ['원자재', '달러강세', '금리인상', '퀄리티고배당']:
+        bm_idx[md_col] = 'SP500'
+        rtn[bm_idx[md_col]] = rtn[bm_idx[md_col]]*100
     rtn = rtn.ffill()
     ticker_rtn = rtn[ticker_list+['td']]
     # rtn = rtn[ticker_list + ['td','SP500']]
@@ -271,21 +275,22 @@ def final_port_DI(big_col, md_col, factor_score, rm_ticker, num):
     ticker_rtn = ticker_rtn.set_index('td')
 
     Trtn = ticker_rtn.mul(total_df, fill_value=0)
+
     Brtn = rtn.set_index('td')[bm_idx[md_col]].dropna()
-    if bm_idx[md_col] == 'GMET-US':
-        Brtn = Brtn.loc['2021-11-13':]
-        Trtn = Trtn.loc['2021-11-13':]
+
     Brtn = (Brtn.dropna()*0.01+1).cumprod()
     min_date = Brtn.index[0]
     Trtn = Trtn.loc[min_date:]
     Trtn = (Trtn.sum(axis=1)*0.01+1).cumprod()
 
+
     return {"date": Trtn.index.tolist(),
-            "rtn": list(map(lambda x: int(x*100)/100, Trtn.values.tolist())),
-            "rtn_bm": list(map(lambda x: int(x*100)/100, Brtn.values.tolist())),
-            "tot_rtn": ((list(map(lambda x: int(x*10000)/10000, Trtn.values.tolist()))[-1]-1)*100),
-            "bm_nm" : bm_idx[md_col]
-            }
+        "rtn": list(map(lambda x: int(x*100)/100, Trtn.values.tolist())),
+        "rtn_bm": list(map(lambda x: int(x*100)/100, Brtn.values.tolist())),
+        "tot_rtn": ((list(map(lambda x: int(x*10000)/10000, Trtn.values.tolist()))[-1]-1)*100),
+        "bm_nm" : bm_idx[md_col]
+        }
+
 @app.route('/OptimalScore/<sm_col>')
 def get_optimal_score(sm_col):
     score_part = read_pickle('model_score_part')
