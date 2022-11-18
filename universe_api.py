@@ -244,7 +244,7 @@ def final_port_DI(big_col, md_col, factor_score, rm_ticker, num):
 
     bm_idx = read_pickle('bm_index')
     rtn = read_pickle('rtn_add_v2')
-    rtn = rtn.bfill()
+    rtn = rtn.ffill()
     ticker_rtn = rtn[ticker_list+['td']]
     # rtn = rtn[ticker_list + ['td','SP500']]
     # rtn['td'] = rtn['td'].apply(lambda x: x.strftime('%Y-%m-%d'))
@@ -269,8 +269,13 @@ def final_port_DI(big_col, md_col, factor_score, rm_ticker, num):
     total_df = total_df.apply(lambda row:row.fillna(0) if row.loc['td'] in rebal_dates else row,axis=1)
     total_df = total_df.set_index('td').ffill()
     ticker_rtn = ticker_rtn.set_index('td')
+
     Trtn = ticker_rtn.mul(total_df, fill_value=0)
-    Brtn = (rtn.set_index('td')[bm_idx[md_col]].dropna()*0.01+1).cumprod()
+    Brtn = rtn.set_index('td')[bm_idx[md_col]].dropna()
+    if bm_idx[md_col] == 'GMET-US':
+        Brtn = Brtn.loc['2021-11-13':]
+        Trtn = Trtn.loc['2021-11-13':]
+    Brtn = (Brtn.dropna()*0.01+1).cumprod()
     min_date = Brtn.index[0]
     Trtn = Trtn.loc[min_date:]
     Trtn = (Trtn.sum(axis=1)*0.01+1).cumprod()
@@ -371,7 +376,7 @@ def fac_explain_DI():
     ex = read_pickle('fac_explain')
     return {"ex": ex}
 
-    print(1)
+
 
 
 @app.route('/returns/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
