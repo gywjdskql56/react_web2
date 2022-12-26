@@ -181,11 +181,11 @@ def make_thl_port(port_year_dict, pre_date,date, etf,tax):
                                                                port_year_dict.loc[date, etf + "_매수수량"]) / \
                                                               port_year_dict.loc[date, etf + "_수량(실현후)"]
     return port_year_dict
+
 def make_all_port(etf, init_invest):
     etf_total_dict = make_BB_df(etf)
     port_df = make_port(etf, etf_total_dict)
     port_year_dict = make_yearly_port(port_df)
-
     # port_year_dict['PORT_Q'] = port_year_dict.apply(lambda x: int(init_invest/(x.loc['PORT'] * x.loc['USDKRW CURNCY'])))
     for col in ['_금액','_수량','_누적수익','_기본공제대비','_실현수익','_실현금액','_실현수량','_매수수량','_수량(실현후)','_평단(실현후)']:
         port_year_dict[etf+col] = 0
@@ -199,7 +199,6 @@ def make_all_port(etf, init_invest):
             port_year_dict.loc[date, etf+"_평단(실현후)"] = port_year_dict.loc[date, etf]
         else:
             port_year_dict = make_thl_port(port_year_dict, pre_date,date, etf,tax)
-
         pre_date = date
     return port_year_dict, port_df
 
@@ -243,6 +242,7 @@ def make_table(etf, port_year_df, init_invest):
     table_df.loc['세후수익률(연환산)','절세전략 효과'] = table_df.loc['세후수익률(연환산)','TLH 적용'] - table_df.loc['세후수익률(연환산)','TLH 미적용']
     table_df.loc['세후수익률(연환산)'] = table_df.loc['세후수익률(연환산)'].map(lambda x: str(round(x, 2)) + '%')
     return table_df
+
 def calc_TLH(etf, init_invest):
     etf += " US EQUITY"
     print(etf)

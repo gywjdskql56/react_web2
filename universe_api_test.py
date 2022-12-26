@@ -197,8 +197,90 @@ def get_green_indexing_theme_num():
     URL = "https://evening-ridge-28066.herokuapp.com/get_theme_num_tbl"
     res = requests.get(URL)
     return res
+def final_port_DI_str(big_col, rm_ticker, num):
+    if rm_ticker == '':
+        rm_ticker = []
+    else:
+        rm_ticker = list(filter(lambda x: len(x) > 0, rm_ticker.split('111')))
+
+    df = read_pickle('model_dat')
+    df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+    df = df[df['TF'] == True]
+    del df['TF']
+    ticker_list = list(set(df.ticker))
+    df = read_pickle('model_dat')
+    df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+    df = df[df['TF'] == True]
+
+    if big_col == "건전한 재무재표 전략지수":
+        rm_sector = ['Utilities', 'Financials', 'Real Estate']
+        df = df.rename(columns = {"altman": "score"})
+        df['TF'] = df['gics'].apply(lambda x: x not in rm_sector)
+        df = df[df['TF'] == True]
+
+    elif big_col == "주주환원지수":
+        df = df.rename(columns={"sh_yield": "score"})
+    else:
+        df = df.rename(columns={"capex_ratio": "score"})
+
+
+    total_df = pd.DataFrame()
+    for td in sorted(list(set(df['td']))):
+        if td == '2012-01-31':
+            print(1)
+        p_df = df[df['td'] == td]
+        p_df['gics_weight'] = p_df['gics_weight'].apply(
+            lambda x: x * (1 / p_df.drop_duplicates(subset=['gics'])['gics_weight'].sum()))
+        p_df['gics_count'] = p_df['gics_weight'].apply(lambda x: round(x * (num - len(list(set(p_df['gics']))) * 2), 0) + 2)
+        for gics in sorted(list(set(p_df['gics']))):
+            pp_df = p_df[p_df['gics'] == gics]
+            pp_df = pp_df.sort_values(by=['score'], ascending=False)
+            if td=='2012-01-31':
+                print(1)
+            try:
+                num_ticker = min(list(set(pp_df['gics_count']))[0], len(pp_df))
+            except:
+                print(1)
+            pp_df = pp_df.iloc[:int(num_ticker)]
+            pp_df['weight'] = pp_df['weight'].apply(lambda x: x*(1/sum(pp_df['weight'])))
+            total_df = total_df.append(pp_df)
+    total_df['weight'] = total_df.apply(lambda row: row.loc['weight'] * row.loc['gics_weight'], axis=1)
+
+    rtn = read_pickle('st_index_pr')
+    rtn = rtn.ffill()
+    rtn = rtn.set_index('td')
+    rtn = rtn.pct_change()
+    wgt_df = total_df.pivot(index='td', columns='ticker', values='weight').fillna(0)
+    wgt_df = wgt_df.sort_index()
+
+    total_rtn = pd.DataFrame()
+    for idx, td in enumerate(list(wgt_df.index)):
+        if idx-1 != len(wgt_df.index):
+            p_rtn = rtn.loc[td:wgt_df.index[idx+1]]
+        else:
+            p_rtn = rtn.loc[wgt_df.index[idx]:]
+        p_rtn['sum'] = 0
+        wgt = wgt_df.iloc[idx]
+        for col in wgt.index:
+            if wgt[col] != 0:
+                p_rtn['sum'] += p_rtn[col] * wgt[col]
+        total_rtn = total_rtn.append(p_rtn)
+    total_port_rtn = (total_rtn['sum']+1).cumprod().ffill()
+    total_bm_rtn = (total_rtn['BM']+1).cumprod().ffill()
+
+
+    return {"date": total_port_rtn.index.tolist(),
+        "rtn": list(map(lambda x: int(x*100)/100, total_port_rtn.values.tolist())),
+        "rtn_bm": list(map(lambda x: int(x*100)/100, total_bm_rtn.values.tolist())),
+        "tot_rtn": ((list(map(lambda x: int(x*10000)/10000, total_bm_rtn.values.tolist()))[-1]-1)*100),
+        "bm_nm" : "S&P500"
+        }
 
 if __name__ == '__main__':
+    big_col = '주주환원지수'
+    rm_ticker = '111'
+    num = 50
+    # final_port_DI_str(big_col='건전한 재무재표 전략지수', rm_ticker='111', num=50)
     big_col = '그린'
     md_col = '배터리'
     factor_score = 'I'.join(['1', '1', '1', '1', '1', '1', '1', '1'])

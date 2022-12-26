@@ -1,12 +1,11 @@
+import pandas as pd
 from flask import Flask
 from flask_cors import CORS
 import requests
 import json
-import pickle
 import random
-import matplotlib
-matplotlib.use('TkAgg')
-# from eft_screening_func import *
+import pickle
+# from etf_screening import *
 from TLH import *
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -27,6 +26,57 @@ def read_pickle(file_nm):
 def get_data(file_nm, skiprows=0, sheet_name =0, index_col=0):
     return pd.read_excel('data/'+file_nm, index_col=index_col , skiprows=skiprows, sheet_name=sheet_name)
 
+def make_port_corr():
+    corr_df = read_pickle('corr_df')
+    universe('변동성','공격')
+
+def universe(port1, port2):
+    if port1 == "변동성":
+        mapping = {'공격': '적극', '위험중립': '중립',}
+        if port2 in mapping.keys():
+            port2 =  mapping[port2]
+
+        universe = get_data(file_nm='변동성_20220513.xlsx',sheet_name="MP내역({})".format(port2))
+        universe = universe[['종목명', '비중']].dropna()
+        # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ", '').replace("%", '')))
+        universe = universe.sort_values(by='비중', ascending=False)
+        data = {'ticker':universe['종목명'].tolist(),'percent':list(map(lambda x:int(10000*x)/100,universe['비중'].tolist())), 'returns': ["" for i in range(len(universe['종목명'].tolist()))], 'port':port1+port2}
+    elif port1 == "멀티에셋인컴":
+        mapping = {'공격': '적극', '적극': '중립','중립':'안정' }
+        if port2 in mapping.keys():
+            port2 = mapping[port2]
+
+        universe = get_data(file_nm='(멀티에셋인컴)21.(자문일임)리밸런싱 발생내역_미래에셋자산운용_20220303(수정).xlsx', sheet_name="MP내역({})".format(port2))
+        universe = universe[universe.index == '2022-02-28']
+        universe = universe[['종목명', '비중']].dropna()
+        # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ",'').replace("%",'')))
+        universe = universe.sort_values(by='비중', ascending=False)
+        data = {'ticker':universe['종목명'].tolist(),'percent':list(map(lambda x:int(10000*x)/100,universe['비중'].tolist())), 'returns': ["" for i in range(len(universe['종목명'].tolist()))], 'port':port1+port2}
+    elif port1 == "테마로테션":
+        mapping = {'공격': '적극', '적극': '중립','중립':'안정' }
+        if port2 in mapping.keys():
+            port2 = mapping[port2]
+        universe = get_data(file_nm='수정본_(테마로테이션)21.(자문일임)포트폴리오 리밸런싱 현황_미래에셋자산운용_202203_vFV3.xlsx',
+                            sheet_name="MP내역({})".format(port2))
+        universe = universe[universe.index == '2022-03-03']
+        universe = universe[['종목명', '비중']].dropna()
+        # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ", '').replace("%", '')))
+        universe = universe.sort_values(by='비중', ascending=False)
+        data = {'ticker': universe['종목명'].tolist(), 'percent': list(map(lambda x:int(10000*x)/100,universe['비중'].tolist())),
+                'returns': ["" for i in range(len(universe['종목명'].tolist()))], 'port': port1 + port2}
+    elif port1 == "초개인로보":
+        if port2 == '성장':
+            port2 = '중립'
+        universe = get_data(file_nm='(초개인화자산관리로보)21.(자문일임)리밸런싱 발생내역_미래에셋자산운용_20211102.xlsx',
+                            sheet_name="MP내역({})".format(port2))
+        universe = universe[universe.index == '2021-11-01']
+        universe = universe[['종목명', '비중']].dropna()
+        # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ", '').replace("%", '')))
+        universe = universe.sort_values(by='비중', ascending=False)
+        data = {'ticker': universe['종목명'].tolist(), 'percent': list(map(lambda x:int(10000*x)/100,universe['비중'].tolist())),
+                'returns': ["" for i in range(len(universe['종목명'].tolist()))], 'port': port1 + port2}
+    return data
+
 @app.route('/make_corr_heatmap/', methods=['GET', 'POST'])
 def make_corr_heatmap():
     corr = read_pickle('corr')
@@ -36,69 +86,6 @@ def make_corr_heatmap():
 def make_corr_heatmap_col(col):
     corr = read_pickle('{}_corr'.format(col))
     return corr
-
-# @app.route('/make_corr_heatmap/', methods=['GET', 'POST'])
-# def make_corr_heatmap():
-#     # Define Tickers
-#     tickers_equity=['ACWI','SPY', 'QQQ','EFA','EEM', 'VLUE', 'IVW', 'MTUM', 'QUAL', 'USMV', 'IWM']
-#     tickers_gx=['BUG','DRIV', 'LIT', 'NXTG', 'PAVE', 'QCLN', 'SNSR', 'WCLD', 'XSD', 'FIVG', 'FBT', 'IGF', 'KWEB', 'BND']
-#     tickers_income=['CWB', 'FPE', 'JNK', 'ICVT', 'SRLN', 'BKLN', 'SCHD', 'VIG', 'VCSH', 'VCIT']
-#
-#
-#     tickers_bond=['TLT','IEF','SHY','TIP','LQD','HYG','BIL']
-#     tickers_etc=['GLD','DBC','KRW=X']
-#     tickers=tickers_equity + tickers_bond+tickers_etc+tickers_gx+tickers_income
-#
-#     tickers= list(set(tickers))
-#
-#     ETF = pd.read_pickle("data/ETF.pkl")
-#     ETF = ETF.sort_values('Tickers')
-#     ETF = ETF.reset_index(drop=True)
-#     annualization = 52
-#
-#     # Download Yahoo Data
-#     df_yahoo_index = pd.read_pickle("data/df_yahoo_index.pkl")
-#
-#     df_asset_index=df_yahoo_index.dropna()
-#     df_asset_ret=df_asset_index.pct_change()
-#     df_asset_ret=df_asset_ret.reindex(columns=tickers)
-#
-#     #####################calculate factor returns
-#     df_factor_ret=calculate_factor_ret(df_asset_ret, method='specific')
-#
-#     df_factor_summary=pd.DataFrame([])
-#     df_factor_summary['Annualized Return']=df_factor_ret.mean()*annualization
-#     df_factor_summary['Annualized Volatility']=df_factor_ret.std()*(annualization**0.5)
-#     df_factor_summary['Sharpe(Rf=0%)']=df_factor_summary['Annualized Return'] / df_factor_summary['Annualized Volatility']
-#
-#     print('factor start')
-#     #####################calculate and display factor exposures
-#     regression_result = factor_model(df_asset_ret.dropna(), df_factor_ret.dropna(), regression='stepwise')
-#
-#     even_range=1.5
-#     cm = sns.diverging_palette(240, 10, as_cmap=True)
-#     factor_exposures=regression_result.exposures.copy()
-#     factor_exposures=factor_exposures.reset_index()
-#     factor_exposures=factor_exposures.sort_values('index')
-#     factor_exposures['ETF']=ETF['Name'].values
-#     factor_exposures.set_index(['index', 'ETF'], inplace=True)
-#     print('data start')
-#     data = []
-#     for idx in factor_exposures.index:
-#         ticker = idx[0]
-#         sub_data = {}
-#         sub_data["id"] = ticker
-#         sub_sub_data = []
-#         for factor in factor_exposures.loc[idx].index:
-#             val = factor_exposures.loc[idx, factor]
-#             sub_sub_data.append({
-#                 "x":factor,
-#                 "y":round(val,4) * 100000
-#             })
-#         sub_data['data'] = sub_sub_data
-#         data.append(sub_data)
-#     return {"data": data}
-
 
 @app.route('/sort_ranking/<col>', methods=['GET', 'POST'])
 def sort_ranking(col):
@@ -203,6 +190,56 @@ def get_screen_DI(big_col,md_col,factor_score,rm_ticker):
     print({"area" : {"name": "포트폴리오", "color": "hsl(336, 70%, 50%)", "children": area_data}})
     return {"area" : {"name": "포트폴리오", "color": "hsl(336, 70%, 50%)", "children": area_data}, "portn":len(set(df['ticker'].tolist()))}
 
+
+@app.route('/screen_DI_str/<big_col>_<rm_ticker>', methods=['GET', 'POST'])
+def get_screen_DI_str(big_col, rm_ticker):
+    if rm_ticker=='111':
+        rm_ticker = []
+    else:
+        rm_ticker = list(filter(lambda x:len(x)>0, rm_ticker.split('111')))
+
+    # df = read_pickle('model_dat')
+    # # df = pd.read_excel('data/st_index/model_dat.xlsx')
+    # last_td = sorted(list(set(df['td'])))[-1]
+    # # df = read_pickle('테마분류_221012')
+    # df = df[df['td']==last_td]
+    # df = df.drop_duplicates(subset=['ticker'])
+    # # df = df[df['gics']==big_col]
+    # df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+    # df = df[df['TF'] == True]
+    if big_col == "인플레이션 수혜기업지수":
+        df = read_pickle('model_dat2')
+    elif big_col == '인플레이션 피해기업지수':
+        df = read_pickle('model_dat3')
+    else:
+        df = read_pickle('model_dat')
+    last_td = sorted(list(set(df['td'])))[-1]
+    df = df[df['td'] == last_td]
+    df = df.drop_duplicates(subset=['ticker'])
+    df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+    df = df[df['TF'] == True]
+
+    if big_col == "건전한 재무재표 전략지수":
+        rm_sector = ['Utilities', 'Financials', 'Real Estate']
+        df = df.rename(columns = {"altman": "score"})
+        df['TF'] = df['gics'].apply(lambda x: x not in rm_sector)
+        df = df[df['TF'] == True]
+        df['gics_weight'] = df['gics_weight'].apply(lambda x: x*(1/sum(df['gics_weight'])))
+        df['weight'] = df['weight'].apply(lambda x: x*(1/sum(df['weight'])))
+
+    area_data = list()
+    for sec in list(set(df['gics'])):
+        area_data_ch = list()
+        sub_df = df[df['gics']==sec].fillna(0)
+        for t, w in zip(sub_df['ticker'], sub_df['weight']):
+            child_ch = {"name": t,"color": "hsl({}, 70%, 50%)".format(random.randint(5, 200)),"loc": int(w*10000)/100}
+            area_data_ch.append(child_ch)
+        child = {"name": sec, "color": "hsl({}, 70%, 50%)".format(random.randint(200, 350)), "children": area_data_ch}
+        area_data.append(child)
+    print({"area": {"name": "포트폴리오", "color": "hsl(336, 70%, 50%)", "children": area_data}})
+    return {"area": {"name": "포트폴리오", "color": "hsl(336, 70%, 50%)", "children": area_data}, "portn": len(set(df['ticker'].tolist()))}
+
+
 @app.route('/finalPort_DI/', methods=['GET', 'POST'], defaults={"big_col":"기타", "md_col":"반려동물", 'factor_score':'2I0I0I2I0I0I0I0','rm_ticker':'1','num':'5' } )
 @app.route('/finalPort_DI/<big_col>_<md_col>_<factor_score>_<rm_ticker>_<num>', methods=['GET', 'POST'])
 def final_port_DI(big_col, md_col, factor_score, rm_ticker, num):
@@ -291,6 +328,114 @@ def final_port_DI(big_col, md_col, factor_score, rm_ticker, num):
         "bm_nm" : bm_idx[md_col]
         }
 
+@app.route('/finalPort_DI_str/', methods=['GET', 'POST'], defaults={"big_col":"기타", "md_col":"반려동물", 'rm_ticker':'111','num':'50' } )
+@app.route('/finalPort_DI_str/<big_col>_<rm_ticker>_<num>', methods=['GET', 'POST'])
+def final_port_DI_str(big_col, rm_ticker, num):
+    num = int(num)
+    print(num)
+    if rm_ticker == '':
+        rm_ticker = []
+    else:
+        rm_ticker = list(filter(lambda x: len(x) > 0, rm_ticker.split('111')))
+
+    rtn = read_pickle('st_index_pr')
+    rtn = rtn.ffill()
+    rtn = rtn.set_index('td')
+    rtn = rtn.pct_change()
+
+    if big_col == "건전한 재무재표 전략지수":
+        df = read_pickle('model_dat')
+        df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+        df = df[df['TF'] == True]
+        del df['TF']
+        rm_sector = ['Utilities', 'Financials', 'Real Estate']
+        df = df.rename(columns = {"altman": "score"})
+        df['TF'] = df['gics'].apply(lambda x: x not in rm_sector)
+        df = df[df['TF'] == True]
+        df['gics_weight'] = df['gics_weight'].apply(lambda x: x*(100/sum(df['gics_weight'])))
+        df['weight'] = df['weight'].apply(lambda x: x*(1/sum(df['weight'])))
+    elif big_col == "주주환원지수":
+        df = read_pickle('model_dat')
+        df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+        df = df[df['TF'] == True]
+        del df['TF']
+        df = df.rename(columns={"sh_yield": "score"})
+    elif big_col == "Capex와 R&D 지수":
+        df = read_pickle('model_dat')
+        df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+        df = df[df['TF'] == True]
+        del df['TF']
+        df = df.rename(columns={"capex_ratio": "score"})
+    elif big_col == "인플레이션 수혜기업지수":
+        df = read_pickle('model_dat2')
+        df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+        df = df[df['TF'] == True]
+        del df['TF']
+        # df = df#.rename(columns={"capex_ratio": "score"})
+    elif big_col == "인플레이션 피해기업지수":
+        df = read_pickle('model_dat3')
+        df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+        df = df[df['TF'] == True]
+        del df['TF']
+        df['score'] = df['score'] * (-1)
+    df = df.sort_index()
+    total_rebal_df = pd.DataFrame()
+    total_univ_df = pd.DataFrame()
+    td_list = sorted(list(set(df['td'])))
+
+    for idx, td in enumerate(td_list):
+        print('{}/{}'.format(idx, len(td_list)))
+        if td == '2012-01-31':
+            print(1)
+        p_df = df[df['td'] == td]
+        p_df['gics_weight'] = p_df['gics_weight'].apply(
+            lambda x: x * (1 / p_df.drop_duplicates(subset=['gics'])['gics_weight'].sum()))
+        p_df['gics_count'] = p_df['gics_weight'].apply(
+            lambda x: round(x * (num - len(list(set(p_df['gics']))) * 2), 0) + 2)
+        for gics in sorted(list(set(p_df['gics']))):
+            pp_df = p_df[p_df['gics'] == gics]
+            pp_df = pp_df.sort_values(by=['score'], ascending=False)
+            if td == '2012-01-31':
+                print(1)
+            try:
+                num_ticker = min(list(set(pp_df['gics_count']))[0], len(pp_df))
+            except:
+                print(1)
+            pp_df = pp_df.iloc[:int(num_ticker)]
+            pp_df['weight'] = pp_df['weight'].apply(lambda x: x * (1 / sum(pp_df['weight'])))
+            pp_df['weight'] = pp_df.apply(lambda row: row.loc['weight'] * row.loc['gics_weight'], axis=1)
+            total_univ_df = total_univ_df.append(pp_df)
+
+        if idx < len(td_list)-1:
+            p_rtn = rtn.loc[td:td_list[idx + 1]]
+        else:
+            p_rtn = rtn.loc[td:]
+        p_rtn = p_rtn.reset_index().melt(id_vars=['td'])
+        rebal_df = pd.merge(pp_df, p_rtn, left_on='ticker', right_on='variable', how='left').groupby(by='td_y').sum()
+        total_rebal_df = total_rebal_df.append(rebal_df[['value']])
+
+    total_rebal_df = pd.merge(total_rebal_df.reset_index(), rtn['BM'].reset_index(), left_on='td_y', right_on='td',how='left').ffill().set_index('td').dropna(subset=['value','BM'])
+    total_rebal_df = total_rebal_df.sort_index()
+    total_port_rtn = (total_rebal_df['value'] + 1).cumprod().ffill()
+    total_bm_rtn = (total_rebal_df['BM'] + 1).cumprod().ffill()
+
+    total_univ_df['weight'] = total_univ_df['weight'].apply(lambda x: round(x, 2))
+
+    return {"date": total_port_rtn.index.tolist(),
+            "rtn": list(map(lambda x: int(x * 100) / 100, total_port_rtn.values.tolist())),
+            "rtn_bm": list(map(lambda x: int(x * 100) / 100, total_bm_rtn.values.tolist())),
+            "tot_rtn": round(((list(map(lambda x: int(x * 10000) / 10000, total_port_rtn.values.tolist()))[-1] - 1) * 100),2),
+            "bm_nm": "S&P500",
+            "universe": {"ticker": total_univ_df.ticker.tolist(),
+            "name": total_univ_df.name.tolist(),
+            "theme1": total_univ_df.gics.tolist(),
+            "weight": total_univ_df.weight.tolist(),
+            "td": total_univ_df.td.tolist(),
+            "td_list": sorted(list(set(total_univ_df.td.tolist()))),
+            }
+            }
+
+
 @app.route('/OptimalScore/<sm_col>')
 def get_optimal_score(sm_col):
     score_part = read_pickle('model_score_part')
@@ -355,7 +500,7 @@ def final_universe_DI(big_col, md_col, factor_score, rm_ticker, num):
         total_rebal_df = total_rebal_df.append(rebal_df)
     total_rebal_df = total_rebal_df.dropna()
     print(total_rebal_df)
-    total_rebal_df = total_rebal_df.sort_values(['td'], ascending=False)
+    total_rebal_df = total_rebal_df.sort_index()
 
 
     return {"ticker": total_rebal_df.ticker.tolist(),
@@ -366,6 +511,65 @@ def final_universe_DI(big_col, md_col, factor_score, rm_ticker, num):
             "weight": total_rebal_df.wgt.tolist(),
             "td": total_rebal_df.td.tolist(),
             "td_list": sorted(list(set(total_rebal_df.td.tolist()))),
+            }
+
+@app.route('/finalUniverse_DI_str/<big_col>_<rm_ticker>_<num>', methods=['GET', 'POST'])
+def final_universe_DI_str(big_col, rm_ticker, num):
+
+    num = int(num)
+    if rm_ticker == '111':
+        rm_ticker = []
+    else:
+        rm_ticker = list(filter(lambda x: len(x) > 0, rm_ticker.split('111')))
+
+    if big_col == "건전한 재무재표 전략지수":
+        df = read_pickle('model_dat')
+        df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+        df = df[df['TF'] == True]
+        del df['TF']
+        rm_sector = ['Utilities', 'Financials', 'Real Estate']
+        df = df.rename(columns = {"altman": "score"})
+        df['TF'] = df['gics'].apply(lambda x: x not in rm_sector)
+        df = df[df['TF'] == True]
+        df['gics_weight'] = df['gics_weight'].apply(lambda x: x*(100/sum(df['gics_weight'])))
+        df['weight'] = df['weight'].apply(lambda x: round(x*(1/sum(df['weight']))*100, 2))
+
+    elif big_col == "주주환원지수":
+        df = read_pickle('model_dat')
+        df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+        df = df[df['TF'] == True]
+        del df['TF']
+        df = df.rename(columns={"sh_yield": "score"})
+
+    elif big_col == "Capex와 R&D 지수":
+        df = read_pickle('model_dat')
+        df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+        df = df[df['TF'] == True]
+        del df['TF']
+        df = df.rename(columns={"capex_ratio": "score"})
+
+    elif big_col == "인플레이션 수혜기업지수":
+        df = read_pickle('model_dat2')
+        df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+        df = df[df['TF'] == True]
+        del df['TF']
+        # df = df#.rename(columns={"capex_ratio": "score"})
+
+    elif big_col == "인플레이션 피해기업지수":
+        df = read_pickle('model_dat3')
+        df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
+        df = df[df['TF'] == True]
+        del df['TF']
+        df['score'] = df['score'] * (-1)
+
+    return {"ticker": df.ticker.tolist(),
+            "name": df.name.tolist(),
+            "theme1": df.gics.tolist(),
+            # "theme2": df.theme.tolist(),
+            # "theme3": df.industry.tolist(),
+            "weight": df.weight.tolist(),
+            "td": df.td.tolist(),
+            "td_list": sorted(list(set(df.td.tolist()))),
             }
 
 @app.route('/sec_ex_DI/<md_col>', methods=['GET', 'POST'])
@@ -465,7 +669,7 @@ def index():
 
 @app.route('/universes/', methods = ['GET','POST'], defaults={"port1": "변동성","port2": "공격" })
 @app.route('/universes/<port1>_<port2>', methods = ['GET','POST'])
-def universe(port1, port2):
+def universe_ui(port1, port2):
     if port1 == "변동성":
         mapping = {'공격': '적극', '위험중립': '중립',}
         if port2 in mapping.keys():

@@ -147,6 +147,7 @@ def reform_df(factor_exposures):
     return  {"data": data}
 
 factor_exposures = make_corr_heatmap()
+
 data = reform_df(factor_exposures)
 
 import pickle
@@ -154,6 +155,9 @@ import pickle
 def save_pickle(df, file_nm):
     with open('data/{}.pickle'.format((file_nm)), 'wb') as file:
         pickle.dump(df, file, protocol=pickle.HIGHEST_PROTOCOL)
+
+save_pickle(factor_exposures, 'corr_df')
+
 save_pickle(data, 'corr')
 factor_exposures = factor_exposures.T
 factor_exposures_inf = factor_exposures['Inflation'][factor_exposures['Inflation']<0].index

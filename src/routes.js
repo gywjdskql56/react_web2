@@ -1,6 +1,8 @@
 import Home1 from "layouts/home1";
 import MAsolutionTest from "layouts/masolution_test";
 import Screening2 from "layouts/screening2";
+import Screening3 from "layouts/screening_str";
+//import GBI from "layouts/GBI";
 // import Screening4 from "layouts/screening4";
 // import DI from "layouts/direct_indexing";
 import TLHsolution from "layouts/tlh_solution";
@@ -39,14 +41,31 @@ const routes = [
 //    route: "/etf_screening",
 //    component: <Screening4 />,
 //  },
+//    {
+//    type: "collapse",
+//    name: "GBI",
+//    key: "GBI",
+//    icon: <Icon fontSize="small">dashboard</Icon>,
+//    route: "/GBI",
+//    component: <GBI />,
+//  },
     {
     type: "collapse",
-    name: "다이렉트 인덱싱",
+    name: "다이렉트 인덱싱(테마)",
     key: "direct_indexing",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/direct_indexing",
     component: <Screening2 />,
   },
+  {
+    type: "collapse",
+    name: "다이렉트 인덱싱(전략)",
+    key: "direct_indexing_st",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/direct_indexing_st",
+    component: <Screening3 />,
+  },
+
   {
     type: "collapse",
     name: "절세 전략",
