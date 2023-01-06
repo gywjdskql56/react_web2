@@ -177,8 +177,6 @@ console.log(Object.keys(theme));
 //  sessionStorage.setItem('secEX', secEX);
 //  sessionStorage.setItem('facEX', JSON.stringify(facEX));
 
-
-
   }
    function onClickNext(e) {
     const ranks = httpGet(`/sort_ranking/수익률(1개월)`);
@@ -261,6 +259,8 @@ console.log(Object.keys(theme));
     console.log(factor_s);
     console.log(rmticker_str);
     const finalPort = httpGet(`/finalPort_DI_str/${sessionStorage.getItem("DI_1")}_${rmticker_str}_${sessionStorage.getItem('portn_select')}`)
+
+    sessionStorage.setItem("fianl_port", JSON.stringify(finalPort))
     sessionStorage.setItem("universe_str", JSON.stringify(finalPort.universe))
     console.log(finalPort);
     let xtick = [];
@@ -549,6 +549,46 @@ console.log(Object.keys(theme));
           date="updated 4 min ago"
           chart={sale}
         />
+        <MDBox mt={4.5} />
+       <Grid container spacing={3}>
+        <Grid item xs={3} md={3} lg={3}>
+            <MDBox mt={1}>
+                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="연평균 수익률" percentage={{
+                  color: "error",
+                  amount: JSON.parse(sessionStorage.getItem("fianl_port")).CAGR,
+                  label: "",
+                }}/>
+            </MDBox>
+        </Grid>
+        <Grid item xs={3} md={3} lg={3}>
+            <MDBox mt={1}>
+                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="연평균 Sharpe Ratio" percentage={{
+                  color: "error",
+                  amount: JSON.parse(sessionStorage.getItem("fianl_port")).SHR,
+                  label: "",
+                }}/>
+            </MDBox>
+        </Grid>
+        <Grid item xs={3} md={3} lg={3}>
+            <MDBox mt={1}>
+                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="연평균 변동성" percentage={{
+                  color: "error",
+                  amount: JSON.parse(sessionStorage.getItem("fianl_port")).STD,
+                  label: "",
+                }}/>
+            </MDBox>
+        </Grid>
+        <Grid item xs={3} md={3} lg={3}>
+            <MDBox mt={1}>
+                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="평균 Turnover" percentage={{
+                  color: "error",
+                  amount: JSON.parse(sessionStorage.getItem("fianl_port")).TURNOVER,
+                  label: "",
+                }}/>
+            </MDBox>
+        </Grid>
+        </Grid>
+
         <MDBox mt={4.5}>
         <Projects />
         </MDBox>
@@ -566,7 +606,6 @@ console.log(Object.keys(theme));
 }
 
 export default Dashboard;
-
 
 //시뮬레이션에 필요한 데이터 목록
 //1.	시뮬레이션용 전처리가 끝난 최종 모델링 데이터 – data/model_dat.xlsx

@@ -33,7 +33,13 @@ function configs(labels, datasets) {
       },
       scales: {
         y: {
+            max:4,
+            min:-0.5,
           grid: {
+            suggestedMin: -1,
+            suggestedMax: 4,
+            min: -1,
+            max: 5,
             drawBorder: false,
             display: true,
             drawOnChartArea: true,
@@ -45,6 +51,8 @@ function configs(labels, datasets) {
             display: true,
             padding: 10,
             color: "#9ca2b7",
+            max:3.5,
+            min:-0.5,
             font: {
               size: 14,
               weight: 300,
