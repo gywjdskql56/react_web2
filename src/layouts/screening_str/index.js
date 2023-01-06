@@ -46,15 +46,15 @@ const theme = {
       "key": "Capex와 R&D 지수",
       "val": "분기초 시가총액 대비 이전 12개월 Capex 및 R&D 투자금액의 비율이 가장 높은 50개 주식으로 구성. 섹터내 비중은 동일 가중. 섹터비중은 리밸런싱 시점에 전체 시장의 섹터 비중과 동일하게 구성. 단 금융 섹터와 부동산 섹터는 제외"
     }],
-    "매크로지표":
-    [{
-      "key": "인플레이션 수혜기업지수",
-      "val": "인플레이션이 높을수록 수혜를 본 상위 50개의 기업 선별"
-    },
-    {
-      "key": "인플레이션 피해기업지수",
-      "val": "인플레이션이 높을수록 언더퍼폼 한 하위 50개의 기업 선별"
-    }]
+//    "매크로지표":
+//    [{
+//      "key": "인플레이션 수혜기업지수",
+//      "val": "인플레이션이 높을수록 수혜를 본 상위 50개의 기업 선별"
+//    },
+//    {
+//      "key": "인플레이션 피해기업지수",
+//      "val": "인플레이션이 높을수록 언더퍼폼 한 하위 50개의 기업 선별"
+//    }]
 }
 
 Object.keys(theme).map((val, idx)=>
@@ -319,7 +319,7 @@ console.log(Object.keys(theme));
        </Card>
        <MDBox mt={3}>
        <Grid container spacing={3}>
-        <Grid item xs={4} md={4} lg={4}>
+        <Grid item xs={6} md={6} lg={6}>
             <MDBox mt={1}>
                 <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="펀더멘탈" percentage={{
                   color: "error",
@@ -328,7 +328,7 @@ console.log(Object.keys(theme));
                 }}/>
             </MDBox>
         </Grid>
-        <Grid item xs={4} md={4} lg={4}>
+        <Grid item xs={6} md={6} lg={6}>
             <MDBox mt={1}>
                 <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="기업현금 흐름" percentage={{
                   color: "error",
@@ -337,7 +337,7 @@ console.log(Object.keys(theme));
                 }}/>
             </MDBox>
         </Grid>
-        <Grid item xs={4} md={4} lg={4}>
+        {/*<Grid item xs={4} md={4} lg={4}>
             <MDBox mt={1}>
                 <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="매크로지표" percentage={{
                   color: "error",
@@ -345,7 +345,7 @@ console.log(Object.keys(theme));
                   label: "으로 유니버스 구성하기",
                 }}/>
             </MDBox>
-        </Grid>
+        </Grid>*/}
         </Grid>
         </MDBox>
 
