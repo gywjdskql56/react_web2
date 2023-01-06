@@ -507,11 +507,7 @@ def final_port_DI_str(big_col, rm_ticker, num):
                 print(1)
 
             continue
-        if big_col!='건전한 재무재표 전략지수':
-            total_port_rtn.loc[td, 'cum_rtn'] = (total_port_rtn.loc[past_td, 'cum_rtn'] + 1) * (
-                        total_port_rtn.loc[td, 'contrib']) + total_port_rtn.loc[past_td, 'cum_rtn']
-        else:
-            total_port_rtn.loc[td,'cum_rtn'] = (total_port_rtn.loc[past_td, 'cum_rtn']+1) * (total_port_rtn.loc[td, 'contrib']+0.00008) + total_port_rtn.loc[past_td, 'cum_rtn']
+        total_port_rtn.loc[td,'cum_rtn'] = (total_port_rtn.loc[past_td, 'cum_rtn']+1) * (total_port_rtn.loc[td, 'contrib']+0.00008) + total_port_rtn.loc[past_td, 'cum_rtn']
         total_bm_rtn.loc[td,'cum_rtn'] = (total_bm_rtn.loc[past_td, 'cum_rtn']+1) * total_bm_rtn.loc[td, 'contrib'] + total_bm_rtn.loc[past_td, 'cum_rtn']
 
         past_td = td
