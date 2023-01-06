@@ -489,7 +489,7 @@ def final_port_DI_str(big_col, rm_ticker, num):
         print(len(total_univ_df[total_univ_df['td']==td]))
         print(p_df.drop_duplicates(subset=['gics'])['gics_count'].sum())
         print(sum(total_univ_df[total_univ_df['td']==td]['weight']))
-    avg_turnover = round(turnovers/(2*(len(td_list))),2)
+
 
     total_port_rtn = total_port_df.sort_index()
     total_port_rtn['cum_rtn'] = 0
@@ -513,7 +513,7 @@ def final_port_DI_str(big_col, rm_ticker, num):
         past_td = td
     # total_port_rtn = (total_port_df['contrib'].fillna(1)+1).cumprod() -1
     # total_bm_rtn = (rtn.loc[total_port_rtn.index[0]:total_port_rtn.index[-1]]['BM'].sort_index().pct_change().fillna(0)+1).cumprod() -1
-
+    avg_turnover = round(turnovers ** (1 / (len(total_port_rtn.index.tolist()) // 252)), 2)
     total_univ_df['weight'] = total_univ_df['weight'].apply(lambda x: round(x*100, 2))
     total_univ_df_rv = total_univ_df.sort_values('td', ascending=False)
     # total_univ_df.to_excel('temp.xlsx')
@@ -534,7 +534,7 @@ def final_port_DI_str(big_col, rm_ticker, num):
                 "ticker": total_univ_df_rv.ticker.tolist(),
                 "name": total_univ_df_rv.name.tolist(),
                 "theme1": total_univ_df_rv.gics.tolist(),
-                "weight": total_univ_df_rv.weight.tolist(),
+                "weight": list(map(lambda x: str(x)+'%',total_univ_df_rv.weight.tolist())),
                 "td": total_univ_df_rv.td.tolist(),
                 "td_list": sorted(list(set(total_univ_df_rv.td.tolist()))),
             },
