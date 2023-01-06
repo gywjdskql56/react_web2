@@ -580,7 +580,7 @@ console.log(Object.keys(theme));
         </Grid>
         <Grid item xs={3} md={3} lg={3}>
             <MDBox mt={1}>
-                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="평균 Turnover" percentage={{
+                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="연평균 Turnover" percentage={{
                   color: "error",
                   amount: JSON.parse(sessionStorage.getItem("fianl_port")).TURNOVER,
                   label: "",
