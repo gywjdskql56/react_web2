@@ -541,7 +541,7 @@ def final_port_DI_str(big_col, rm_ticker, num):
             "CAGR": str(round(cagr,2)) + "%",
             "STD": str(round(std,2)) + "%",
             "SHR": str(round(spr,2)),
-            "TURNOVER": avg_turnover,
+            "TURNOVER": str(avg_turnover)+'%',
             }
 
 # def final_port_DI_str_v2(big_col, rm_ticker, num):
