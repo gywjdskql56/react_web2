@@ -553,7 +553,7 @@ console.log(Object.keys(theme));
        <Grid container spacing={3}>
         <Grid item xs={3} md={3} lg={3}>
             <MDBox mt={1}>
-                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="연평균 수익률" percentage={{
+                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="연평균 수익률(TR)" percentage={{
                   color: "error",
                   amount: JSON.parse(sessionStorage.getItem("fianl_port")).CAGR,
                   label: "",
