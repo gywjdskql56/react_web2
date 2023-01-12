@@ -540,7 +540,7 @@ console.log(Object.keys(theme));
       {open3 && <MDBox mb={3}>
         <ReportsLineChart
           color="success"
-          title="수익률"
+          title="수익률(TR)"
           description={
             <>
               전 기간 백테스트 수익률은 <strong>{sessionStorage.getItem("tot_rtn")}%</strong> 입니다.
@@ -553,7 +553,7 @@ console.log(Object.keys(theme));
        <Grid container spacing={3}>
         <Grid item xs={3} md={3} lg={3}>
             <MDBox mt={1}>
-                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="연평균 수익률(TR)" percentage={{
+                <ComplexStatisticsCard solutionNum="5" color="success" icon="weekend" count="연평균 수익률" percentage={{
                   color: "error",
                   amount: JSON.parse(sessionStorage.getItem("fianl_port")).CAGR,
                   label: "",
