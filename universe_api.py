@@ -435,9 +435,20 @@ def final_port_DI_str(big_col, rm_ticker, num):
             else:
                 num_ticker = min(list(set(pp_df['gics_count']))[0], len(pp_df))
 
-            if td != td_list[0]:
+            if idx != 0:
                 org_ticker = pp_df_past['ticker'].tolist()
-                org_ticker = list(set(org_ticker) & set(pp_df['ticker'].iloc[:num_ticker+max(int(num_ticker*0.25),1)].tolist()))
+                if big_col=='주주환원지수':
+                    if idx>=4:
+                        df['TF'] = df['td'].apply(lambda x:x in td_list[idx-3:idx+1])
+                        hist_df = df[df['TF']==True]
+                        hist_df = hist_df[hist_df['gics'] == gics]
+                        hist_df = hist_df.groupby(['ticker', 'name', 'gics']).mean().reset_index()
+                        pp_df = hist_df.sort_values(by='score', ascending=False)
+                        pp_df['td'] = td
+                    org_ticker = list(set(org_ticker) & set(pp_df['ticker'].iloc[:min(num_ticker+4, len(pp_df))].tolist()))
+                else:
+                    org_ticker = list(set(org_ticker) & set(
+                        pp_df['ticker'].iloc[:num_ticker + max(int(num_ticker * 0.25), 1)].tolist()))
                 pp_df['TF'] = pp_df['ticker'].apply(lambda x: x in org_ticker)
                 org_port = pp_df[pp_df['TF']==True]
                 org_port = org_port.sort_values(by='score', ascending=False)
@@ -471,9 +482,6 @@ def final_port_DI_str(big_col, rm_ticker, num):
             print(1)
         check = p_rtn_df[gics_rebal_df_rf.columns]
         check_univ = gics_rebal_df_rf
-        for tdtd in port_df.index:
-            check_p = check.loc[tdtd]
-            check_univ_p = check_univ.loc[tdtd]
 
         total_port_df_dt = total_port_df_dt.append(port_df)
         total_port_df_wgt = total_port_df_wgt.append(gics_rebal_df_rf.reset_index().melt(id_vars=['td']))
@@ -484,7 +492,7 @@ def final_port_DI_str(big_col, rm_ticker, num):
         turn_over = len(list(set(total_univ_df[total_univ_df['td']==td].ticker) - set(past_df.ticker)))
         past_df = total_univ_df[total_univ_df['td']==td]
 
-        turnovers += turn_over * 2
+        turnovers += turn_over
         print('--------------------')
         print(len(total_univ_df[total_univ_df['td']==td]))
         print(p_df.drop_duplicates(subset=['gics'])['gics_count'].sum())
@@ -513,7 +521,7 @@ def final_port_DI_str(big_col, rm_ticker, num):
         past_td = td
     # total_port_rtn = (total_port_df['contrib'].fillna(1)+1).cumprod() -1
     # total_bm_rtn = (rtn.loc[total_port_rtn.index[0]:total_port_rtn.index[-1]]['BM'].sort_index().pct_change().fillna(0)+1).cumprod() -1
-    avg_turnover = round(turnovers ** (1 / (len(total_port_rtn.index.tolist()) // 252)), 2)
+    avg_turnover = round(turnovers*2 / ((len(total_port_rtn.index.tolist()) / 252)), 2)
     total_univ_df['weight'] = total_univ_df['weight'].apply(lambda x: round(x*100, 2))
     total_univ_df_rv = total_univ_df.sort_values('td', ascending=False)
     # total_univ_df.to_excel('temp.xlsx')
