@@ -25,6 +25,8 @@ function handleClick(title, solutionNum) {
       sessionStorage.setItem("port1", "테마로테션");
     } else if (title === "멀티에셋 인컴") {
       sessionStorage.setItem("port1", "멀티에셋인컴");
+    } else if (title === "멀티에셋국") {
+      sessionStorage.setItem("port1", "멀티에셋국");
     }
     localStorage.setItem("color", "salmon");
     console.log(sessionStorage.getItem("port1"));

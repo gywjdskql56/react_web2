@@ -80,6 +80,10 @@ def universe(port1, port2):
         universe = universe.sort_values(by='비중', ascending=False)
         data = {'ticker': universe['종목명'].tolist(), 'percent': list(map(lambda x:int(10000*x)/100,universe['비중'].tolist())),
                 'returns': ["" for i in range(len(universe['종목명'].tolist()))], 'port': port1 + port2}
+    elif port1 =='멀티에셋국':
+        universe = get_data(file_nm='(멀티에셋모멘텀로보 - 국내)21.(자문일임)리밸런싱발생내역_미래에셋자산운용_20220801',
+                            sheet_name="MP내역({})".format(port2))
+
     return data
 
 @app.route('/make_corr_heatmap/', methods=['GET', 'POST'])
@@ -552,331 +556,6 @@ def final_port_DI_str(big_col, rm_ticker, num):
             "TURNOVER": str(avg_turnover)+'%',
             }
 
-# def final_port_DI_str_v2(big_col, rm_ticker, num):
-#     init_val = 100000000
-#     num = int(num)
-#     print(num)
-#     if rm_ticker == '':
-#         rm_ticker = []
-#     else:
-#         rm_ticker = list(filter(lambda x: len(x) > 0, rm_ticker.split('111')))
-#     pr_data = read_pickle('pr_data_v2')
-#     df = select_data(big_col, rm_ticker)
-#
-#
-#     total_univ_df = pd.DataFrame()
-#     total_port_df = pd.DataFrame()
-#     total_port_df_wgt = pd.DataFrame()
-#
-#     td_list = sorted(list(set(df['td'])))
-#     turnovers = 0
-#
-#
-#     for idx, td in enumerate(td_list):
-#         print('{}/{}'.format(idx, len(td_list)))
-#         print(td)
-#         p_df = df[df['td'] == td]
-#         gics_sum = p_df.drop_duplicates(subset=['gics'])['gics_weight'].sum()
-#         p_df['gics_weight'] = p_df['gics_weight'].apply(
-#                 lambda x: x * (1 / gics_sum))
-#         p_df['gics_count'] = p_df['gics_weight'].apply(
-#             lambda x: int(round(x * num,0)))
-#
-#         total_count = p_df.drop_duplicates(subset=['gics'])['gics_count'].sum()
-#         p_df = p_df.sort_values(by=['gics_weight'], ascending=False)
-#         first_gics = p_df['gics'].iloc[0]
-#         p_df = p_df.set_index('gics')
-#         p_df.loc[first_gics,'gics_count'] = p_df.loc[first_gics,'gics_count']+(num-total_count)
-#         p_df = p_df.reset_index()
-#         if idx < len(td_list) - 1:
-#             p_rtn_df = pr_data.loc[td:td_list[idx + 1]].iloc[:-1]
-#         else:
-#             p_rtn_df = pr_data.loc[td:]
-#
-#         if td == td_list[0]:
-#             past_df = p_df
-#         gics_rebal_df = pd.DataFrame()
-#         for gics in sorted(list(set(p_df['gics']))):
-#             pp_df_past =  past_df[past_df['gics'] == gics]
-#             pp_df_past = pp_df_past.sort_values(by=['score'], ascending=False)
-#
-#             pp_df = p_df[p_df['gics'] == gics]
-#             pp_df = pp_df.sort_values(by=['score'], ascending=False)
-#             gics_wgt = pp_df['gics_weight'].iloc[0]
-#
-#             if len(p_df)<=num:
-#                 num_ticker = len(pp_df)
-#             else:
-#                 num_ticker = min(list(set(pp_df['gics_count']))[0], len(pp_df))
-#
-#             if td != td_list[0]:
-#                 org_ticker = pp_df_past['ticker'].tolist()
-#                 org_ticker = list(set(org_ticker) & set(pp_df['ticker'].iloc[:num_ticker+max(int(num_ticker*0.25),1)].tolist()))
-#                 pp_df['TF'] = pp_df['ticker'].apply(lambda x: x in org_ticker)
-#                 org_port = pp_df[pp_df['TF']==True]
-#                 org_port = org_port.sort_values(by='score', ascending=False)
-#                 org_port = org_port.iloc[: min(len(org_ticker), num_ticker)]
-#                 not_org_port = pp_df[pp_df['TF']==False].sort_values(by=['score'], ascending=False)
-#                 pp_df = org_port.append(not_org_port.iloc[:max(int(num_ticker-len(org_port)),0)])
-#
-#             else:
-#                 pp_df = pp_df.iloc[:int(num_ticker)]
-#
-#             pp_df['weight'] = pp_df['weight'].apply(lambda x: 1 / num_ticker)
-#             pp_df['weight'] = pp_df.apply(lambda row: row.loc['weight'] * gics_wgt, axis=1)
-#
-#             pp_df['invest'] = pp_df['weight'] * init_val
-#
-#             pr = p_rtn_df.loc[td][pp_df.ticker]
-#             pr = pd.DataFrame(pr.values, index=pr.index, columns=['pr'])
-#             pr_pp_df = pd.merge(pr.reset_index().rename(columns={'index': 'ticker'}), pp_df, left_on='ticker', right_on='ticker',
-#                      how='right')
-#
-#             pr_pp_df['qty'] = pr_pp_df['invest'] / pr_pp_df['pr']
-#
-#
-#             # pp_df['weight'] = pp_df['weight'] * init_val
-#             total_univ_df = total_univ_df.append(pr_pp_df)
-#
-#             qty_dict = pr_pp_df[['ticker','qty']].set_index('ticker').to_dict()['qty']
-#             rebal_df = p_rtn_df[qty_dict.keys()].copy(deep=True)
-#             for key in qty_dict.keys():
-#                 rebal_df[key] = p_rtn_df[key] * qty_dict[key]
-#                 gics_rebal_df[key] = p_rtn_df[key] * qty_dict[key]
-#
-#         port_df = gics_rebal_df.sum(axis=1)
-#         port_df = pd.DataFrame(port_df, columns=['contrib'], index=port_df.index)
-#         init_val = port_df.iloc[-1]['contrib']
-#         print(init_val)
-#
-#         total_port_df = total_port_df.append(port_df)
-#         turn_over = len(list(set(total_univ_df[total_univ_df['td']==td].ticker) - set(past_df.ticker)))
-#         past_df = total_univ_df[total_univ_df['td']==td]
-#
-#         turnovers += turn_over * 2
-#         print('--------------------')
-#         print(len(total_univ_df[total_univ_df['td']==td]))
-#         print(p_df.drop_duplicates(subset=['gics'])['gics_count'].sum())
-#         # print(gics_rebal_df_rf.sum(axis=1).tolist()[0])
-#         print(sum(total_univ_df[total_univ_df['td']==td]['weight']))
-#     avg_turnover = round(turnovers/(2*(len(td_list)/250)),2)
-#
-#     total_port_df = total_port_df.sort_index()
-#     total_port_rtn = ((total_port_df).pct_change().fillna(0)+1).cumprod() -1
-#
-#     # total_port_rtn = (total_port_df.pct_change().fillna(0)).cumsum()
-#     pr_data = pr_data.sort_index()
-#     total_bm_rtn = ((pr_data['BM_v2'].loc[total_port_rtn.index[0]:total_port_rtn.index[-1]].ffill() / pr_data['BM_v2'].loc[total_port_rtn.index[0]]) ).cumprod() -1
-#     # total_bm_rtn = (pr_data['BM_v2'].loc[total_port_rtn.index[0]:total_port_rtn.index[-1]].ffill().pct_change().fillna(0)).cumsum()
-#
-#     total_univ_df['weight'] = total_univ_df['weight'].apply(lambda x: round(x*100, 2))
-#     total_univ_df_rv = total_univ_df.sort_values('td', ascending=False)
-#     total_port_df_wgt.to_excel('total_port_df_wgt.xlsx')
-#     cagr = (total_port_rtn.values.flatten().tolist()[-1] ** (1/(len(total_port_rtn.index.tolist()) // 252)) - 1)* 100
-#     std = np.std(total_port_rtn.values.tolist()) * np.sqrt(252)
-#     spr = cagr / std
-#
-#     return {"date": total_port_rtn.index.tolist(),
-#             "rtn": list(map(lambda x: int(x * 100) / 100, total_port_rtn.values.flatten().tolist())),
-#             "rtn_bm": list(map(lambda x: int(x * 100) / 100, total_bm_rtn.values.tolist())),
-#             "tot_rtn": round(((list(map(lambda x: int(x * 10000) / 10000, total_port_rtn.values.flatten().tolist()))[-1] - 1) * 100),2),
-#             "bm_nm": "S&P500",
-#             "universe": {
-#                 "ticker": total_univ_df_rv.ticker.tolist(),
-#                 "name": total_univ_df_rv.name.tolist(),
-#                 "theme1": total_univ_df_rv.gics.tolist(),
-#                 "weight": total_univ_df_rv.weight.tolist(),
-#                 "td": total_univ_df_rv.td.tolist(),
-#                 "td_list": sorted(list(set(total_univ_df_rv.td.tolist()))),
-#             },
-#             "CAGR": str(round(cagr,2)) + "%",
-#             "STD": str(round(std,2)) + "%",
-#             "SHR": str(round(spr,2)),
-#             "TURNOVER": avg_turnover,
-#             }
-
-
-
-
-
-
-
-# def final_port_DI_str(big_col, rm_ticker, num):
-#     num = int(num)
-#     print(num)
-#     if rm_ticker == '':
-#         rm_ticker = []
-#     else:
-#         rm_ticker = list(filter(lambda x: len(x) > 0, rm_ticker.split('111')))
-#
-#     rtn = read_pickle('st_index_pr').sort_values(by=['td'])
-#     rtn = rtn.ffill()
-#     rtn = rtn.set_index('td')
-#     rtn = rtn.pct_change()
-#     rtn = rtn[rtn[rtn.columns[0]] != 0]
-#
-#     if big_col == "건전한 재무재표 전략지수":
-#         df = read_pickle('model_dat')
-#         df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
-#         df = df[df['TF'] == True]
-#         del df['TF']
-#         rm_sector = ['Utilities', 'Financials', 'Real Estate']
-#         df = df.rename(columns = {"altman": "score"})
-#         df['TF'] = df['gics'].apply(lambda x: x not in rm_sector)
-#         df = df[df['TF'] == True]
-#         # df['gics_weight'] = df['gics_weight'].apply(lambda x: x*(100/sum(df['gics_weight'])))
-#         # df['weight'] = df['weight'].apply(lambda x: x*(1/sum(df['weight'])))
-#     elif big_col == "주주환원지수":
-#         df = read_pickle('model_dat')
-#         df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
-#         df = df[df['TF'] == True]
-#         del df['TF']
-#         df = df.rename(columns={"sh_yield": "score"})
-#     elif big_col == "Capex와 R&D 지수":
-#         df = read_pickle('model_dat')
-#         df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
-#         df = df[df['TF'] == True]
-#         del df['TF']
-#         df = df.rename(columns={"capex_ratio": "score"})
-#     elif big_col == "인플레이션 수혜기업지수":
-#         df = read_pickle('model_dat2')
-#         df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
-#         df = df[df['TF'] == True]
-#         del df['TF']
-#     elif big_col == "인플레이션 피해기업지수":
-#         df = read_pickle('model_dat3')
-#         df['TF'] = df['ticker'].apply(lambda x: x not in rm_ticker)
-#         df = df[df['TF'] == True]
-#         del df['TF']
-#         df['score'] = df['score'] * (-1)
-#     df = df.sort_index()
-#
-#     total_rebal_df = pd.DataFrame()
-#     total_univ_df = pd.DataFrame()
-#     total_port_df = pd.DataFrame()
-#     td_list = sorted(list(set(df['td'])))
-#     turnovers = 0
-#
-#
-#     for idx, td in enumerate(td_list):
-#         print('{}/{}'.format(idx, len(td_list)))
-#         print(td)
-#         # if num >= len(td_list):
-#         p_df = df[df['td'] == td]
-#         gics_sum = p_df.drop_duplicates(subset=['gics'])['gics_weight'].sum()
-#         if True:#big_col == "건전한 재무재표 전략지수" or big_col == "인플레이션 수혜기업지수" or big_col == "인플레이션 피해기업지수":
-#             p_df['gics_weight'] = p_df['gics_weight'].apply(
-#                 lambda x: x * (1 / gics_sum))
-#         p_df['gics_count'] = p_df['gics_weight'].apply(
-#             lambda x: int(round(x * num,0)))
-#
-#         total_count = p_df.drop_duplicates(subset=['gics'])['gics_count'].sum()
-#         p_df = p_df.sort_values(by=['gics_weight'], ascending=False)
-#         first_gics = p_df['gics'].iloc[0]
-#         p_df = p_df.set_index('gics')
-#         p_df.loc[first_gics,'gics_count'] = p_df.loc[first_gics,'gics_count']+(num-total_count)
-#         p_df = p_df.reset_index()
-#         if td == td_list[0]:
-#             past_df = p_df
-#         for gics in sorted(list(set(p_df['gics']))):
-#             pp_df_past =  past_df[past_df['gics'] == gics]
-#             pp_df_past = pp_df_past.sort_values(by=['score'], ascending=False)
-#             pp_df = p_df[p_df['gics'] == gics]
-#             pp_df = pp_df.sort_values(by=['score'], ascending=False)
-#             gics_wgt = pp_df['gics_weight'].iloc[0]
-#
-#             if len(p_df)<=num:
-#                 num_ticker = len(pp_df)
-#             else:
-#                 num_ticker = min(list(set(pp_df['gics_count']))[0], len(pp_df))
-#
-#             if td != td_list[0]:
-#                 org_ticker = pp_df_past['ticker'].tolist()
-#                 org_ticker = list(set(org_ticker) & set(pp_df['ticker'].iloc[:num_ticker+max(int(num_ticker*0.25),1)].tolist()))
-#                 pp_df['TF'] = pp_df['ticker'].apply(lambda x: x in org_ticker)
-#                 org_port = pp_df[pp_df['TF']==True]
-#                 org_port = org_port.sort_values(by='score', ascending=False)
-#                 org_port = org_port.iloc[: min(len(org_ticker), num_ticker)]
-#                 org_port['편입이유'] = '턴오버제한'
-#                 not_org_port = pp_df[pp_df['TF']==False].sort_values(by=['score'], ascending=False)
-#                 not_org_port['편입이유'] = '신규편입'
-#                 pp_df = org_port.append(not_org_port.iloc[:max(int(num_ticker-len(org_port)),0)])
-#             else:
-#                 pp_df = pp_df.iloc[:int(num_ticker)]
-#
-#             pp_df['weight'] = pp_df['weight'].apply(lambda x: 1 / num_ticker)
-#             pp_df['weight'] = pp_df.apply(lambda row: row.loc['weight'] * gics_wgt, axis=1)
-#             total_univ_df = total_univ_df.append(pp_df)
-#
-#             if idx < len(td_list)-1:
-#                 p_rtn = rtn.loc[td:td_list[idx + 1]]
-#             else:
-#                 p_rtn = rtn.loc[td:]
-#             p_rtn = p_rtn.reset_index().melt(id_vars=['td'])
-#             rebal_df = pd.merge(pp_df, p_rtn, left_on='ticker', right_on='variable', how='left')
-#             rebal_df = rebal_df.sort_values(by=['td_y'])
-#             rebal_df['weight_increase'] = (rebal_df['value']+1).cumprod()
-#             rebal_df['weight_increase'] = rebal_df['weight_increase'].shift(1)
-#             rebal_df['weight_increase'] = rebal_df['weight_increase'].fillna(1) * rebal_df['weight']
-#
-#             total_rebal_df = total_rebal_df.append(rebal_df)
-#
-#
-#         total_rebal_df = total_rebal_df.drop_duplicates(subset=['td_y','variable'])
-#         total_rebal_df_rf = total_rebal_df.pivot(index='td_y', columns='variable', values='weight_increase')
-#         total_rebal_df_rf = total_rebal_df_rf.apply(lambda row: (row / sum(row)), axis=1)
-#         total_rebal_df_rf = total_rebal_df_rf.reset_index().melt(id_vars=['td_y'])
-#
-#         port_df = pd.merge(total_rebal_df[['ticker', 'td_y', 'value']].rename(columns={'value': 'rtn'}),
-#                  total_rebal_df_rf.rename(columns={'variable': 'ticker', 'value': 'wgt'}), left_on=['ticker', 'td_y'],
-#                  right_on=['ticker', 'td_y'], how='right')
-#         port_df['contrib'] = port_df.apply(lambda row: row.loc['wgt']*row.loc['rtn'], axis=1)
-#         port_df = port_df.groupby(by='td_y').sum()
-#         total_port_df = total_port_df.append(port_df)
-#         turn_over = len(list(set(p_df.ticker) - set(past_df.ticker)))
-#         past_df = total_univ_df[total_univ_df['td']==td]
-#
-#         turnovers += turn_over * 2
-#         print('--------------------')
-#         print(len(total_univ_df[total_univ_df['td']==td]))
-#         print(p_df.drop_duplicates(subset=['gics'])['gics_count'].sum())
-#         print(p_df.drop_duplicates(subset=['gics'])['gics_weight'].sum())
-#         print(sum(total_univ_df[total_univ_df['td']==td]['weight']))
-#     avg_turnover = round(turnovers/2*(len(td_list)/250),2)
-#
-#     total_port_df = total_port_df.reset_index()
-#     total_port_df = total_port_df.groupby('td_y').sum()
-#     # total_port_df = pd.merge(total_port_df.reset_index(), rtn['BM'].reset_index(), left_on='td_y', right_on='td',how='left').ffill().set_index('td').dropna(subset=['contrib','BM'])
-#     total_port_df = total_port_df.sort_index()
-#     total_port_rtn = (total_port_df['contrib'].fillna(0) + 1).cumprod()
-#     total_bm_rtn = (rtn['BM'].fillna(0) + 1).cumprod()
-#
-#     total_univ_df['weight'] = total_univ_df['weight'].apply(lambda x: round(x*100, 2))
-#     total_univ_df_rv = total_univ_df.sort_values('td', ascending=False)
-#     # total_univ_df.to_excel('temp.xlsx')
-#     cagr = (total_port_rtn.values.tolist()[-1] ** (1/(len(total_port_rtn.index.tolist()) // 252)) - 1)* 100
-#     std = np.std(total_port_rtn.values.tolist()) * np.sqrt(252)
-#     spr = cagr / std
-#
-#     return {"date": total_port_rtn.index.tolist(),
-#             "rtn": list(map(lambda x: int(x * 100) / 100, total_port_rtn.values.tolist())),
-#             "rtn_bm": list(map(lambda x: int(x * 100) / 100, total_bm_rtn.values.tolist())),
-#             "tot_rtn": round(((list(map(lambda x: int(x * 10000) / 10000, total_port_rtn.values.tolist()))[-1] - 1) * 100),2),
-#             "bm_nm": "S&P500",
-#             "universe": {
-#                 "ticker": total_univ_df_rv.ticker.tolist(),
-#                 "name": total_univ_df_rv.name.tolist(),
-#                 "theme1": total_univ_df_rv.gics.tolist(),
-#                 "weight": total_univ_df_rv.weight.tolist(),
-#                 "td": total_univ_df_rv.td.tolist(),
-#                 "td_list": sorted(list(set(total_univ_df_rv.td.tolist()))),
-#             },
-#             "CAGR": str(round(cagr,2)) + "%",
-#             "STD": str(round(std,2)) + "%",
-#             "SHR": str(round(spr,2)),
-#             "TURNOVER": avg_turnover,
-#             }
-
 
 
 @app.route('/OptimalScore/<sm_col>')
@@ -1037,6 +716,9 @@ def returns(port1, port2):
     returns = get_data('RATB_성과표_18차추가.xlsx', sheet_name='그래프(영업일)', skiprows=1)
     if port1=='멀티에셋인컴':
         port2 = port2[0]
+    if port1=='멀티에셋국':
+        port1 = '멀티에셋_국_'
+        port2 = port2[0]
     returns = returns[port1+port2+'2'].dropna().drop_duplicates()
     return {"returns": list(map(lambda x: int(10000*x)/100,returns.values.tolist())), "date":list(map(lambda x : x.strftime('%y/%m/%d'),returns.index.tolist())), "std": int(np.std(returns.values)*10000)/10000}
 
@@ -1049,6 +731,9 @@ def period_returns(port1, port2):
     data.index = list(map(lambda x: str(x).replace('2', ''), data.index))
     data = data.fillna("")
     if port1=='멀티에셋인컴':
+        port2 = port2[0]
+    if port1=='멀티에셋국':
+        port1 = '멀티에셋_국_'
         port2 = port2[0]
     # mapping_dict = {
     #     '테마로테션적극' : '테마로테션공격',
@@ -1070,7 +755,8 @@ def strategy():
         '변동성': ['공격', '위험중립', '안정'],
         '초개인로보': ['적극','성장', '안정'],
         '테마로테션':[ '공격','적극','중립'],
-        '멀티에셋인컴': [ '공격','적극','중립']
+        '멀티에셋인컴': [ '공격','적극','중립'],
+        '멀티에셋국': ['적극', '중립', '안정']
     }
 
 @app.route('/strategy_explain/', methods=['GET', 'POST'])
@@ -1098,7 +784,11 @@ def strategy_explain():
                          'desc':'위험자산군의 비중 : 10%'}},
         '멀티에셋인컴': {'적극': {'title':'(매우 높은 위험) 투자자산의 100% 이하를 위험자산(배당주 ETF/ 리츠 ETF/ 전환사채 ETF/ 우선주 ETF)에 투자 ', 'desc':'위험자산군의 비중 : 100%'} ,
                   '중립': {'title':'(다소 높은 위험) 투자자산의 80% 이하를 위험자산에 투자', 'desc':'위험자산군의 비중 : 80%'},
-                  '안정': {'title':'(보통 위험) 투자자산의 50% 이하를 위험자산에 투자','desc': '위험자산군의 비중 : 50%'}}
+                  '안정': {'title':'(보통 위험) 투자자산의 50% 이하를 위험자산에 투자','desc': '위험자산군의 비중 : 50%'}},
+        '멀티에셋국': {'적극': {'title': '(매우 높은 위험) 투자자산의 100% 이하를 위험자산(배당주 ETF/ 리츠 ETF/ 전환사채 ETF/ 우선주 ETF)에 투자 ',
+                          'desc': '위험자산군의 비중 : 100%'},
+                   '중립': {'title': '(다소 높은 위험) 투자자산의 80% 이하를 위험자산에 투자', 'desc': '위험자산군의 비중 : 80%'},
+                   '안정': {'title': '(보통 위험) 투자자산의 50% 이하를 위험자산에 투자', 'desc': '위험자산군의 비중 : 50%'}}
     }
 
 @app.route('/universe', methods = ['GET','POST'])
@@ -1152,6 +842,15 @@ def universe_ui(port1, port2):
         universe = get_data(file_nm='(초개인화자산관리로보)21.(자문일임)리밸런싱 발생내역_미래에셋자산운용_20211102.xlsx',
                             sheet_name="MP내역({})".format(port2))
         universe = universe[universe.index == '2021-11-01']
+        universe = universe[['종목명', '비중']].dropna()
+        # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ", '').replace("%", '')))
+        universe = universe.sort_values(by='비중', ascending=False)
+        data = {'ticker': universe['종목명'].tolist(), 'percent': list(map(lambda x:int(10000*x)/100,universe['비중'].tolist())),
+                'returns': ["" for i in range(len(universe['종목명'].tolist()))], 'port': port1 + port2}
+    elif port1 == "멀티에셋국":
+        universe = get_data(file_nm='(멀티에셋모멘텀로보-국내)21.(자문일임)리밸런싱 발생내역_미래에셋자산운용_20220801.xlsx',
+                            sheet_name="MP내역({})".format(port2))
+        universe = universe[universe.index == '2022-05-02']
         universe = universe[['종목명', '비중']].dropna()
         # universe['비중'] = universe['비중'].apply(lambda x: float(x.replace(" ", '').replace("%", '')))
         universe = universe.sort_values(by='비중', ascending=False)

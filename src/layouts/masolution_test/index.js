@@ -49,8 +49,11 @@ function Dashboard() {
     } else if (portfolio1 === "멀티에셋인컴") {
       setPort("4");
       portnm = "미래멀티에셋인컴공1";
-    } else if (portfolio1 === "AI 미국주식 투자") {
+    } else if (portfolio1 === "멀티에셋국") {
       setPort("5");
+      portnm = "멀티에셋국";
+    } else if (portfolio1 === "AI 미국주식 투자") {
+      setPort("6");
       portnm = "미래에셋AI크로스알파";
     }
     localStorage.setItem("port", portnm);
@@ -60,6 +63,7 @@ function Dashboard() {
   {title:'초개인화 자산관리', color: 'info', subtitle:"국내외 / ETF", val:'+31%', icon:"leaderboard" },
   {title:'테마 로테이션', color: 'success', subtitle:"해외 / ETF", val:'+13%', icon:"store" },
   {title:'멀티에셋 인컴', color: 'primary', subtitle:"다양한 인컴 자산", val:'+16%', icon:"person_add" },
+  {title:'멀티에셋 모멘텀', color: 'warning', subtitle:"국내 / ETF", val:'+16%', icon:"person_add" },
   ];
 //  function onClickNext(e) {
 //    setOpen1(true);
@@ -139,7 +143,7 @@ function Dashboard() {
         <Grid container spacing={3}>
 
          {algos.map(algo =>
-         <Grid item xs={9.6} md={4.8} lg={3}>
+         <Grid item xs={2.4} md={2.4} lg={2.4}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color={algo.color}

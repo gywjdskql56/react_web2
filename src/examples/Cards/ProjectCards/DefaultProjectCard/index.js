@@ -30,6 +30,7 @@ import port2 from "assets/images/port_2.png";
 import port3 from "assets/images/port_3.png";
 import port4 from "assets/images/port_4.png";
 import port5 from "assets/images/port_5.png";
+import port6 from "assets/images/port_6.png";
 import apple from "assets/images/apple-icon.png";
 
 function DefaultProjectCard({ image, title, description }) {
@@ -44,6 +45,8 @@ function DefaultProjectCard({ image, title, description }) {
   } else if (image === "4") {
     imagepath = port4;
   } else if (image === "5") {
+    imagepath = port6;
+  } else if (image === "6") {
     imagepath = port5;
   } else if (image === "apple") {
     imagepath = apple;

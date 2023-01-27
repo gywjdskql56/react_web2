@@ -45,6 +45,7 @@ import port2 from "assets/images/port_2.png";
 import port3 from "assets/images/port_3.png";
 import port4 from "assets/images/port_4.png";
 import port5 from "assets/images/port_5.png";
+import port6 from "assets/images/port_6.png";
 
 function Dashboard() {
   const [warningSB, setWarningSB] = useState(false);
@@ -71,6 +72,9 @@ function Dashboard() {
     } else if (sessionStorage.getItem("port1") === "AI 미국주식 투자") {
       setPort(port5);
       portnm = "미래에셋AI크로스알파";
+    } else if (sessionStorage.getItem("port1") === "멀티에셋 모멘텀") {
+      setPort(port5);
+      portnm = "멀티에셋국";
     }
     sessionStorage.setItem("port1", portnm);
   });
@@ -98,7 +102,7 @@ function Dashboard() {
       <DashboardNavbar />
       <MDBox py={3}>
         <Grid container spacing={3}>
-          <Grid item xs={9.6} md={4.8} lg={2.4}>
+          <Grid item xs={9.6} md={4.8} lg={2}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
@@ -113,7 +117,7 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-          <Grid item xs={9.6} md={4.8} lg={2.4}>
+          <Grid item xs={9.6} md={4.8} lg={2}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
@@ -127,7 +131,7 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-          <Grid item xs={9.6} md={4.8} lg={2.4}>
+          <Grid item xs={9.6} md={4.8} lg={2}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="success"
@@ -142,7 +146,7 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-          <Grid item xs={9.6} md={4.8} lg={2.4}>
+          <Grid item xs={9.6} md={4.8} lg={2}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
@@ -157,7 +161,22 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-          <Grid item xs={9.6} md={4.8} lg={2.4}>
+          <Grid item xs={9.6} md={4.8} lg={2}>
+            <MDBox mb={1.5}>
+              <ComplexStatisticsCard
+                color="secondary"
+                icon="adb"
+                count="AI 미국주식 투자"
+                title="국내외 238개 종목"
+                percentage={{
+                  color: "success",
+                  amount: "+18%",
+                  label: "설정일 이후",
+                }}
+              />
+            </MDBox>
+          </Grid>
+          <Grid item xs={9.6} md={4.8} lg={2}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="secondary"

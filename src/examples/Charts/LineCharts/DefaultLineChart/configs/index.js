@@ -33,8 +33,8 @@ function configs(labels, datasets) {
       },
       scales: {
         y: {
-            max:4,
-            min:-0.5,
+            max:8,
+            min:-8,
           grid: {
             suggestedMin: -1,
             suggestedMax: 4,

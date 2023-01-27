@@ -15,6 +15,7 @@ import httpGet from "config";
 
 // import React from "react";
 function handleClick(title, solutionNum) {
+  console.log('click: ',title)
   localStorage.setItem("title", title);
   if (solutionNum === "1") {
     sessionStorage.setItem("selected1", true);
@@ -29,6 +30,9 @@ function handleClick(title, solutionNum) {
       sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
     } else if (title === "멀티에셋 인컴") {
       sessionStorage.setItem("port1", "멀티에셋인컴");
+      sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
+    } else if (title === "멀티에셋 모멘텀") {
+      sessionStorage.setItem("port1", "멀티에셋국");
       sessionStorage.setItem("port2", httpGet("/strategy")[sessionStorage.getItem("port1")][0]);
     }
     localStorage.setItem("color", "salmon");
